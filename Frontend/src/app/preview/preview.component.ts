@@ -18,7 +18,14 @@ export class PreviewComponent {
   }
 
   onClick(e: any) {
-    console.log(e.target.innerText);
+    console.log(e);
+    let selected = e.target;
+    let s = "<" + e.target.tagName + ">";
+    while(selected.parentElement) {
+      s += "<" + selected.parentElement.tagName + ">";
+      selected = selected.parentElement;
+    }
+    console.log(s);
   }
   
   onMouseOver(e: any) {
