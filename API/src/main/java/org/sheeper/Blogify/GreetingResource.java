@@ -42,4 +42,25 @@ public class GreetingResource {
 
         return null;
     }
+
+    @GET
+    @Path("html")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getHTML() {
+        var url = "https://freddysblog.com";
+
+        try {
+            Document doc = Jsoup.connect(url).get();
+
+            var bodyElement = doc.getElementsByTag("body").first();
+            bodyElement.select("a").forEach((link) -> {
+                link.removeAttr("href");
+            });
+            return bodyElement.html();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 }
