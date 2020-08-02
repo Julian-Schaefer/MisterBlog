@@ -7,4 +7,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'Blogify';
+  comment = "<p><em><strong>abc</strong></em> ist noch eine <br> line</p>";
 }
