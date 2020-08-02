@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-preview',
@@ -9,6 +10,12 @@ import { HttpClient } from '@angular/common/http';
 export class PreviewComponent {
 
   comment = '';
+  
+  constructor(private http: HttpClient, public activatedRoute: ActivatedRoute) {
+    let url = this.activatedRoute.snapshot.queryParamMap.get('url');
+    console.log(url);
+    http.get("http://localhost:8080/html?url=" + url, {responseType: 'text'}).subscribe((data) => this.comment = data);
+  }
 
   onClick(e: any) {
     console.log(e.target.innerText);
@@ -20,10 +27,5 @@ export class PreviewComponent {
   
   onMouseOut(e: any) {
     e.target.style.border = "none";
-  }
-  
-  constructor(private http: HttpClient) { 
-    let url = "https://waldo.be";
-    http.get("http://localhost:8080/html?url=" + url, {responseType: 'text'}).subscribe((data) => this.comment = data);
   }
 }
