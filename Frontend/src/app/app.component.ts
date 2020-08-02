@@ -22,6 +22,7 @@ export class AppComponent {
   }
   
   constructor(private http: HttpClient) { 
-    http.get("http://localhost:8080/hello/html", {responseType: 'text'}).subscribe((data) => this.comment = data);
+    let url = "https://waldo.be";
+    http.get("http://localhost:8080/html?url=" + url, {responseType: 'text'}).subscribe((data) => this.comment = data);
   }
 }
