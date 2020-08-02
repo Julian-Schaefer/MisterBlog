@@ -338,7 +338,7 @@
 
   </div>
 
-  <div [innerHTML]="comment" (click)="onClick($event)"></div>
+  <div [innerHTML]="comment" (click)="onClick($event)" (mouseover)="onMouseOver($event)" (mouseout)="onMouseOut($event)"></div>
 
   <!-- Resources -->
   <h2>Resources</h2>
