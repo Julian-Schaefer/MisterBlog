@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PreviewComponent } from './preview/preview.component';
+import { HomeComponent } from './home/home.component';
 
 
 
 const routes: Routes = [
-  { path: '', component: PreviewComponent },
+  { path: '', component: HomeComponent },
   { path: 'preview', component: PreviewComponent }
 ];
 
