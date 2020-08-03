@@ -5,7 +5,7 @@ div#steps {
     border-right: black 2px solid;
 }
 
-div#preview {
+div#preview-div {
     float: right;
     width: 70%;
     height: 90%;

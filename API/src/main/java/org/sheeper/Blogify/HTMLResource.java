@@ -19,7 +19,7 @@ public class HTMLResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String getHTML(@QueryParam("url") String url) {
-        if(url == null) {
+        if (url == null) {
             throw new RuntimeException("Please provide a URL");
         }
 
@@ -41,20 +41,19 @@ public class HTMLResource {
     @GET
     @Path("asd")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Article> hello() {
+    public List<String> hello() {
         try {
-            Document doc = Jsoup.connect("https://navbitsbytes.com").get();
-            var articleElements = doc.select("article.post");
-            if (articleElements.isEmpty()) {
-                articleElements = doc.select("div.post");
-            }
-            List<Article> articles = new LinkedList<>();
+            Document doc = Jsoup.connect("https://freddysblog.com").get();
+            var articleElements = doc.select("body div div div div article header h1 a");
+
+            List<String> articles = new LinkedList<>();
             for (var articleElement : articleElements) {
-                Article article = new Article();
-                article.setTitle(articleElement.select(".entry-title").first().text());
-                article.setIntroduction(articleElement.select(".entry-content").first().children().first().text());
-                article.setContent(articleElement.select(".entry-title").first().text());
-                articles.add(article);
+                articles.add(articleElement.text());
+                // Article article = new Article();
+                // article.setTitle(articleElement.select(".entry-title").first().text());
+                // article.setIntroduction(articleElement.select(".entry-content").first().children().first().text());
+                // article.setContent(articleElement.select(".entry-title").first().text());
+                // articles.add(article);
             }
 
             return articles;
