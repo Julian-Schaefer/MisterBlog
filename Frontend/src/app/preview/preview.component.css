@@ -11,3 +11,7 @@ div#preview-div {
     height: 90%;
     overflow-y: scroll;
 }
+
+p.selected {
+    color: red;
+}

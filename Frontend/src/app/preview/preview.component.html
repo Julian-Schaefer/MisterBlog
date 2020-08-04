@@ -1,10 +1,13 @@
 <div id="steps">
     <h2>Steps</h2>
-    <p>1. Select Article Header</p>
-    <p>2. Select Article Date</p>
-    <p>3. Select Article author</p>
-    <p>4. Select Article introduction</p>
-    <p>5. Select Article content</p>
+    <p [ngClass]="{selected: step === 1}">1. Select Article Header</p>
+    <p [ngClass]="{selected: step === 2}">2. Select Article Date</p>
+    <p [ngClass]="{selected: step === 3}">3. Select Article author</p>
+    <p [ngClass]="{selected: step === 4}">4. Select Article introduction</p>
+    <p [ngClass]="{selected: step === 5}">5. Select Article content</p>
+
+    <button mat-raised-button color="primary" (click)="onNextClick()">Next</button>
+    <button mat-raised-button (click)="onBackClick()">Back</button>
 </div>
-<div id="preview-div" [innerHTML]="comment" (click)="onClick($event)" (mouseover)="onMouseOver($event)"
+<div id="preview-div" [innerHTML]="comment" (click)="onElementSelected($event)" (mouseover)="onMouseOver($event)"
     (mouseout)="onMouseOut($event)"></div>
