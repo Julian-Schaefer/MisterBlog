@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 
-interface IArticleSelection {
+interface IBlogSelection {
+  blogUrl?: string;
   headerSelector?: string;
   dateSelector?: string;
   authorSelector?: string;
@@ -17,15 +18,17 @@ interface IArticleSelection {
 })
 export class PreviewComponent {
 
+  blogUrl: string;
   step = 1;
+  stage = 1;
   previewHtml: string;
   selectedElement: any;
   selectedElements: any[] = [];
   nextButtonEnabled = false;
 
   constructor(private http: HttpClient, public activatedRoute: ActivatedRoute) {
-    let url = this.activatedRoute.snapshot.queryParamMap.get('url');
-    http.get("http://localhost:8080/html?url=" + url, { responseType: 'text' }).subscribe((data) => this.previewHtml = data);
+    this.blogUrl = this.activatedRoute.snapshot.queryParamMap.get('url');
+    http.get("http://localhost:8080/html?url=" + this.blogUrl, { responseType: 'text' }).subscribe((data) => this.previewHtml = data);
   }
 
   onElementSelected(e: any) {
@@ -47,6 +50,12 @@ export class PreviewComponent {
 
     this.selectedElements[this.step - 1] = this.selectedElement;
     this.step += 1;
+
+    if (this.selectedElements[this.step - 1]) {
+      this.selectedElement = this.selectedElements[this.step - 1];
+      this.selectedElement.style.border = "red 2px solid";
+      this.nextButtonEnabled = true;
+    }
   }
 
   onBackClick(): void {
@@ -58,6 +67,7 @@ export class PreviewComponent {
 
     this.selectedElement = this.selectedElements[this.step - 1];
     this.selectedElement.style.border = "red 2px solid";
+    this.nextButtonEnabled = true;
   }
 
   onFinishClick(): void {
@@ -68,7 +78,9 @@ export class PreviewComponent {
     this.selectedElements[this.step - 1] = this.selectedElement;
 
     let counter = 1;
-    let articleSelection: IArticleSelection;
+    let articleSelection: IBlogSelection = {
+      blogUrl: this.blogUrl
+    };
 
     for (let element of this.selectedElements) {
       let selected = element;
@@ -95,13 +107,24 @@ export class PreviewComponent {
       counter++;
     }
 
-    this.http.post("http://localhost:8080/blog-selection", articleSelection).subscribe(data => {
+    console.log(articleSelection);
+
+    this.http.post("http://localhost:8080/blog-selection", articleSelection, { responseType: 'text' }).subscribe(data => {
       console.log(data);
     });
   }
 
   getTagName(element: any): string {
-    return element.tagName.toLowerCase() + ' ';
+    let tagName = element.tagName.toLowerCase();
+    if (element.classList.length !== 0) {
+      tagName += ".";
+      for (let className of element.classList) {
+        tagName += className + " ";
+      }
+    }
+
+    tagName += " ";
+    return tagName;
   }
 
   onMouseOver(e: any) {

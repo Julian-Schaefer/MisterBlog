@@ -1,12 +1,26 @@
 <div id="steps">
     <h2>Steps</h2>
-    <p [ngClass]="{selected: step === 1}">1. Select Article Header</p>
-    <p [ngClass]="{selected: step === 2}">2. Select Article Date</p>
-    <p [ngClass]="{selected: step === 3}">3. Select Article author</p>
-    <p [ngClass]="{selected: step === 4}">4. Select Article introduction</p>
-    <p [ngClass]="{selected: step === 5}">5. Select Article content</p>
 
-    <button mat-raised-button (click)="onBackClick()">Back</button>
+    <h3>First Article</h3>
+    <p [ngClass]="{selected: step === 1}">1. Select Header of first Article</p>
+    <p [ngClass]="{selected: step === 2}">2. Select Introduction of first Article</p>
+    <br>
+
+    <h3>Second Article</h3>
+    <p [ngClass]="{selected: step === 1}">1. Select Header of second Article</p>
+    <p [ngClass]="{selected: step === 2}">2. Select Introduction of second Article</p>
+    <br>
+
+    <h3>Old Articles</h3>
+    <p>Select the Link to the second Page/older Posts of the Blog</p>
+
+    <h3>Article</h3>
+    <p>1. Select Article content</p>
+    <p>1. Select Article content</p>
+    <p>1. Select Article content</p>
+    <p>1. Select Article content</p>
+
+    <button mat-raised-button (click)="onBackClick()" [disabled]="step === 1">Back</button>
     <button mat-raised-button color="primary" (click)="onNextClick()" [disabled]="!nextButtonEnabled"
         *ngIf="step !== 5">Next</button>
     <button mat-raised-button color="primary" (click)="onFinishClick()" [disabled]="!nextButtonEnabled"
