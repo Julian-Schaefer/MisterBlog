@@ -24,7 +24,7 @@ export class HomeComponent {
 
 @Component({
   selector: 'add-blog-dialog',
-  templateUrl: 'add-blog-dialog.html'
+  templateUrl: './add-blog-dialog.html'
 })
 export class AddBlogDialog {
 

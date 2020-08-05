@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorDialogComponent } from '../error-dialog/error-dialog.component';
+import * as clone2 from 'clone';
 
 interface IArticleSelection {
   selector: string;
@@ -82,6 +83,16 @@ export class PreviewComponent {
           this.dialog.open(ErrorDialogComponent, { data: e })
         }
         break;
+      case 2:
+        this.selectedElements[this.stage][this.step] = this.selectedElement;
+        this.stage += 1;
+        this.step = 0;
+        let headerElement = this.selectedElements[0][0];
+        console.log(headerElement);
+        let arr = this.getSelectorArray(headerElement);
+        let sel = this.buildSelectorString(arr);
+        this.http.get("http://localhost:8080/html?url=" + this.blogUrl + "&headerSelector=" + sel, { responseType: 'text' }).subscribe((data) => { console.log(data); this.previewHtml = data });
+        break;
     }
 
     this.selectElement(this.selectedElements[this.stage][this.step]);
@@ -92,32 +103,13 @@ export class PreviewComponent {
 
     this.selectedElements[this.step - 1] = this.selectedElement;
 
-    let counter = 1;
     let articleSelection: IBlogSelection = {
       blogUrl: this.blogUrl
     };
 
-    // for (let element of this.selectedElements) {
-    //   let selected = element;
-    //   let selectorString: string = "";
-    //   while (selected) {
-    //     if (selected.tagName.toLowerCase() === "div" && selected.id === "preview-div") {
-    //       break;
-    //     }
-
-    //     let siblings = selected.parentElement.children as HTMLCollection;
-    //     let siblingIndex = 0;
-    //     for (let counter = 0; counter < siblings.length; counter++) {
-    //       let sibling = siblings.item(counter);
-    //       if (sibling === selected) {
-    //         siblingIndex = counter;
-    //         break;
-    //       }
-    //     }
-
-    //     selectorString = selected.tagName.toLowerCase() + ":eq(" + siblingIndex + ") > " + selectorString;
-    //     selected = selected.parentElement;
-    //   }
+    console.log(this.buildSelectorString(this.getSelectorArray(this.selectedElements[0][0]), this.getSelectorArray(this.selectedElements[1][0])));
+    console.log(this.buildSelectorString(this.getSelectorArray(this.selectedElements[0][1]), this.getSelectorArray(this.selectedElements[1][1])));
+    console.log(this.buildSelectorString(this.getSelectorArray(this.selectedElements[2][0])));
 
     /*
   for (let element of this.selectedElements) {
@@ -127,7 +119,7 @@ export class PreviewComponent {
       if (selected.tagName.toLowerCase() === "div" && selected.id === "preview-div") {
         break;
       }
-
+ 
       let siblings = selected.parentElement.children as HTMLCollection;
       let siblingIndex = 0;
       for (let counter = 0; counter < siblings.length; counter++) {
@@ -137,11 +129,11 @@ export class PreviewComponent {
           break;
         }
       }
-
+ 
       selectorString = selected.tagName.toLowerCase() + ":eq(" + siblingIndex + ") > " + selectorString;
       selected = selected.parentElement;
     }
-
+ 
     selectorString = selectorString.trim();
     */
 
@@ -200,6 +192,56 @@ export class PreviewComponent {
     });
   }
 
+  getSelectorArray(element: any): { tagName: string, siblingIndex: number }[] {
+    let selected = clone2(element);
+    let selectorArray: { tagName: string, siblingIndex: number }[] = [];
+
+    while (selected) {
+      if (selected.tagName.toLowerCase() === "div" && selected.id === "preview-div") {
+        break;
+      }
+
+      let siblings = selected.parentElement.children as HTMLCollection;
+      let siblingIndex = 0;
+      for (let siblingCounter = 0; siblingCounter < siblings.length; siblingCounter++) {
+        let sibling = siblings.item(siblingCounter);
+        if (sibling === selected) {
+          siblingIndex = siblingCounter;
+          break;
+        }
+      }
+
+      //selectorString = selected.tagName.toLowerCase() + ":eq(" + siblingIndex + ") > " + selectorString;
+      let tagName = selected.tagName.toLowerCase();
+      selectorArray.push({ tagName, siblingIndex });
+
+      selected = selected.parentElement;
+    }
+
+    return selectorArray.reverse();
+  }
+
+  buildSelectorString(firstSelectorArray: { tagName: string, siblingIndex: number }[], secondSelectorArray: { tagName: string, siblingIndex: number }[] = null): string {
+    let selectorString = "";
+    if (firstSelectorArray && secondSelectorArray) {
+      for (let counter = 0; counter < firstSelectorArray.length; counter++) {
+        let firstSelector = firstSelectorArray[counter];
+        let secondSelector = secondSelectorArray[counter];
+        if (firstSelector.siblingIndex === secondSelector.siblingIndex) {
+          selectorString += firstSelector.tagName + ":eq(" + firstSelector.siblingIndex + ") > ";
+        } else {
+          selectorString += firstSelector.tagName + " > ";
+        }
+      }
+    } else {
+      for (let selector of firstSelectorArray) {
+        selectorString += selector.tagName + ":eq(" + selector.siblingIndex + ") > ";
+      }
+    }
+
+    return selectorString.substr(0, selectorString.length - 3)
+  }
+
   checkFirstAndSecondStage(): void {
     this.checkElementTypesAndDepths(this.selectedElements[0][this.step], this.selectedElements[1][this.step]);
   }
@@ -212,7 +254,7 @@ export class PreviewComponent {
 
 
       if ((firstElement.parentElement && !secondElement.parentElement) || (!firstElement.parentElement && secondElement.parentElement)) {
-        throw "Depth not matching";
+        throw "Depths not matching";
       } else {
         firstElement = firstElement.parentElement;
         secondElement = secondElement.parentElement;

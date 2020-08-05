@@ -18,7 +18,28 @@ public class HTMLResource {
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public String getHTML(@QueryParam("url") String url) {
+    public String getHTML(@QueryParam("url") String url, @QueryParam("headerSelector") String headerSelector) {
+        if (url == null) {
+            throw new RuntimeException("Please provide a URL.");
+        }
+
+        try {
+            if (headerSelector != null) {
+                return HTMLService.getHTML(url, headerSelector);
+            }
+
+            return HTMLService.getHTML(url);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getHTMLForBlogPost(@QueryParam("url") String url,
+            @QueryParam("headerSelector") String headerSelector) {
         if (url == null) {
             throw new RuntimeException("Please provide a URL.");
         }
@@ -26,11 +47,11 @@ public class HTMLResource {
         try {
             Document doc = Jsoup.connect(url).get();
 
-            var bodyElement = doc.getElementsByTag("body").first();
-            bodyElement.select("a").forEach((link) -> {
-                link.removeAttr("href");
-            });
-            return bodyElement.html();
+            var headerElement = doc.select(headerSelector).first();
+            var linkElement = headerElement.select("a[href]");
+            var blogPostUrl = linkElement.attr("href");
+
+            return HTMLService.getHTML(blogPostUrl);
         } catch (IOException e) {
             e.printStackTrace();
         }
