@@ -30,7 +30,6 @@ export class PreviewComponent {
   stage = 0;
   selectedElement: any;
   selectedElements: any[][] = [[], [], [], []];
-  secondStageElements: any[] = [];
   nextButtonEnabled = false;
 
   constructor(private http: HttpClient, public activatedRoute: ActivatedRoute) {
@@ -39,22 +38,24 @@ export class PreviewComponent {
   }
 
   onElementSelected(e: any) {
-    if (this.selectedElement) {
-      this.selectedElement.style.border = "none";
+    this.unselectElement();
+    this.selectElement(e.target);
+  }
+
+  onBackClick(): void {
+    this.unselectElement();
+
+    this.step -= 1;
+    if (this.step < 0) {
+      this.stage -= 1;
+      this.step = this.selectedElements[this.stage].length - 1;
     }
 
-    console.log(e);
-    this.selectedElement = e.target;
-    this.selectedElement.style.border = "red 2px solid";
-    this.nextButtonEnabled = true;
+    this.selectElement(this.selectedElements[this.stage][this.step]);
   }
 
   onNextClick(): void {
-    this.nextButtonEnabled = false;
-
-    if (this.selectedElement) {
-      this.selectedElement.style.border = "none";
-    }
+    this.unselectElement();
 
     switch (this.stage) {
       case 0:
@@ -75,32 +76,11 @@ export class PreviewComponent {
         break;
     }
 
-    if (this.selectedElements[this.stage][this.step]) {
-      this.selectedElement = this.selectedElements[this.stage][this.step];
-      this.selectedElement.style.border = "red 2px solid";
-      this.nextButtonEnabled = true;
-    }
-  }
-
-  onBackClick(): void {
-    if (this.selectedElement) {
-      this.selectedElement.style.border = "none";
-    }
-
-    this.step -= 1;
-    if (this.step < 0) {
-      this.stage -= 1;
-    }
-
-    this.selectedElement = this.selectedElements[this.stage][this.step];
-    this.selectedElement.style.border = "red 2px solid";
-    this.nextButtonEnabled = true;
+    this.selectElement(this.selectedElements[this.stage][this.step]);
   }
 
   onFinishClick(): void {
-    if (this.selectedElement) {
-      this.selectedElement.style.border = "none";
-    }
+    this.unselectElement();
 
     this.selectedElements[this.step - 1] = this.selectedElement;
 
@@ -109,75 +89,75 @@ export class PreviewComponent {
       blogUrl: this.blogUrl
     };
 
-    for (let element of this.selectedElements) {
-      let selected = element;
-      let selectorString: string = "";
-      while (selected) {
-        if (selected.tagName.toLowerCase() === "div" && selected.id === "preview-div") {
+    // for (let element of this.selectedElements) {
+    //   let selected = element;
+    //   let selectorString: string = "";
+    //   while (selected) {
+    //     if (selected.tagName.toLowerCase() === "div" && selected.id === "preview-div") {
+    //       break;
+    //     }
+
+    //     let siblings = selected.parentElement.children as HTMLCollection;
+    //     let siblingIndex = 0;
+    //     for (let counter = 0; counter < siblings.length; counter++) {
+    //       let sibling = siblings.item(counter);
+    //       if (sibling === selected) {
+    //         siblingIndex = counter;
+    //         break;
+    //       }
+    //     }
+
+    //     selectorString = selected.tagName.toLowerCase() + ":eq(" + siblingIndex + ") > " + selectorString;
+    //     selected = selected.parentElement;
+    //   }
+
+    /*
+  for (let element of this.selectedElements) {
+    let selected = element;
+    let selectorString: string = "";
+    while (selected) {
+      if (selected.tagName.toLowerCase() === "div" && selected.id === "preview-div") {
+        break;
+      }
+
+      let siblings = selected.parentElement.children as HTMLCollection;
+      let siblingIndex = 0;
+      for (let counter = 0; counter < siblings.length; counter++) {
+        let sibling = siblings.item(counter);
+        if (sibling === selected) {
+          siblingIndex = counter;
           break;
         }
-
-        let siblings = selected.parentElement.children as HTMLCollection;
-        let siblingIndex = 0;
-        for (let counter = 0; counter < siblings.length; counter++) {
-          let sibling = siblings.item(counter);
-          if (sibling === selected) {
-            siblingIndex = counter;
-            break;
-          }
-        }
-
-        selectorString = selected.tagName.toLowerCase() + ":eq(" + siblingIndex + ") > " + selectorString;
-        selected = selected.parentElement;
       }
 
-      /*
-    for (let element of this.selectedElements) {
-      let selected = element;
-      let selectorString: string = "";
-      while (selected) {
-        if (selected.tagName.toLowerCase() === "div" && selected.id === "preview-div") {
-          break;
-        }
-
-        let siblings = selected.parentElement.children as HTMLCollection;
-        let siblingIndex = 0;
-        for (let counter = 0; counter < siblings.length; counter++) {
-          let sibling = siblings.item(counter);
-          if (sibling === selected) {
-            siblingIndex = counter;
-            break;
-          }
-        }
-
-        selectorString = selected.tagName.toLowerCase() + ":eq(" + siblingIndex + ") > " + selectorString;
-        selected = selected.parentElement;
-      }
-
-      selectorString = selectorString.trim();
-      */
-
-      let tagName = selectedElementFirstStage.tagName.toLowerCase();
-      let selectorString = tagName;
-
-      let firstClassList = selectedElementFirstStage.classList as DOMTokenList;
-      let secondClassList = selectedElementSecondStage.classList as DOMTokenList;
-
-      if (firstClassList.length > 0) {
-        selectorString += ".";
-      }
-
-      firstClassList.forEach(cssClass => {
-        if (secondClassList.contains(cssClass)) {
-          selectorString += cssClass + " ";
-        }
-      });
-
-      console.log(selectorString);
-
-      selectedElementFirstStage = selectedElementFirstStage.parentElement;
-      selectedElementSecondStage = selectedElementSecondStage.parentElement;
+      selectorString = selected.tagName.toLowerCase() + ":eq(" + siblingIndex + ") > " + selectorString;
+      selected = selected.parentElement;
     }
+
+    selectorString = selectorString.trim();
+    */
+
+    //   let tagName = selectedElementFirstStage.tagName.toLowerCase();
+    //   let selectorString = tagName;
+
+    //   let firstClassList = selectedElementFirstStage.classList as DOMTokenList;
+    //   let secondClassList = selectedElementSecondStage.classList as DOMTokenList;
+
+    //   if (firstClassList.length > 0) {
+    //     selectorString += ".";
+    //   }
+
+    //   firstClassList.forEach(cssClass => {
+    //     if (secondClassList.contains(cssClass)) {
+    //       selectorString += cssClass + " ";
+    //     }
+    //   });
+
+    //   console.log(selectorString);
+
+    //   selectedElementFirstStage = selectedElementFirstStage.parentElement;
+    //   selectedElementSecondStage = selectedElementSecondStage.parentElement;
+    // }
 
 
     // for (let element of this.selectedElements) {
@@ -210,6 +190,21 @@ export class PreviewComponent {
     this.http.post("http://localhost:8080/blog-selection", articleSelection, { responseType: 'text' }).subscribe(data => {
       console.log(data);
     });
+  }
+
+  unselectElement() {
+    if (this.selectedElement) {
+      this.nextButtonEnabled = false;
+      this.selectedElement.style.border = "none";
+    }
+  }
+
+  selectElement(element: any): void {
+    if (element) {
+      this.selectedElement = element;
+      element.style.border = "red 2px solid";
+      this.nextButtonEnabled = true;
+    }
   }
 
   onMouseOver(e: any) {

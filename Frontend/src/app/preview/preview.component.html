@@ -15,10 +15,10 @@
     <p [ngClass]="{selected: stage === 2 && step === 0}">Select the Link to the second Page/older Posts of the Blog</p>
 
     <h3>Article</h3>
-    <p>1. Select Article content</p>
-    <p>1. Select Article content</p>
-    <p>1. Select Article content</p>
-    <p>1. Select Article content</p>
+    <p>1. Select Article Header</p>
+    <p>1. Select Article Content</p>
+    <p>1. Select Article Date</p>
+    <p>1. Select Article Author</p>
 
     <button mat-raised-button (click)="onBackClick()" [disabled]="stage === 0 && step === 0">Back</button>
     <button mat-raised-button color="primary" (click)="onNextClick()" [disabled]="!nextButtonEnabled"
