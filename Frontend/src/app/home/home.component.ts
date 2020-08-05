@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
 @Component({
@@ -9,13 +9,13 @@ import { Router } from '@angular/router';
 })
 export class HomeComponent {
 
-  constructor(private dialog: MatDialog, private router: Router) {}
+  constructor(private dialog: MatDialog, private router: Router) { }
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(DialogElementsExampleDialog, { data: { url: '' }});
+    const dialogRef = this.dialog.open(AddBlogDialog, { data: { url: '' } });
     dialogRef.afterClosed().subscribe(result => {
-      if(result) {
-        this.router.navigate(["preview"], { queryParams: { url: result }});
+      if (result) {
+        this.router.navigate(["preview"], { queryParams: { url: result } });
       }
     })
   }
@@ -23,14 +23,14 @@ export class HomeComponent {
 
 
 @Component({
-  selector: 'dialog-elements-example-dialog',
-  templateUrl: './dialog-elements-example-dialog.html'
+  selector: 'add-blog-dialog',
+  templateUrl: 'add-blog-dialog.html'
 })
-export class DialogElementsExampleDialog {
-  
-  constructor(public dialogRef: MatDialogRef<DialogElementsExampleDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: { url: string }) {}
-    
+export class AddBlogDialog {
+
+  constructor(public dialogRef: MatDialogRef<AddBlogDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: { url: string }) { }
+
   onCancelClick(): void {
     this.dialogRef.close();
   }

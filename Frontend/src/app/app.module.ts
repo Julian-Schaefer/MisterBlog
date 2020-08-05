@@ -11,14 +11,16 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { PreviewComponent } from './preview/preview.component';
-import { HomeComponent, DialogElementsExampleDialog } from './home/home.component';
+import { HomeComponent, AddBlogDialog } from './home/home.component';
+import { ErrorDialogComponent } from './error-dialog/error-dialog.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PreviewComponent,
     HomeComponent,
-    DialogElementsExampleDialog
+    AddBlogDialog,
+    ErrorDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -31,7 +33,7 @@ import { HomeComponent, DialogElementsExampleDialog } from './home/home.componen
     MatInputModule,
     MatFormFieldModule
   ],
-  entryComponents: [DialogElementsExampleDialog],
+  entryComponents: [AddBlogDialog],
   providers: [],
   bootstrap: [AppComponent]
 })

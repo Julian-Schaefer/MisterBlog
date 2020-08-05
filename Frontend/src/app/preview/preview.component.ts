@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ErrorDialogComponent } from '../error-dialog/error-dialog.component';
 
 interface IArticleSelection {
   selector: string;
@@ -32,7 +34,7 @@ export class PreviewComponent {
   selectedElements: any[][] = [[], [], [], []];
   nextButtonEnabled = false;
 
-  constructor(private http: HttpClient, public activatedRoute: ActivatedRoute) {
+  constructor(private dialog: MatDialog, private http: HttpClient, public activatedRoute: ActivatedRoute) {
     this.blogUrl = this.activatedRoute.snapshot.queryParamMap.get('url');
     http.get("http://localhost:8080/html?url=" + this.blogUrl, { responseType: 'text' }).subscribe((data) => this.previewHtml = data);
   }
@@ -68,10 +70,16 @@ export class PreviewComponent {
         break;
       case 1:
         this.selectedElements[this.stage][this.step] = this.selectedElement;
-        this.step += 1;
-        if (this.step > 1) {
-          this.stage += 1;
-          this.step = 0;
+
+        try {
+          this.checkFirstAndSecondStage();
+          this.step += 1;
+          if (this.step > 1) {
+            this.stage += 1;
+            this.step = 0;
+          }
+        } catch (e) {
+          this.dialog.open(ErrorDialogComponent, { data: e })
         }
         break;
     }
@@ -190,6 +198,26 @@ export class PreviewComponent {
     this.http.post("http://localhost:8080/blog-selection", articleSelection, { responseType: 'text' }).subscribe(data => {
       console.log(data);
     });
+  }
+
+  checkFirstAndSecondStage(): void {
+    this.checkElementTypesAndDepths(this.selectedElements[0][this.step], this.selectedElements[1][this.step]);
+  }
+
+  checkElementTypesAndDepths(firstElement: any, secondElement: any): void {
+    while (firstElement && secondElement) {
+      if (firstElement.tagName !== secondElement.tagName) {
+        throw "Tagnames not matching!";
+      }
+
+
+      if ((firstElement.parentElement && !secondElement.parentElement) || (!firstElement.parentElement && secondElement.parentElement)) {
+        throw "Depth not matching";
+      } else {
+        firstElement = firstElement.parentElement;
+        secondElement = secondElement.parentElement;
+      }
+    }
   }
 
   unselectElement() {
