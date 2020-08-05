@@ -2,17 +2,17 @@
     <h2>Steps</h2>
 
     <h3>First Article</h3>
-    <p [ngClass]="{selected: step === 1}">1. Select Header of first Article</p>
-    <p [ngClass]="{selected: step === 2}">2. Select Introduction of first Article</p>
+    <p [ngClass]="{selected: stage === 0 && step === 0}">1. Select Header of first Article</p>
+    <p [ngClass]="{selected: stage === 0 && step === 1}">2. Select Introduction of first Article</p>
     <br>
 
     <h3>Second Article</h3>
-    <p [ngClass]="{selected: step === 1}">1. Select Header of second Article</p>
-    <p [ngClass]="{selected: step === 2}">2. Select Introduction of second Article</p>
+    <p [ngClass]="{selected: stage === 1 && step === 0}">1. Select Header of second Article</p>
+    <p [ngClass]="{selected: stage === 1 && step === 1}">2. Select Introduction of second Article</p>
     <br>
 
     <h3>Old Articles</h3>
-    <p>Select the Link to the second Page/older Posts of the Blog</p>
+    <p [ngClass]="{selected: stage === 2 && step === 0}">Select the Link to the second Page/older Posts of the Blog</p>
 
     <h3>Article</h3>
     <p>1. Select Article content</p>
@@ -20,11 +20,11 @@
     <p>1. Select Article content</p>
     <p>1. Select Article content</p>
 
-    <button mat-raised-button (click)="onBackClick()" [disabled]="step === 1">Back</button>
+    <button mat-raised-button (click)="onBackClick()" [disabled]="stage === 0 && step === 0">Back</button>
     <button mat-raised-button color="primary" (click)="onNextClick()" [disabled]="!nextButtonEnabled"
-        *ngIf="step !== 5">Next</button>
+        *ngIf="stage !== 2 || step !== 0">Next</button>
     <button mat-raised-button color="primary" (click)="onFinishClick()" [disabled]="!nextButtonEnabled"
-        *ngIf="step === 5">Finish</button>
+        *ngIf="stage === 2 && step === 0">Finish</button>
 </div>
 <div id="preview-div" [innerHTML]="previewHtml" (click)="onElementSelected($event)" (mouseover)="onMouseOver($event)"
     (mouseout)="onMouseOut($event)"></div>

@@ -2,6 +2,11 @@ import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 
+interface IArticleSelection {
+  selector: string;
+  siblingIndex: number;
+}
+
 interface IBlogSelection {
   blogUrl?: string;
   headerSelector?: string;
@@ -19,11 +24,13 @@ interface IBlogSelection {
 export class PreviewComponent {
 
   blogUrl: string;
-  step = 1;
-  stage = 1;
   previewHtml: string;
+
+  step = 0;
+  stage = 0;
   selectedElement: any;
-  selectedElements: any[] = [];
+  selectedElements: any[][] = [[], [], [], []];
+  secondStageElements: any[] = [];
   nextButtonEnabled = false;
 
   constructor(private http: HttpClient, public activatedRoute: ActivatedRoute) {
@@ -36,6 +43,7 @@ export class PreviewComponent {
       this.selectedElement.style.border = "none";
     }
 
+    console.log(e);
     this.selectedElement = e.target;
     this.selectedElement.style.border = "red 2px solid";
     this.nextButtonEnabled = true;
@@ -48,11 +56,27 @@ export class PreviewComponent {
       this.selectedElement.style.border = "none";
     }
 
-    this.selectedElements[this.step - 1] = this.selectedElement;
-    this.step += 1;
+    switch (this.stage) {
+      case 0:
+        this.selectedElements[this.stage][this.step] = this.selectedElement;
+        this.step += 1;
+        if (this.step > 1) {
+          this.stage += 1;
+          this.step = 0;
+        }
+        break;
+      case 1:
+        this.selectedElements[this.stage][this.step] = this.selectedElement;
+        this.step += 1;
+        if (this.step > 1) {
+          this.stage += 1;
+          this.step = 0;
+        }
+        break;
+    }
 
-    if (this.selectedElements[this.step - 1]) {
-      this.selectedElement = this.selectedElements[this.step - 1];
+    if (this.selectedElements[this.stage][this.step]) {
+      this.selectedElement = this.selectedElements[this.stage][this.step];
       this.selectedElement.style.border = "red 2px solid";
       this.nextButtonEnabled = true;
     }
@@ -64,8 +88,11 @@ export class PreviewComponent {
     }
 
     this.step -= 1;
+    if (this.step < 0) {
+      this.stage -= 1;
+    }
 
-    this.selectedElement = this.selectedElements[this.step - 1];
+    this.selectedElement = this.selectedElements[this.stage][this.step];
     this.selectedElement.style.border = "red 2px solid";
     this.nextButtonEnabled = true;
   }
@@ -84,47 +111,105 @@ export class PreviewComponent {
 
     for (let element of this.selectedElements) {
       let selected = element;
-      let selectorString = this.getTagName(selected);
-      while (selected.parentElement) {
-        if (selected.parentElement.tagName.toLowerCase() === "div" && selected.parentElement.id === "preview-div") {
+      let selectorString: string = "";
+      while (selected) {
+        if (selected.tagName.toLowerCase() === "div" && selected.id === "preview-div") {
           break;
         }
 
-        selectorString = this.getTagName(selected.parentElement) + selectorString;
+        let siblings = selected.parentElement.children as HTMLCollection;
+        let siblingIndex = 0;
+        for (let counter = 0; counter < siblings.length; counter++) {
+          let sibling = siblings.item(counter);
+          if (sibling === selected) {
+            siblingIndex = counter;
+            break;
+          }
+        }
+
+        selectorString = selected.tagName.toLowerCase() + ":eq(" + siblingIndex + ") > " + selectorString;
+        selected = selected.parentElement;
+      }
+
+      /*
+    for (let element of this.selectedElements) {
+      let selected = element;
+      let selectorString: string = "";
+      while (selected) {
+        if (selected.tagName.toLowerCase() === "div" && selected.id === "preview-div") {
+          break;
+        }
+
+        let siblings = selected.parentElement.children as HTMLCollection;
+        let siblingIndex = 0;
+        for (let counter = 0; counter < siblings.length; counter++) {
+          let sibling = siblings.item(counter);
+          if (sibling === selected) {
+            siblingIndex = counter;
+            break;
+          }
+        }
+
+        selectorString = selected.tagName.toLowerCase() + ":eq(" + siblingIndex + ") > " + selectorString;
         selected = selected.parentElement;
       }
 
       selectorString = selectorString.trim();
+      */
 
-      switch (counter) {
-        case 1: articleSelection = { ...articleSelection, headerSelector: selectorString }; break;
-        case 2: articleSelection = { ...articleSelection, dateSelector: selectorString }; break;
-        case 3: articleSelection = { ...articleSelection, authorSelector: selectorString }; break;
-        case 4: articleSelection = { ...articleSelection, introductionSelector: selectorString }; break;
-        case 5: articleSelection = { ...articleSelection, contentSelector: selectorString }; break;
+      let tagName = selectedElementFirstStage.tagName.toLowerCase();
+      let selectorString = tagName;
+
+      let firstClassList = selectedElementFirstStage.classList as DOMTokenList;
+      let secondClassList = selectedElementSecondStage.classList as DOMTokenList;
+
+      if (firstClassList.length > 0) {
+        selectorString += ".";
       }
 
-      counter++;
+      firstClassList.forEach(cssClass => {
+        if (secondClassList.contains(cssClass)) {
+          selectorString += cssClass + " ";
+        }
+      });
+
+      console.log(selectorString);
+
+      selectedElementFirstStage = selectedElementFirstStage.parentElement;
+      selectedElementSecondStage = selectedElementSecondStage.parentElement;
     }
+
+
+    // for (let element of this.selectedElements) {
+    //   let selected = element;
+    //   let selectorString = this.getTagName(selected);
+    //   while (selected.parentElement) {
+    //     if (selected.parentElement.tagName.toLowerCase() === "div" && selected.parentElement.id === "preview-div") {
+    //       break;
+    //     }
+
+    //     selectorString = this.getTagName(selected.parentElement) + selectorString;
+    //     selected = selected.parentElement;
+    //   }
+
+    //   selectorString = selectorString.trim();
+
+    //   switch (counter) {
+    //     case 1: articleSelection = { ...articleSelection, headerSelector: selectorString }; break;
+    //     case 2: articleSelection = { ...articleSelection, dateSelector: selectorString }; break;
+    //     case 3: articleSelection = { ...articleSelection, authorSelector: selectorString }; break;
+    //     case 4: articleSelection = { ...articleSelection, introductionSelector: selectorString }; break;
+    //     case 5: articleSelection = { ...articleSelection, contentSelector: selectorString }; break;
+    //   }
+
+    //   counter++;
+    // }
 
     console.log(articleSelection);
 
     this.http.post("http://localhost:8080/blog-selection", articleSelection, { responseType: 'text' }).subscribe(data => {
       console.log(data);
     });
-  }
-
-  getTagName(element: any): string {
-    let tagName = element.tagName.toLowerCase();
-    if (element.classList.length !== 0) {
-      tagName += ".";
-      for (let className of element.classList) {
-        tagName += className + " ";
-      }
-    }
-
-    tagName += " ";
-    return tagName;
   }
 
   onMouseOver(e: any) {
