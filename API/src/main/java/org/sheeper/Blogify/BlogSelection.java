@@ -8,6 +8,7 @@ public class BlogSelection {
     private String authorSelector;
     private String introductionSelector;
     private String contentSelector;
+    private String nextPageSuffix;
 
     public BlogSelection() {
     }
@@ -58,5 +59,13 @@ public class BlogSelection {
 
     public void setContentSelector(String contentSelector) {
         this.contentSelector = contentSelector;
+    }
+
+    public String getNextPageSuffix() {
+        return nextPageSuffix;
+    }
+
+    public void setNextPageSuffix(String nextPageSuffix) {
+        this.nextPageSuffix = nextPageSuffix;
     }
 }
