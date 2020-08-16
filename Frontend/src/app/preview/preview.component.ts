@@ -1,8 +1,8 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorDialogComponent } from '../error-dialog/error-dialog.component';
+import { HTMLService } from '../services/html.service';
 
 enum Step {
   SELECT_FIRST_ARTICLE_HEADER = 0,
@@ -46,9 +46,9 @@ export class PreviewComponent {
   selectedElements: any[] = [];
   nextButtonEnabled = false;
 
-  constructor(private dialog: MatDialog, private http: HttpClient, public activatedRoute: ActivatedRoute) {
+  constructor(private dialog: MatDialog, private htmlService: HTMLService, public activatedRoute: ActivatedRoute) {
     this.blogUrl = this.activatedRoute.snapshot.queryParamMap.get('url');
-    http.get("http://localhost:8080/html?url=" + this.blogUrl, { responseType: 'text' }).subscribe((data) => this.previewHtml = data);
+    this.htmlService.getBlogPosts(this.blogUrl).subscribe((data) => this.previewHtml = data);
   }
 
   onElementSelected(e: MouseEvent) {
@@ -60,7 +60,7 @@ export class PreviewComponent {
     this.unselectElement();
 
     if (this.step === Step.SELECT_OLD_ARTICLE_LINK) {
-      this.http.get("http://localhost:8080/html?url=" + this.blogUrl, { responseType: 'text' }).subscribe((data) => {
+      this.htmlService.getBlogPosts(this.blogUrl).subscribe((data) => {
         this.step -= 1;
         this.previewHtml = data;
         this.selectElement(this.selectedElements[this.step]);
@@ -89,9 +89,9 @@ export class PreviewComponent {
           this.checkElementTypesAndDepths(this.selectedElements[Step.SELECT_FIRST_ARTICLE_INTRODUCTION], this.selectedElements[Step.SELECT_SECOND_ARTICLE_INTRODUCTION]);
 
           let headerElement = this.selectedElements[Step.SELECT_FIRST_ARTICLE_HEADER];
-          let arr = this.getSelectorArray(headerElement);
-          let sel = this.buildSelectorString(arr);
-          this.http.get("http://localhost:8080/html?url=" + this.blogUrl + "&headerSelector=" + sel, { responseType: 'text' }).subscribe((data) => {
+          let headerSelectionArray = this.getSelectorArray(headerElement);
+          let headerSelector = this.buildSelectorString(headerSelectionArray);
+          this.htmlService.getSpecificBlogPost(this.blogUrl, headerSelector).subscribe((data) => {
             this.previewHtml = data;
             this.step += 1;
           });
@@ -197,9 +197,9 @@ export class PreviewComponent {
 
     console.log(articleSelection);
 
-    this.http.post("http://localhost:8080/blog-selection", articleSelection, { responseType: 'text' }).subscribe(data => {
-      console.log(data);
-    });
+    // this.htmlService.post("http://localhost:8080/blog-selection", articleSelection, { responseType: 'text' }).subscribe(data => {
+    //   console.log(data);
+    // });
   }
 
   getSelectorArray(element: HTMLElement): { tagName: string, siblingIndex: number }[] {
