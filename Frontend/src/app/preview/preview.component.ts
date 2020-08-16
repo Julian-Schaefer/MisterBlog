@@ -3,7 +3,18 @@ import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorDialogComponent } from '../error-dialog/error-dialog.component';
-import * as clone2 from 'clone';
+
+enum Step {
+  SELECT_FIRST_ARTICLE_HEADER = 0,
+  SELECT_FIRST_ARTICLE_INTRODUCTION = 1,
+  SELECT_SECOND_ARTICLE_HEADER = 2,
+  SELECT_SECOND_ARTICLE_INTRODUCTION = 3,
+  SELECT_OLD_ARTICLE_LINK = 4,
+  SELECT_ARTICLE_HEADER = 5,
+  SELECT_ARTICLE_CONTENT = 6,
+  SELECT_ARTICLE_DATE = 7,
+  SELECT_ARTICLE_AUTHOR = 8,
+}
 
 interface IArticleSelection {
   selector: string;
@@ -29,10 +40,9 @@ export class PreviewComponent {
   blogUrl: string;
   previewHtml: string;
 
-  step = 0;
-  stage = 0;
+  step = Step.SELECT_FIRST_ARTICLE_HEADER;
   selectedElement: any;
-  selectedElements: any[][] = [[], [], [], []];
+  selectedElements: any[] = [];
   nextButtonEnabled = false;
 
   constructor(private dialog: MatDialog, private http: HttpClient, public activatedRoute: ActivatedRoute) {
@@ -40,76 +50,67 @@ export class PreviewComponent {
     http.get("http://localhost:8080/html?url=" + this.blogUrl, { responseType: 'text' }).subscribe((data) => this.previewHtml = data);
   }
 
-  onElementSelected(e: any) {
+  onElementSelected(e: MouseEvent) {
     this.unselectElement();
     this.selectElement(e.target);
   }
 
   onBackClick(): void {
     this.unselectElement();
-
     this.step -= 1;
-    if (this.step < 0) {
-      this.stage -= 1;
-      this.step = this.selectedElements[this.stage].length - 1;
-    }
-
-    this.selectElement(this.selectedElements[this.stage][this.step]);
+    this.selectElement(this.selectedElements[this.step]);
   }
 
   onNextClick(): void {
     this.unselectElement();
+    this.selectedElements[this.step] = this.cloneElement(this.selectedElement);
 
-    switch (this.stage) {
-      case 0:
-        this.selectedElements[this.stage][this.step] = this.selectedElement;
-        this.step += 1;
-        if (this.step > 1) {
-          this.stage += 1;
-          this.step = 0;
-        }
-        break;
-      case 1:
-        this.selectedElements[this.stage][this.step] = this.selectedElement;
-
+    switch (this.step) {
+      case Step.SELECT_SECOND_ARTICLE_HEADER:
         try {
-          this.checkFirstAndSecondStage();
+          this.checkElementTypesAndDepths(this.selectedElements[Step.SELECT_FIRST_ARTICLE_HEADER], this.selectedElements[Step.SELECT_SECOND_ARTICLE_HEADER]);
           this.step += 1;
-          if (this.step > 1) {
-            this.stage += 1;
-            this.step = 0;
-          }
         } catch (e) {
           this.dialog.open(ErrorDialogComponent, { data: e })
         }
         break;
-      case 2:
-        this.selectedElements[this.stage][this.step] = this.selectedElement;
-        this.stage += 1;
-        this.step = 0;
-        let headerElement = this.selectedElements[0][0];
-        console.log(headerElement);
-        let arr = this.getSelectorArray(headerElement);
-        let sel = this.buildSelectorString(arr);
-        this.http.get("http://localhost:8080/html?url=" + this.blogUrl + "&headerSelector=" + sel, { responseType: 'text' }).subscribe((data) => { console.log(data); this.previewHtml = data });
+      case Step.SELECT_SECOND_ARTICLE_INTRODUCTION:
+        try {
+          this.checkElementTypesAndDepths(this.selectedElements[Step.SELECT_FIRST_ARTICLE_INTRODUCTION], this.selectedElements[Step.SELECT_SECOND_ARTICLE_INTRODUCTION]);
+
+          let headerElement = this.selectedElements[Step.SELECT_FIRST_ARTICLE_HEADER];
+          let arr = this.getSelectorArray(headerElement);
+          let sel = this.buildSelectorString(arr);
+          this.http.get("http://localhost:8080/html?url=" + this.blogUrl + "&headerSelector=" + sel, { responseType: 'text' }).subscribe((data) => {
+            this.previewHtml = data;
+            this.step += 1;
+          });
+        } catch (e) {
+          this.dialog.open(ErrorDialogComponent, { data: e })
+        }
+        break;
+      default:
+        this.step += 1;
         break;
     }
 
-    this.selectElement(this.selectedElements[this.stage][this.step]);
+    this.selectElement(this.selectedElements[this.step]);
   }
 
   onFinishClick(): void {
     this.unselectElement();
-
+this.
     this.selectedElements[this.step - 1] = this.selectedElement;
 
     let articleSelection: IBlogSelection = {
       blogUrl: this.blogUrl
     };
 
-    console.log(this.buildSelectorString(this.getSelectorArray(this.selectedElements[0][0]), this.getSelectorArray(this.selectedElements[1][0])));
-    console.log(this.buildSelectorString(this.getSelectorArray(this.selectedElements[0][1]), this.getSelectorArray(this.selectedElements[1][1])));
-    console.log(this.buildSelectorString(this.getSelectorArray(this.selectedElements[2][0])));
+    console.log(this.buildSelectorString(this.getSelectorArray(this.selectedElements[Step.SELECT_FIRST_ARTICLE_HEADER]),
+      this.getSelectorArray(this.selectedElements[Step.SELECT_SECOND_ARTICLE_HEADER])));
+    console.log(this.buildSelectorString(this.getSelectorArray(this.selectedElements[Step.SELECT_FIRST_ARTICLE_INTRODUCTION]),
+      this.getSelectorArray(this.selectedElements[Step.SELECT_SECOND_ARTICLE_INTRODUCTION])));
+    console.log(this.buildSelectorString(this.getSelectorArray(this.selectedElements[Step.SELECT_OLD_ARTICLE_LINK])));
 
     /*
   for (let element of this.selectedElements) {
@@ -192,8 +193,9 @@ export class PreviewComponent {
     });
   }
 
-  getSelectorArray(element: any): { tagName: string, siblingIndex: number }[] {
-    let selected = clone2(element);
+  getSelectorArray(element: HTMLElement): { tagName: string, siblingIndex: number }[] {
+    let selected = this.cloneElement(element);
+
     let selectorArray: { tagName: string, siblingIndex: number }[] = [];
 
     while (selected) {
@@ -201,13 +203,15 @@ export class PreviewComponent {
         break;
       }
 
-      let siblings = selected.parentElement.children as HTMLCollection;
-      let siblingIndex = 0;
-      for (let siblingCounter = 0; siblingCounter < siblings.length; siblingCounter++) {
-        let sibling = siblings.item(siblingCounter);
-        if (sibling === selected) {
-          siblingIndex = siblingCounter;
-          break;
+      let siblingIndex = -1;
+      if (selected.parentElement) {
+        let siblings = selected.parentElement.children as HTMLCollection;
+        for (let siblingCounter = 0; siblingCounter < siblings.length; siblingCounter++) {
+          let sibling = siblings.item(siblingCounter);
+          if (sibling === selected) {
+            siblingIndex = siblingCounter;
+            break;
+          }
         }
       }
 
@@ -227,7 +231,7 @@ export class PreviewComponent {
       for (let counter = 0; counter < firstSelectorArray.length; counter++) {
         let firstSelector = firstSelectorArray[counter];
         let secondSelector = secondSelectorArray[counter];
-        if (firstSelector.siblingIndex === secondSelector.siblingIndex) {
+        if (firstSelector.siblingIndex === secondSelector.siblingIndex && firstSelector.siblingIndex !== -1) {
           selectorString += firstSelector.tagName + ":eq(" + firstSelector.siblingIndex + ") > ";
         } else {
           selectorString += firstSelector.tagName + " > ";
@@ -235,18 +239,21 @@ export class PreviewComponent {
       }
     } else {
       for (let selector of firstSelectorArray) {
-        selectorString += selector.tagName + ":eq(" + selector.siblingIndex + ") > ";
+        if (selector.siblingIndex !== -1) {
+          selectorString += selector.tagName + ":eq(" + selector.siblingIndex + ") > ";
+        } else {
+          selectorString += selector.tagName + " > ";
+        }
       }
     }
 
     return selectorString.substr(0, selectorString.length - 3)
   }
 
-  checkFirstAndSecondStage(): void {
-    this.checkElementTypesAndDepths(this.selectedElements[0][this.step], this.selectedElements[1][this.step]);
-  }
+  checkElementTypesAndDepths(firstElement: HTMLElement, secondElement: HTMLElement): void {
+    firstElement = this.cloneElement(firstElement);
+    secondElement = this.cloneElement(secondElement);
 
-  checkElementTypesAndDepths(firstElement: any, secondElement: any): void {
     while (firstElement && secondElement) {
       if (firstElement.tagName !== secondElement.tagName) {
         throw "Tagnames not matching!";
@@ -260,6 +267,19 @@ export class PreviewComponent {
         secondElement = secondElement.parentElement;
       }
     }
+  }
+
+  cloneElement(element: HTMLElement): HTMLElement {
+    let document = element.ownerDocument.cloneNode(true) as Document;
+
+    let clone;
+    document.querySelectorAll("*").forEach(currentElement => {
+      if (!clone && currentElement.isEqualNode(element)) {
+        clone = currentElement;
+      }
+    });
+
+    return clone;
   }
 
   unselectElement() {
