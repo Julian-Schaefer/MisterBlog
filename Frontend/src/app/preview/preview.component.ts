@@ -5,20 +5,15 @@ import { ErrorDialogComponent } from '../error-dialog/error-dialog.component';
 import { HTMLService } from '../services/html.service';
 
 enum Step {
-  SELECT_FIRST_ARTICLE_HEADER = 0,
-  SELECT_FIRST_ARTICLE_INTRODUCTION = 1,
-  SELECT_SECOND_ARTICLE_HEADER = 2,
-  SELECT_SECOND_ARTICLE_INTRODUCTION = 3,
-  SELECT_OLD_ARTICLE_LINK = 4,
-  SELECT_ARTICLE_HEADER = 5,
-  SELECT_ARTICLE_CONTENT = 6,
-  SELECT_ARTICLE_DATE = 7,
-  SELECT_ARTICLE_AUTHOR = 8,
-}
-
-interface IArticleSelection {
-  selector: string;
-  siblingIndex: number;
+  SELECT_FIRST_BLOG_POST_HEADER = 0,
+  SELECT_FIRST_BLOG_POST_INTRODUCTION = 1,
+  SELECT_SECOND_BLOG_POST_HEADER = 2,
+  SELECT_SECOND_BLOG_POST_INTRODUCTION = 3,
+  SELECT_OLD_BLOG_POSTS_LINK = 4,
+  SELECT_BLOG_POST_HEADER = 5,
+  SELECT_BLOG_POST_CONTENT = 6,
+  SELECT_BLOG_POST_DATE = 7,
+  SELECT_BLOG_POST_AUTHOR = 8,
 }
 
 interface IBlogSelection {
@@ -41,7 +36,7 @@ export class PreviewComponent {
   previewHtml: string;
   @ViewChild("previewDiv") previewDiv: ElementRef<HTMLElement>;
 
-  step = Step.SELECT_FIRST_ARTICLE_HEADER;
+  step = Step.SELECT_FIRST_BLOG_POST_HEADER;
   selectedElement: any;
   selectedElements: any[] = [];
   nextButtonEnabled = false;
@@ -59,7 +54,7 @@ export class PreviewComponent {
   onBackClick(): void {
     this.unselectElement();
 
-    if (this.step === Step.SELECT_OLD_ARTICLE_LINK) {
+    if (this.step === Step.SELECT_BLOG_POST_HEADER) {
       this.htmlService.getBlogPosts(this.blogUrl).subscribe((data) => {
         this.step -= 1;
         this.previewHtml = data;
@@ -73,31 +68,33 @@ export class PreviewComponent {
 
   onNextClick(): void {
     this.unselectElement();
-    this.selectedElements[this.step] = this.cloneElement(this.selectedElement);
+    this.selectedElements[this.step] = this.htmlService.cloneElement(this.selectedElement);
 
     switch (this.step) {
-      case Step.SELECT_SECOND_ARTICLE_HEADER:
+      case Step.SELECT_SECOND_BLOG_POST_HEADER:
         try {
-          this.checkElementTypesAndDepths(this.selectedElements[Step.SELECT_FIRST_ARTICLE_HEADER], this.selectedElements[Step.SELECT_SECOND_ARTICLE_HEADER]);
+          this.htmlService.checkElementTypesAndDepths(this.selectedElements[Step.SELECT_FIRST_BLOG_POST_HEADER], this.selectedElements[Step.SELECT_SECOND_BLOG_POST_HEADER]);
           this.step += 1;
         } catch (e) {
           this.dialog.open(ErrorDialogComponent, { data: e })
         }
         break;
-      case Step.SELECT_SECOND_ARTICLE_INTRODUCTION:
+      case Step.SELECT_SECOND_BLOG_POST_INTRODUCTION:
         try {
-          this.checkElementTypesAndDepths(this.selectedElements[Step.SELECT_FIRST_ARTICLE_INTRODUCTION], this.selectedElements[Step.SELECT_SECOND_ARTICLE_INTRODUCTION]);
-
-          let headerElement = this.selectedElements[Step.SELECT_FIRST_ARTICLE_HEADER];
-          let headerSelectionArray = this.getSelectorArray(headerElement);
-          let headerSelector = this.buildSelectorString(headerSelectionArray);
-          this.htmlService.getSpecificBlogPost(this.blogUrl, headerSelector).subscribe((data) => {
-            this.previewHtml = data;
-            this.step += 1;
-          });
+          this.htmlService.checkElementTypesAndDepths(this.selectedElements[Step.SELECT_FIRST_BLOG_POST_INTRODUCTION], this.selectedElements[Step.SELECT_SECOND_BLOG_POST_INTRODUCTION]);
+          this.step += 1;
         } catch (e) {
           this.dialog.open(ErrorDialogComponent, { data: e })
         }
+        break;
+      case Step.SELECT_OLD_BLOG_POSTS_LINK:
+        let headerElement = this.selectedElements[Step.SELECT_FIRST_BLOG_POST_HEADER];
+        let headerSelectionArray = this.getSelectorArray(headerElement);
+        let headerSelector = this.htmlService.buildSelectorString(headerSelectionArray);
+        this.htmlService.getSpecificBlogPost(this.blogUrl, headerSelector).subscribe((data) => {
+          this.previewHtml = data;
+          this.step += 1;
+        });
         break;
       default:
         this.step += 1;
@@ -112,14 +109,15 @@ export class PreviewComponent {
     this.selectedElements[this.step - 1] = this.selectedElement;
 
     let articleSelection: IBlogSelection = {
-      blogUrl: this.blogUrl
+      blogUrl: this.blogUrl,
+
     };
 
-    console.log(this.buildSelectorString(this.getSelectorArray(this.selectedElements[Step.SELECT_FIRST_ARTICLE_HEADER]),
-      this.getSelectorArray(this.selectedElements[Step.SELECT_SECOND_ARTICLE_HEADER])));
-    console.log(this.buildSelectorString(this.getSelectorArray(this.selectedElements[Step.SELECT_FIRST_ARTICLE_INTRODUCTION]),
-      this.getSelectorArray(this.selectedElements[Step.SELECT_SECOND_ARTICLE_INTRODUCTION])));
-    console.log(this.buildSelectorString(this.getSelectorArray(this.selectedElements[Step.SELECT_OLD_ARTICLE_LINK])));
+    console.log(this.htmlService.buildSelectorString(this.getSelectorArray(this.selectedElements[Step.SELECT_FIRST_BLOG_POST_HEADER]),
+      this.getSelectorArray(this.selectedElements[Step.SELECT_SECOND_BLOG_POST_HEADER])));
+    console.log(this.htmlService.buildSelectorString(this.getSelectorArray(this.selectedElements[Step.SELECT_FIRST_BLOG_POST_INTRODUCTION]),
+      this.getSelectorArray(this.selectedElements[Step.SELECT_SECOND_BLOG_POST_INTRODUCTION])));
+    console.log(this.htmlService.buildSelectorString(this.getSelectorArray(this.selectedElements[Step.SELECT_OLD_BLOG_POSTS_LINK])));
 
     /*
   for (let element of this.selectedElements) {
@@ -203,92 +201,7 @@ export class PreviewComponent {
   }
 
   getSelectorArray(element: HTMLElement): { tagName: string, siblingIndex: number }[] {
-    let selected = this.cloneElement(element);
-
-    let selectorArray: { tagName: string, siblingIndex: number }[] = [];
-
-    while (selected) {
-      if (selected.tagName.toLowerCase() === this.previewDiv.nativeElement.tagName.toLowerCase() && selected.id === this.previewDiv.nativeElement.id) {
-        break;
-      }
-
-      let siblingIndex = -1;
-      if (selected.parentElement) {
-        let siblings = selected.parentElement.children as HTMLCollection;
-        for (let siblingCounter = 0; siblingCounter < siblings.length; siblingCounter++) {
-          let sibling = siblings.item(siblingCounter);
-          if (sibling === selected) {
-            siblingIndex = siblingCounter;
-            break;
-          }
-        }
-      }
-
-      //selectorString = selected.tagName.toLowerCase() + ":eq(" + siblingIndex + ") > " + selectorString;
-      let tagName = selected.tagName.toLowerCase();
-      selectorArray.push({ tagName, siblingIndex });
-
-      selected = selected.parentElement;
-    }
-
-    return selectorArray.reverse();
-  }
-
-  buildSelectorString(firstSelectorArray: { tagName: string, siblingIndex: number }[], secondSelectorArray: { tagName: string, siblingIndex: number }[] = null): string {
-    let selectorString = "";
-    if (firstSelectorArray && secondSelectorArray) {
-      for (let counter = 0; counter < firstSelectorArray.length; counter++) {
-        let firstSelector = firstSelectorArray[counter];
-        let secondSelector = secondSelectorArray[counter];
-        if (firstSelector.siblingIndex === secondSelector.siblingIndex && firstSelector.siblingIndex !== -1) {
-          selectorString += firstSelector.tagName + ":eq(" + firstSelector.siblingIndex + ") > ";
-        } else {
-          selectorString += firstSelector.tagName + " > ";
-        }
-      }
-    } else {
-      for (let selector of firstSelectorArray) {
-        if (selector.siblingIndex !== -1) {
-          selectorString += selector.tagName + ":eq(" + selector.siblingIndex + ") > ";
-        } else {
-          selectorString += selector.tagName + " > ";
-        }
-      }
-    }
-
-    return selectorString.substr(0, selectorString.length - 3)
-  }
-
-  checkElementTypesAndDepths(firstElement: HTMLElement, secondElement: HTMLElement): void {
-    firstElement = this.cloneElement(firstElement);
-    secondElement = this.cloneElement(secondElement);
-
-    while (firstElement && secondElement) {
-      if (firstElement.tagName !== secondElement.tagName) {
-        throw "Tagnames not matching!";
-      }
-
-
-      if ((firstElement.parentElement && !secondElement.parentElement) || (!firstElement.parentElement && secondElement.parentElement)) {
-        throw "Depths not matching";
-      } else {
-        firstElement = firstElement.parentElement;
-        secondElement = secondElement.parentElement;
-      }
-    }
-  }
-
-  cloneElement(element: HTMLElement): HTMLElement {
-    let document = element.ownerDocument.cloneNode(true) as Document;
-
-    let clone;
-    document.querySelectorAll("*").forEach(currentElement => {
-      if (!clone && currentElement.isEqualNode(element)) {
-        clone = currentElement;
-      }
-    });
-
-    return clone;
+    return this.htmlService.getSelectorArray(element, this.previewDiv.nativeElement)
   }
 
   getDOMElement(element: HTMLElement): HTMLElement {
