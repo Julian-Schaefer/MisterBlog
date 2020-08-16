@@ -45,6 +45,14 @@ public class BlogSelectionResource {
             var oldPostsElement = doc.select(blogSelection.getOldPostsSelector());
             if (oldPostsElement.size() != 1) {
                 return "mehrere old posts elemente gefunden";
+            } else {
+                var linkElements = oldPostsElement.first().select("a[href]");
+                if (linkElements.size() > 0) {
+                    var oldPostsUrl = linkElements.first().attr("href");
+                    System.out.println(oldPostsUrl);
+                } else {
+                    return "kein Old Post Link gefunden";
+                }
             }
 
             return "das hat funktioniert!";
