@@ -1,7 +1,12 @@
 package org.sheeper.Blogify;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class BlogSelection {
 
+    @Id
     private String blogUrl;
     private String postHeaderSelector;
     private String postIntroductionSelector;

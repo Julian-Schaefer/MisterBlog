@@ -1,5 +1,7 @@
 package org.sheeper.Blogify;
 
+import javax.inject.Inject;
+import javax.transaction.Transactional;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
@@ -9,7 +11,11 @@ import org.jsoup.nodes.Document;
 @Path("blog-selection")
 public class BlogSelectionResource {
 
+    @Inject
+    private BlogSelectionRepository blogSelectionRepository;
+
     @POST
+    @Transactional
     public String registerBlogSelection(BlogSelection blogSelection) {
         try {
             Document doc = Jsoup.connect(blogSelection.getBlogUrl()).get();
@@ -54,6 +60,8 @@ public class BlogSelectionResource {
                     return "kein Old Post Link gefunden";
                 }
             }
+
+            blogSelectionRepository.persist(blogSelection);
 
             return "das hat funktioniert!";
         } catch (Exception e) {

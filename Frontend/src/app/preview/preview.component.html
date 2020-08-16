@@ -7,18 +7,18 @@
     <br>
 
     <h3>Second Article</h3>
-    <p [ngClass]="{selected: step === 2}">1. Select Header of second Article</p>
-    <p [ngClass]="{selected: step === 3}">2. Select Introduction of second Article</p>
+    <p [ngClass]="{selected: step === 2}">3. Select Header of second Article</p>
+    <p [ngClass]="{selected: step === 3}">4. Select Introduction of second Article</p>
     <br>
 
     <h3>Old Articles</h3>
-    <p [ngClass]="{selected: step === 4}">Select the Link to the second Page/older Posts of the Blog</p>
+    <p [ngClass]="{selected: step === 4}">5. Select the Link to the second Page/older Posts of the Blog</p>
 
     <h3>Article</h3>
-    <p [ngClass]="{selected: step === 5}">1. Select Article Header</p>
-    <p [ngClass]="{selected: step === 6}">1. Select Article Content</p>
-    <p [ngClass]="{selected: step === 7}">1. Select Article Date</p>
-    <p [ngClass]="{selected: step === 8}">1. Select Article Author</p>
+    <p [ngClass]="{selected: step === 5}">6. Select Article Header</p>
+    <p [ngClass]="{selected: step === 6}">7. Select Article Content</p>
+    <p [ngClass]="{selected: step === 7}">8. Select Article Date</p>
+    <p [ngClass]="{selected: step === 8}">9. Select Article Author</p>
 
     <button mat-raised-button (click)="onBackClick()" [disabled]="step === 0">Back</button>
     <button mat-raised-button color="primary" (click)="onNextClick()" [disabled]="!nextButtonEnabled"
