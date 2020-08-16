@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -39,6 +39,7 @@ export class PreviewComponent {
 
   blogUrl: string;
   previewHtml: string;
+  @ViewChild("previewDiv") previewDiv: ElementRef<HTMLElement>;
 
   step = Step.SELECT_FIRST_ARTICLE_HEADER;
   selectedElement: any;
@@ -57,8 +58,17 @@ export class PreviewComponent {
 
   onBackClick(): void {
     this.unselectElement();
-    this.step -= 1;
-    this.selectElement(this.selectedElements[this.step]);
+
+    if (this.step === Step.SELECT_OLD_ARTICLE_LINK) {
+      this.http.get("http://localhost:8080/html?url=" + this.blogUrl, { responseType: 'text' }).subscribe((data) => {
+        this.step -= 1;
+        this.previewHtml = data;
+        this.selectElement(this.selectedElements[this.step]);
+      });
+    } else {
+      this.step -= 1;
+      this.selectElement(this.selectedElements[this.step]);
+    }
   }
 
   onNextClick(): void {
@@ -99,7 +109,6 @@ export class PreviewComponent {
 
   onFinishClick(): void {
     this.unselectElement();
-this.
     this.selectedElements[this.step - 1] = this.selectedElement;
 
     let articleSelection: IBlogSelection = {
@@ -199,7 +208,7 @@ this.
     let selectorArray: { tagName: string, siblingIndex: number }[] = [];
 
     while (selected) {
-      if (selected.tagName.toLowerCase() === "div" && selected.id === "preview-div") {
+      if (selected.tagName.toLowerCase() === this.previewDiv.nativeElement.tagName.toLowerCase() && selected.id === this.previewDiv.nativeElement.id) {
         break;
       }
 
@@ -282,6 +291,17 @@ this.
     return clone;
   }
 
+  getDOMElement(element: HTMLElement): HTMLElement {
+    let domElement;
+    this.previewDiv.nativeElement.querySelectorAll("*").forEach(currentElement => {
+      if (!domElement && currentElement.isEqualNode(element)) {
+        domElement = currentElement;
+      }
+    });
+
+    return domElement;
+  }
+
   unselectElement() {
     if (this.selectedElement) {
       this.nextButtonEnabled = false;
@@ -290,6 +310,8 @@ this.
   }
 
   selectElement(element: any): void {
+    element = this.getDOMElement(element);
+
     if (element) {
       this.selectedElement = element;
       element.style.border = "red 2px solid";

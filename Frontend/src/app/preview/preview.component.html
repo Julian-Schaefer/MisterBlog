@@ -27,5 +27,5 @@
         *ngIf="step === 8">Finish</button>
 </div>
 
-<div id="preview-div" [innerHTML]="previewHtml" (click)="onElementSelected($event)" (mouseover)="onMouseOver($event)"
-    (mouseout)="onMouseOut($event)"></div>
+<div #previewDiv id="preview-div" [innerHTML]="previewHtml" (click)="onElementSelected($event)"
+    (mouseover)="onMouseOver($event)" (mouseout)="onMouseOut($event)"></div>
