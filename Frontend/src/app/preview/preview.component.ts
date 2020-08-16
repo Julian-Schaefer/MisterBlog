@@ -16,13 +16,15 @@ enum Step {
   SELECT_BLOG_POST_AUTHOR = 8,
 }
 
-interface IBlogSelection {
-  blogUrl?: string;
-  headerSelector?: string;
-  dateSelector?: string;
-  authorSelector?: string;
-  introductionSelector?: string;
-  contentSelector?: string;
+export interface IBlogSelection {
+  blogUrl: string;
+  postHeaderSelector: string;
+  postIntroductionSelector: string;
+  oldPostsSelector: string;
+  headerSelector: string;
+  dateSelector: string;
+  authorSelector: string;
+  contentSelector: string;
 }
 
 @Component({
@@ -106,98 +108,26 @@ export class PreviewComponent {
 
   onFinishClick(): void {
     this.unselectElement();
-    this.selectedElements[this.step - 1] = this.selectedElement;
+    this.selectedElements[this.step] = this.selectedElement;
 
     let articleSelection: IBlogSelection = {
       blogUrl: this.blogUrl,
-
+      postHeaderSelector: this.htmlService.buildSelectorString(this.getSelectorArray(this.selectedElements[Step.SELECT_FIRST_BLOG_POST_HEADER]),
+        this.getSelectorArray(this.selectedElements[Step.SELECT_SECOND_BLOG_POST_HEADER])),
+      postIntroductionSelector: this.htmlService.buildSelectorString(this.getSelectorArray(this.selectedElements[Step.SELECT_FIRST_BLOG_POST_INTRODUCTION]),
+        this.getSelectorArray(this.selectedElements[Step.SELECT_SECOND_BLOG_POST_INTRODUCTION])),
+      oldPostsSelector: this.htmlService.buildSelectorString(this.getSelectorArray(this.selectedElements[Step.SELECT_OLD_BLOG_POSTS_LINK])),
+      headerSelector: this.htmlService.buildSelectorString(this.getSelectorArray(this.selectedElements[Step.SELECT_BLOG_POST_HEADER])),
+      authorSelector: this.htmlService.buildSelectorString(this.getSelectorArray(this.selectedElements[Step.SELECT_BLOG_POST_AUTHOR])),
+      dateSelector: this.htmlService.buildSelectorString(this.getSelectorArray(this.selectedElements[Step.SELECT_BLOG_POST_DATE])),
+      contentSelector: this.htmlService.buildSelectorString(this.getSelectorArray(this.selectedElements[Step.SELECT_BLOG_POST_CONTENT])),
     };
-
-    console.log(this.htmlService.buildSelectorString(this.getSelectorArray(this.selectedElements[Step.SELECT_FIRST_BLOG_POST_HEADER]),
-      this.getSelectorArray(this.selectedElements[Step.SELECT_SECOND_BLOG_POST_HEADER])));
-    console.log(this.htmlService.buildSelectorString(this.getSelectorArray(this.selectedElements[Step.SELECT_FIRST_BLOG_POST_INTRODUCTION]),
-      this.getSelectorArray(this.selectedElements[Step.SELECT_SECOND_BLOG_POST_INTRODUCTION])));
-    console.log(this.htmlService.buildSelectorString(this.getSelectorArray(this.selectedElements[Step.SELECT_OLD_BLOG_POSTS_LINK])));
-
-    /*
-  for (let element of this.selectedElements) {
-    let selected = element;
-    let selectorString: string = "";
-    while (selected) {
-      if (selected.tagName.toLowerCase() === "div" && selected.id === "preview-div") {
-        break;
-      }
- 
-      let siblings = selected.parentElement.children as HTMLCollection;
-      let siblingIndex = 0;
-      for (let counter = 0; counter < siblings.length; counter++) {
-        let sibling = siblings.item(counter);
-        if (sibling === selected) {
-          siblingIndex = counter;
-          break;
-        }
-      }
- 
-      selectorString = selected.tagName.toLowerCase() + ":eq(" + siblingIndex + ") > " + selectorString;
-      selected = selected.parentElement;
-    }
- 
-    selectorString = selectorString.trim();
-    */
-
-    //   let tagName = selectedElementFirstStage.tagName.toLowerCase();
-    //   let selectorString = tagName;
-
-    //   let firstClassList = selectedElementFirstStage.classList as DOMTokenList;
-    //   let secondClassList = selectedElementSecondStage.classList as DOMTokenList;
-
-    //   if (firstClassList.length > 0) {
-    //     selectorString += ".";
-    //   }
-
-    //   firstClassList.forEach(cssClass => {
-    //     if (secondClassList.contains(cssClass)) {
-    //       selectorString += cssClass + " ";
-    //     }
-    //   });
-
-    //   console.log(selectorString);
-
-    //   selectedElementFirstStage = selectedElementFirstStage.parentElement;
-    //   selectedElementSecondStage = selectedElementSecondStage.parentElement;
-    // }
-
-
-    // for (let element of this.selectedElements) {
-    //   let selected = element;
-    //   let selectorString = this.getTagName(selected);
-    //   while (selected.parentElement) {
-    //     if (selected.parentElement.tagName.toLowerCase() === "div" && selected.parentElement.id === "preview-div") {
-    //       break;
-    //     }
-
-    //     selectorString = this.getTagName(selected.parentElement) + selectorString;
-    //     selected = selected.parentElement;
-    //   }
-
-    //   selectorString = selectorString.trim();
-
-    //   switch (counter) {
-    //     case 1: articleSelection = { ...articleSelection, headerSelector: selectorString }; break;
-    //     case 2: articleSelection = { ...articleSelection, dateSelector: selectorString }; break;
-    //     case 3: articleSelection = { ...articleSelection, authorSelector: selectorString }; break;
-    //     case 4: articleSelection = { ...articleSelection, introductionSelector: selectorString }; break;
-    //     case 5: articleSelection = { ...articleSelection, contentSelector: selectorString }; break;
-    //   }
-
-    //   counter++;
-    // }
 
     console.log(articleSelection);
 
-    // this.htmlService.post("http://localhost:8080/blog-selection", articleSelection, { responseType: 'text' }).subscribe(data => {
-    //   console.log(data);
-    // });
+    this.htmlService.createBlogSelection(articleSelection).subscribe(data => {
+      console.log(data);
+    });
   }
 
   getSelectorArray(element: HTMLElement): { tagName: string, siblingIndex: number }[] {

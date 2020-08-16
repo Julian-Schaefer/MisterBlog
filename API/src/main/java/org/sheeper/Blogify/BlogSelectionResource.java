@@ -1,7 +1,5 @@
 package org.sheeper.Blogify;
 
-import java.io.IOException;
-
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
@@ -16,25 +14,42 @@ public class BlogSelectionResource {
         try {
             Document doc = Jsoup.connect(blogSelection.getBlogUrl()).get();
 
-            var headerElements = doc.select(blogSelection.getHeaderSelector());
-            var authorElements = doc.select(blogSelection.getAuthorSelector());
-            var dateElements = doc.select(blogSelection.getDateSelector());
-            var introductionElements = doc.select(blogSelection.getIntroductionSelector());
+            var postHeaderElements = doc.select(blogSelection.getPostHeaderSelector());
+            var postIntroductionElements = doc.select(blogSelection.getPostHeaderSelector());
 
-            if (headerElements.size() != 0 && headerElements.size() == authorElements.size()
-                    && authorElements.size() == dateElements.size()
-                    && dateElements.size() == introductionElements.size()) {
-                return "Das hat funktioniert " + headerElements.size() + " " + authorElements.size() + " "
-                        + dateElements.size() + " " + introductionElements.size();
-            } else {
-                return "die anzahl passt nicht" + headerElements.size() + " " + authorElements.size() + " "
-                        + dateElements.size() + " " + introductionElements.size();
+            if (postHeaderElements.size() == 0 || postHeaderElements.size() != postIntroductionElements.size()) {
+                throw new RuntimeException(
+                        "Das hat funktioniert " + postHeaderElements.size() + " " + postIntroductionElements.size());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+
+            var headerElement = doc.select(blogSelection.getHeaderSelector());
+            if (headerElement.size() != 1) {
+                return "mehrere header elemente gefunden";
+            }
+
+            var contentElement = doc.select(blogSelection.getContentSelector());
+            if (contentElement.size() != 1) {
+                return "mehrere content elemente gefunden";
+            }
+
+            var authorElement = doc.select(blogSelection.getAuthorSelector());
+            if (authorElement.size() != 1) {
+                return "mehrere autor elemente gefunden";
+            }
+
+            var dateElement = doc.select(blogSelection.getDateSelector());
+            if (dateElement.size() != 1) {
+                return "mehrere datums elemente gefunden";
+            }
+
+            var oldPostsElement = doc.select(blogSelection.getOldPostsSelector());
+            if (oldPostsElement.size() != 1) {
+                return "mehrere old posts elemente gefunden";
+            }
+
+            return "das hat funktioniert!";
+        } catch (Exception e) {
+            return e.getMessage();
         }
-
-        return null;
     }
-
 }

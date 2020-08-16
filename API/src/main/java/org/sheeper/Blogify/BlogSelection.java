@@ -3,12 +3,13 @@ package org.sheeper.Blogify;
 public class BlogSelection {
 
     private String blogUrl;
+    private String postHeaderSelector;
+    private String postIntroductionSelector;
+    private String oldPostsSelector;
     private String headerSelector;
     private String dateSelector;
     private String authorSelector;
-    private String introductionSelector;
     private String contentSelector;
-    private String nextPageSuffix;
 
     public BlogSelection() {
     }
@@ -19,6 +20,30 @@ public class BlogSelection {
 
     public void setBlogUrl(String blogUrl) {
         this.blogUrl = blogUrl;
+    }
+
+    public String getPostHeaderSelector() {
+        return postHeaderSelector;
+    }
+
+    public void setPostHeaderSelector(String postHeaderSelector) {
+        this.postHeaderSelector = postHeaderSelector;
+    }
+
+    public String getPostIntroductionSelector() {
+        return postIntroductionSelector;
+    }
+
+    public void setPostIntroductionSelector(String postIntroductionSelector) {
+        this.postIntroductionSelector = postIntroductionSelector;
+    }
+
+    public String getOldPostsSelector() {
+        return oldPostsSelector;
+    }
+
+    public void setOldPostsSelector(String oldPostsSelector) {
+        this.oldPostsSelector = oldPostsSelector;
     }
 
     public String getHeaderSelector() {
@@ -45,27 +70,11 @@ public class BlogSelection {
         this.authorSelector = authorSelector;
     }
 
-    public String getIntroductionSelector() {
-        return introductionSelector;
-    }
-
-    public void setIntroductionSelector(String introductionSelector) {
-        this.introductionSelector = introductionSelector;
-    }
-
     public String getContentSelector() {
         return contentSelector;
     }
 
     public void setContentSelector(String contentSelector) {
         this.contentSelector = contentSelector;
-    }
-
-    public String getNextPageSuffix() {
-        return nextPageSuffix;
-    }
-
-    public void setNextPageSuffix(String nextPageSuffix) {
-        this.nextPageSuffix = nextPageSuffix;
     }
 }

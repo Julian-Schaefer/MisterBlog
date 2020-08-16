@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { IBlogSelection } from '../preview/preview.component';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,9 @@ export class HTMLService {
     return this.http.get(this.baseUrl + "/html?url=" + blogUrl + "&headerSelector=" + headerSelector, { responseType: 'text' });
   }
 
+  createBlogSelection(blogSelection: IBlogSelection) {
+    return this.http.post(this.baseUrl + "/blog-selection", blogSelection, { responseType: "text" });
+  }
 
   getSelectorArray(element: HTMLElement, rootElement: HTMLElement): { tagName: string, siblingIndex: number }[] {
     let selected = this.cloneElement(element);
