@@ -1,7 +1,7 @@
-<mat-grid-list cols="3" rowHeight="2:1" *ngFor="let blogPost of blogPosts">
+<mat-grid-list cols="1" rowHeight="3:1" style="width: 500px" *ngFor="let blogPost of blogPosts">
     <mat-grid-tile>
-        <div class="card">
+        <mat-card>
             <h2>{{blogPost.title}}</h2>
             <p>{{blogPost.introduction}}</p>
-        </div>
+        </mat-card>
     </mat-grid-tile>

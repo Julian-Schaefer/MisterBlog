@@ -10,6 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatCardModule } from '@angular/material/card';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
@@ -60,7 +61,8 @@ import { PostListComponent } from './components/post-list/post-list.component';
     MatInputModule,
     MatFormFieldModule,
     MatBadgeModule,
-    MatGridListModule
+    MatGridListModule,
+    MatCardModule
   ],
   entryComponents: [AddBlogDialog],
   providers: [AuthService],
