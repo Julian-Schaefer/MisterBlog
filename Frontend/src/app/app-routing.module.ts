@@ -6,12 +6,14 @@ import { SignInComponent } from './components/sign-in/sign-in.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
+import { PostListComponent } from './components/post-list/post-list.component';
 
 
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'preview', component: PreviewComponent },
+  { path: 'list', component: PostListComponent },
   { path: '', redirectTo: '/sign-in', pathMatch: 'full' },
   { path: 'sign-in', component: SignInComponent },
   { path: 'register-user', component: SignUpComponent },

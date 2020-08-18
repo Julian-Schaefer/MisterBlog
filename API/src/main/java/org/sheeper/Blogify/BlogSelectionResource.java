@@ -27,9 +27,10 @@ public class BlogSelectionResource {
     public String registerBlogSelection(BlogSelection blogSelection) {
         try {
             var blogPostListDocument = Jsoup.connect(blogSelection.getBlogUrl()).get();
+            var blogPostListDocumentBody = blogPostListDocument.body();
 
-            var postHeaderElements = blogPostListDocument.select(blogSelection.getPostHeaderSelector());
-            var postIntroductionElements = blogPostListDocument.select(blogSelection.getPostHeaderSelector());
+            var postHeaderElements = blogPostListDocumentBody.select(blogSelection.getPostHeaderSelector());
+            var postIntroductionElements = blogPostListDocumentBody.select(blogSelection.getPostHeaderSelector());
 
             String blogPostUrl = null;
             if (postHeaderElements.size() == 0 || postHeaderElements.size() != postIntroductionElements.size()) {
@@ -45,7 +46,7 @@ public class BlogSelectionResource {
                 }
             }
 
-            var oldPostsElement = blogPostListDocument.select(blogSelection.getOldPostsSelector());
+            var oldPostsElement = blogPostListDocumentBody.select(blogSelection.getOldPostsSelector());
             if (oldPostsElement.size() != 1) {
                 return "mehrere old posts elemente gefunden: " + oldPostsElement.size();
             } else {
@@ -59,23 +60,24 @@ public class BlogSelectionResource {
             }
 
             var blogPostDocument = Jsoup.connect(blogPostUrl).get();
+            var blogPostDocumentBody = blogPostDocument.body();
 
-            var headerElement = blogPostDocument.select(blogSelection.getHeaderSelector());
+            var headerElement = blogPostDocumentBody.select(blogSelection.getHeaderSelector());
             if (headerElement.size() != 1) {
                 return "mehrere header elemente gefunden: " + headerElement.size();
             }
 
-            var contentElement = blogPostDocument.select(blogSelection.getContentSelector());
+            var contentElement = blogPostDocumentBody.select(blogSelection.getContentSelector());
             if (contentElement.size() != 1) {
                 return "mehrere content elemente gefunden: " + contentElement.size();
             }
 
-            var authorElement = blogPostDocument.select(blogSelection.getAuthorSelector());
+            var authorElement = blogPostDocumentBody.select(blogSelection.getAuthorSelector());
             if (authorElement.size() != 1) {
                 return "mehrere autor elemente gefunden: " + authorElement.size();
             }
 
-            var dateElement = blogPostDocument.select(blogSelection.getDateSelector());
+            var dateElement = blogPostDocumentBody.select(blogSelection.getDateSelector());
             if (dateElement.size() != 1) {
                 return "mehrere datums elemente gefunden: " + dateElement.size();
             }
@@ -97,9 +99,11 @@ public class BlogSelectionResource {
 
             for (var blogSelection : blogSelections) {
                 var blogPostListDocument = Jsoup.connect(blogSelection.getBlogUrl()).get();
+                var blogPostListDocumentBody = blogPostListDocument.body();
 
-                var postHeaderElements = blogPostListDocument.select(blogSelection.getPostHeaderSelector());
-                var postIntroductionElements = blogPostListDocument.select(blogSelection.getPostIntroductionSelector());
+                var postHeaderElements = blogPostListDocumentBody.select(blogSelection.getPostHeaderSelector());
+                var postIntroductionElements = blogPostListDocumentBody
+                        .select(blogSelection.getPostIntroductionSelector());
                 for (int i = 0; i < postHeaderElements.size(); i++) {
                     var postHeaderElement = postHeaderElements.get(i);
                     var postIntroductionElement = postIntroductionElements.get(i);
@@ -108,10 +112,11 @@ public class BlogSelectionResource {
                     var blogPostUrl = linkElements.first().attr("href");
 
                     var blogPostDocument = Jsoup.connect(blogPostUrl).get();
-                    var headerElement = blogPostDocument.select(blogSelection.getHeaderSelector()).first();
-                    var authorElement = blogPostDocument.select(blogSelection.getAuthorSelector()).first();
-                    var dateElement = blogPostDocument.select(blogSelection.getDateSelector()).first();
-                    var contentElement = blogPostDocument.select(blogSelection.getContentSelector()).first();
+                    var blogPostDocumentBody = blogPostDocument.body();
+                    var headerElement = blogPostDocumentBody.select(blogSelection.getHeaderSelector()).first();
+                    var authorElement = blogPostDocumentBody.select(blogSelection.getAuthorSelector()).first();
+                    var dateElement = blogPostDocumentBody.select(blogSelection.getDateSelector()).first();
+                    var contentElement = blogPostDocumentBody.select(blogSelection.getContentSelector()).first();
 
                     BlogPost blogPost = new BlogPost();
                     blogPost.setUrl(blogPostUrl);

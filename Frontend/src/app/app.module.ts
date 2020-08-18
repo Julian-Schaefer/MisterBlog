@@ -9,6 +9,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatGridListModule } from '@angular/material/grid-list';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
@@ -22,6 +23,7 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
 
 import { AuthService } from './shared/services/AuthService';
+import { PostListComponent } from './components/post-list/post-list.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +35,8 @@ import { AuthService } from './shared/services/AuthService';
     SignInComponent,
     SignUpComponent,
     ForgotPasswordComponent,
-    VerifyEmailComponent
+    VerifyEmailComponent,
+    PostListComponent
   ],
   imports: [
     BrowserModule,
@@ -56,7 +59,8 @@ import { AuthService } from './shared/services/AuthService';
     MatDialogModule,
     MatInputModule,
     MatFormFieldModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatGridListModule
   ],
   entryComponents: [AddBlogDialog],
   providers: [AuthService],
