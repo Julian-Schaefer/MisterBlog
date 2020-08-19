@@ -124,7 +124,7 @@ public class BlogSelectionResource {
                     blogPost.setIntroduction(postIntroductionElement.text());
                     blogPost.setAuthor(authorElement.text());
                     blogPost.setDate(dateElement.text());
-                    blogPost.setContent(contentElement.text());
+                    blogPost.setContent(contentElement.html());
                     blogPosts.add(blogPost);
                 }
             }

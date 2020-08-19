@@ -26,6 +26,7 @@ import { VerifyEmailComponent } from './components/verify-email/verify-email.com
 
 import { AuthService } from './shared/services/AuthService';
 import { PostListComponent } from './components/post-list/post-list.component';
+import { PostComponent } from './components/post/post.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { PostListComponent } from './components/post-list/post-list.component';
     SignUpComponent,
     ForgotPasswordComponent,
     VerifyEmailComponent,
-    PostListComponent
+    PostListComponent,
+    PostComponent
   ],
   imports: [
     BrowserModule,

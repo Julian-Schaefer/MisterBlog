@@ -1,11 +1,12 @@
 <mat-spinner *ngIf="loading"></mat-spinner>
 <button *ngIf="!loading" mat-raised-button color="primary" (click)="loadBlogPosts()">Reload</button>
 
-<div *ngIf="blogPosts.length > 0">
+<div *ngIf="blogPosts && blogPosts.length > 0">
     <mat-card style="width: 500px; margin-bottom: 30px;" *ngFor="let blogPost of blogPosts">
-        <a routerLink="/preview">
+        <a routerLink="/post" [state]="{ data: blogPost }">
             <h2>{{blogPost.title}}</h2>
         </a>
+        <p>From {{blogPost.url}}</p>
         <p>{{blogPost.author}} on {{blogPost.date}}</p>
         <p>{{blogPost.introduction}}</p>
     </mat-card>
