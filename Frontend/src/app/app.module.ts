@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
@@ -62,7 +63,8 @@ import { PostListComponent } from './components/post-list/post-list.component';
     MatFormFieldModule,
     MatBadgeModule,
     MatGridListModule,
-    MatCardModule
+    MatCardModule,
+    MatProgressSpinnerModule
   ],
   entryComponents: [AddBlogDialog],
   providers: [AuthService],

@@ -1,7 +1,12 @@
-<mat-grid-list cols="1" rowHeight="3:1" style="width: 500px" *ngFor="let blogPost of blogPosts">
-    <mat-grid-tile>
-        <mat-card>
+<mat-spinner *ngIf="loading"></mat-spinner>
+<button *ngIf="!loading" mat-raised-button color="primary" (click)="loadBlogPosts()">Reload</button>
+
+<div *ngIf="blogPosts.length > 0">
+    <mat-card style="width: 500px; margin-bottom: 30px;" *ngFor="let blogPost of blogPosts">
+        <a routerLink="/preview">
             <h2>{{blogPost.title}}</h2>
-            <p>{{blogPost.introduction}}</p>
-        </mat-card>
-    </mat-grid-tile>
+        </a>
+        <p>{{blogPost.author}} on {{blogPost.date}}</p>
+        <p>{{blogPost.introduction}}</p>
+    </mat-card>
+</div>
