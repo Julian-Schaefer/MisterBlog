@@ -25,7 +25,36 @@
         *ngIf="step !== 8">Next</button>
     <button mat-raised-button color="primary" (click)="onFinishClick()" [disabled]="!nextButtonEnabled"
         *ngIf="step === 8">Finish</button>
+
+    <mat-vertical-stepper [linear]="true" #stepper>
+        <mat-step [stepControl]="firstFormGroup">
+            <form [formGroup]="firstFormGroup">
+                <ng-template matStepLabel>Fill out your name</ng-template>
+                <div>
+                    <button mat-raised-button color="primary" matStepperNext>Next</button>
+                </div>
+            </form>
+        </mat-step>
+        <mat-step [stepControl]="secondFormGroup">
+            <form [formGroup]="secondFormGroup">
+                <ng-template matStepLabel>Fill out your address</ng-template>
+                <div>
+                    <button mat-raised-button color="primary" matStepperPrevious>Back</button>
+                    <button mat-raised-button color="primary" matStepperNext>Next</button>
+                </div>
+            </form>
+        </mat-step>
+        <mat-step>
+            <ng-template matStepLabel>Done</ng-template>
+            <p>You are now done.</p>
+            <div>
+                <button mat-raised-button color="primary" matStepperPrevious>Back</button>
+                <button mat-raised-button color="primary" (click)="stepper.reset()">Finish</button>
+            </div>
+        </mat-step>
+    </mat-vertical-stepper>
 </div>
+
 
 <div #previewDiv id="preview-div" [innerHTML]="previewHtml" (click)="onElementSelected($event)"
     (mouseover)="onMouseOver($event)" (mouseout)="onMouseOut($event)"></div>

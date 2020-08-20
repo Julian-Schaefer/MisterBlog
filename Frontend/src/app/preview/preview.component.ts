@@ -1,8 +1,9 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorDialogComponent } from '../error-dialog/error-dialog.component';
 import { HTMLService } from '../services/html.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 enum Step {
   SELECT_FIRST_BLOG_POST_HEADER = 0,
@@ -32,7 +33,10 @@ export interface IBlogSelection {
   templateUrl: './preview.component.html',
   styleUrls: ['./preview.component.css']
 })
-export class PreviewComponent {
+export class PreviewComponent implements OnInit {
+  firstFormGroup: FormGroup;
+  secondFormGroup: FormGroup;
+  isOptional = false;
 
   blogUrl: string;
   previewHtml: string;
@@ -43,9 +47,18 @@ export class PreviewComponent {
   selectedElements: any[] = [];
   nextButtonEnabled = false;
 
-  constructor(private dialog: MatDialog, private htmlService: HTMLService, public activatedRoute: ActivatedRoute) {
+  constructor(private dialog: MatDialog, private htmlService: HTMLService, public activatedRoute: ActivatedRoute, private formBuilder: FormBuilder) {
     this.blogUrl = this.activatedRoute.snapshot.queryParamMap.get('url');
     this.htmlService.getBlogPosts(this.blogUrl).subscribe((data) => this.previewHtml = data);
+  }
+
+  ngOnInit() {
+    this.firstFormGroup = this.formBuilder.group({
+      firstCtrl: ''
+    });
+    this.secondFormGroup = this.formBuilder.group({
+      secondCtrl: ''
+    });
   }
 
   onElementSelected(e: MouseEvent) {
