@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,11 +24,13 @@ import { SignInComponent } from './components/sign-in/sign-in.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
-import { AuthService } from './shared/services/auth.service';
+import { AuthService } from './services/auth.service';
 import { PostListComponent } from './components/post-list/post-list.component';
 import { PostComponent } from './components/post/post.component';
 
 import { SafeHtmlPipe } from './util/SafeHtmlPipe';
+
+import { AuthenticationInterceptor } from './interceptors/authentication.interceptor';
 
 @NgModule({
   declarations: [
@@ -74,7 +76,11 @@ import { SafeHtmlPipe } from './util/SafeHtmlPipe';
     MatStepperModule
   ],
   entryComponents: [AddBlogDialog],
-  providers: [AuthService],
+  providers: [AuthService, {
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthenticationInterceptor,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

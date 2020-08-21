@@ -9,6 +9,7 @@ import { Router } from "@angular/router";
 )
 export class AuthService {
     user: User; // Save logged in user data
+    private idToken: string;
 
     constructor(
         public auth: AngularFireAuth, // Inject Firebase auth service
@@ -23,9 +24,13 @@ export class AuthService {
                 localStorage.setItem('user', JSON.stringify(this.user));
                 JSON.parse(localStorage.getItem('user'));
 
-                this.ngZone.run(() => {
-                    this.router.navigate(['list']);
-                })
+                this.refreshIdToken().then((idToken) => {
+                    this.idToken = idToken;
+                });
+
+                // this.ngZone.run(() => {
+                //     this.router.navigate(['list']);
+                // });
             } else {
                 this.user = null;
                 localStorage.removeItem('user');
@@ -77,6 +82,15 @@ export class AuthService {
     get isLoggedIn(): boolean {
         const user = JSON.parse(localStorage.getItem('user'));
         return (user !== null && user.emailVerified !== false) ? true : false;
+    }
+
+    async refreshIdToken() {
+        let user = await this.auth.currentUser;
+        return user.getIdToken();
+    }
+
+    getIdToken(): string {
+        return this.idToken;
     }
 
     // Sign in with Google
