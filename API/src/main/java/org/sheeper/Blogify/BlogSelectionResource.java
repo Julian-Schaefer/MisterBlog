@@ -1,5 +1,6 @@
 package org.sheeper.Blogify;
 
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -117,6 +118,9 @@ public class BlogSelectionResource {
                     var authorElement = blogPostDocumentBody.select(blogSelection.getAuthorSelector()).first();
                     var dateElement = blogPostDocumentBody.select(blogSelection.getDateSelector()).first();
                     var contentElement = blogPostDocumentBody.select(blogSelection.getContentSelector()).first();
+                    contentElement.select("*").forEach((element) -> {
+                        element.attr("style", "overflow: auto;");
+                    });
 
                     BlogPost blogPost = new BlogPost();
                     blogPost.setUrl(blogPostUrl);
@@ -131,6 +135,12 @@ public class BlogSelectionResource {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        blogPosts.sort(new Comparator<BlogPost>() {
+            public int compare(BlogPost a, BlogPost b) {
+                return a.getDate().compareTo(b.getDate());
+            }
+        });
 
         return blogPosts;
     }

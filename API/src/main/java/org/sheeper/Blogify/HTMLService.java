@@ -19,8 +19,9 @@ public class HTMLService {
 
     public static String getHTML(String url, String headerSelector) throws IOException {
         var doc = Jsoup.connect(url).get();
+        var docBody = doc.body();
 
-        var headerElement = doc.select(headerSelector).first();
+        var headerElement = docBody.select(headerSelector).first();
         var linkElement = headerElement.select("a[href]");
         var blogPostUrl = linkElement.attr("href");
 

@@ -1,3 +1,4 @@
 <h1><b>{{blogPost.title}}</b></h1>
 <p>{{blogPost.date}} on {{blogPost.author}}</p>
-<div [innerHTML]="contentHtml" style="width: 1000px; overflow: auto;"></div>
+<mat-card [innerHTML]="contentHtml | safeHtml" style="width: 1000px; margin: auto;">
+</mat-card>

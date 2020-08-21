@@ -24,10 +24,11 @@ import { SignInComponent } from './components/sign-in/sign-in.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
-
 import { AuthService } from './shared/services/AuthService';
 import { PostListComponent } from './components/post-list/post-list.component';
 import { PostComponent } from './components/post/post.component';
+
+import { SafeHtmlPipe } from './util/SafeHtmlPipe';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { PostComponent } from './components/post/post.component';
     ForgotPasswordComponent,
     VerifyEmailComponent,
     PostListComponent,
-    PostComponent
+    PostComponent,
+    SafeHtmlPipe
   ],
   imports: [
     BrowserModule,
