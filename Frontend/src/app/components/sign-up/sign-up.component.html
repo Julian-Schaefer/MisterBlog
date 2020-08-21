@@ -4,38 +4,35 @@
         <div class="authBlock">
             <h3>Sign Up</h3>
 
-            <div class="formGroup">
-                <input type="email" class="formControl" placeholder="Email Address" #userEmail required>
-            </div>
+            <mat-form-field>
+                <mat-label>E-Mail</mat-label>
+                <input matInput type="email" class="formControl" #userEmail required>
+            </mat-form-field>
 
-            <div class="formGroup">
-                <input type="password" class="formControl" placeholder="Password" #userPwd required>
-            </div>
+            <mat-form-field>
+                <mat-label>Password</mat-label>
+                <input matInput type="password" class="formControl" #userPassword required>
+            </mat-form-field>
 
-            <div class="formGroup">
-                <input type="button" class="btn btnPrimary" value="Sign Up"
-                    (click)="authService.signUpWithEmail(userEmail.value, userPwd.value)">
-            </div>
+            <button mat-raised-button color="primary"
+                (click)="authService.signUpWithEmail(userEmail.value, userPassword.value)">
+                Sign up
+            </button>
+
 
             <div class="formGroup">
                 <span class="or"><span class="orInner">Or</span></span>
             </div>
 
-            <!-- Continue with Google -->
-            <div class="formGroup">
-                <button type="button" class="btn googleBtn" (click)="authService.signInWithGoogle()">
-                    <i class="fab fa-google-plus-g"></i>
-                    Continue with Google
-                </button>
-            </div>
+            <button mat-raised-button color="primary" (click)="authService.signInWithGoogle()">
+                <i class="fab fa-google-plus-g"></i>
+                Continue with Google
+            </button>
 
-            <!-- Continue with Facebook -->
-            <div class="formGroup">
-                <button type="button" class="btn facebookBtn" (click)="authService.signInWithFacebook()">
-                    <i class="fab fa-facebook"></i>
-                    Continue with Facebook
-                </button>
-            </div>
+            <button mat-raised-button color="primary" (click)="authService.signInWithFacebook()">
+                <i class="fab fa-facebook"></i>
+                Continue with Facebook
+            </button>
         </div>
 
         <div class="redirectToLogin">

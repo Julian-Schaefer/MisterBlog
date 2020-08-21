@@ -19,7 +19,7 @@ const routes: Routes = [
   { path: 'post', component: PostComponent, canActivate: [AuthGuard] },
   // Unauthenticated
   { path: 'sign-in', component: SignInComponent },
-  { path: 'register-user', component: SignUpComponent },
+  { path: 'sign-up', component: SignUpComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'verify-email-address', component: VerifyEmailComponent }
 ];
