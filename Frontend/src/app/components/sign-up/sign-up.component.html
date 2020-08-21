@@ -14,7 +14,7 @@
 
             <div class="formGroup">
                 <input type="button" class="btn btnPrimary" value="Sign Up"
-                    (click)="authService.SignUp(userEmail.value, userPwd.value)">
+                    (click)="authService.signUpWithEmail(userEmail.value, userPwd.value)">
             </div>
 
             <div class="formGroup">
@@ -23,7 +23,7 @@
 
             <!-- Continue with Google -->
             <div class="formGroup">
-                <button type="button" class="btn googleBtn" (click)="authService.GoogleAuth()">
+                <button type="button" class="btn googleBtn" (click)="authService.signInWithGoogle()">
                     <i class="fab fa-google-plus-g"></i>
                     Continue with Google
                 </button>
@@ -31,7 +31,7 @@
 
             <!-- Continue with Facebook -->
             <div class="formGroup">
-                <button type="button" class="btn facebookBtn" (click)="authService.FacebookAuth()">
+                <button type="button" class="btn facebookBtn" (click)="authService.signInWithFacebook()">
                     <i class="fab fa-facebook"></i>
                     Continue with Facebook
                 </button>

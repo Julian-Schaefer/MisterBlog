@@ -8,15 +8,16 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
 import { PostListComponent } from './components/post-list/post-list.component';
 import { PostComponent } from './components/post/post.component';
+import { AuthGuard } from './guards/auth.guard';
 
 
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'preview', component: PreviewComponent },
-  { path: 'list', component: PostListComponent },
-  { path: 'post', component: PostComponent },
-  { path: '', redirectTo: '/sign-in', pathMatch: 'full' },
+  { path: '', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: 'preview', component: PreviewComponent, canActivate: [AuthGuard] },
+  { path: 'list', component: PostListComponent, canActivate: [AuthGuard] },
+  { path: 'post', component: PostComponent, canActivate: [AuthGuard] },
+  // Unauthenticated
   { path: 'sign-in', component: SignInComponent },
   { path: 'register-user', component: SignUpComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
