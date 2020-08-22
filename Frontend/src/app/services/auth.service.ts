@@ -26,11 +26,11 @@ export class AuthService {
 
                 this.refreshIdToken().then((idToken) => {
                     this.idToken = idToken;
-                });
 
-                // this.ngZone.run(() => {
-                //     this.router.navigate(['list']);
-                // });
+                    this.ngZone.run(() => {
+                        this.router.navigate(['']);
+                    });
+                });
             } else {
                 this.user = null;
                 localStorage.removeItem('user');

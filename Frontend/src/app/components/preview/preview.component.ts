@@ -2,7 +2,7 @@ import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorDialogComponent } from '../error-dialog/error-dialog.component';
-import { HTMLService } from '../services/html.service';
+import { HTMLService } from '../../services/html.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 enum Step {

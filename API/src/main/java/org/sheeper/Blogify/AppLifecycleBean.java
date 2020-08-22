@@ -18,7 +18,7 @@ import org.jboss.logging.Logger;
 @ApplicationScoped
 public class AppLifecycleBean {
 
-    private static final Logger LOGGER = Logger.getLogger("ListenerBean");
+    private static final Logger LOGGER = Logger.getLogger("AppLifecycleBean");
 
     void onStart(@Observes StartupEvent ev) {
         LOGGER.info("The application is starting...");
@@ -36,7 +36,6 @@ public class AppLifecycleBean {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     void onStop(@Observes ShutdownEvent ev) {

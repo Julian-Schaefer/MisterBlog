@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { IBlogSelection } from '../preview/preview.component';
+import { IBlogSelection } from '../components/preview/preview.component';
 
 @Injectable({
   providedIn: 'root'
