@@ -13,8 +13,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import com.google.firebase.auth.FirebaseAuth;
-
 import org.jsoup.Jsoup;
 
 @Path("blog-selection")
