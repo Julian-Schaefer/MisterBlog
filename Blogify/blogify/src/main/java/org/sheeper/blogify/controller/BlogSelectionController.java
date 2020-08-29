@@ -39,7 +39,6 @@ public class BlogSelectionController {
                 var linkElements = postHeaderElements.first().select("a[href]");
                 if (linkElements.size() > 0) {
                     blogPostUrl = linkElements.first().attr("href");
-                    System.out.println(blogPostUrl);
                 } else {
                     return "kein Blog Post Link gefunden";
                 }
@@ -52,7 +51,6 @@ public class BlogSelectionController {
                 var linkElements = oldPostsElement.first().select("a[href]");
                 if (linkElements.size() > 0) {
                     var oldPostsUrl = linkElements.first().attr("href");
-                    System.out.println(oldPostsUrl);
                 } else {
                     return "kein Old Post Link gefunden";
                 }
