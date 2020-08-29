@@ -92,7 +92,7 @@ public class BlogSelectionController {
     @GetMapping
     public List<BlogPost> getBlogPosts(Principal principal) {
         var userId = principal.getName();
-        System.out.println(principal.getName());
+        System.out.println(userId);
 
         var blogPosts = new LinkedList<BlogPost>();
 

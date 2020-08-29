@@ -7,6 +7,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -27,10 +30,25 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
         }
 
         var bearerToken = header.substring(TOKEN_PREFIX.length());
+        var userId = verifyToken(bearerToken);
 
-        var token = new UsernamePasswordAuthenticationToken("test", null, null);
-        SecurityContextHolder.getContext().setAuthentication(token);
+        if (userId != null) {
+            var token = new UsernamePasswordAuthenticationToken(userId, null, null);
+            SecurityContextHolder.getContext().setAuthentication(token);
+        }
+
         filterChain.doFilter(request, response);
+    }
+
+    private String verifyToken(String bearerToken) {
+        try {
+            var firebaseToken = FirebaseAuth.getInstance().verifyIdToken(bearerToken);
+            return firebaseToken.getUid();
+        } catch (FirebaseAuthException e) {
+            System.err.println("Could not verify Token");
+        }
+
+        return null;
     }
 
 }
