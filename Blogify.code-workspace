@@ -4,8 +4,7 @@
 			"path": "Frontend"
 		},
 		{
-			"name": "blogify",
-			"path": "Blogify/blogify"
+			"path": "API"
 		}
 	],
 	"settings": {
