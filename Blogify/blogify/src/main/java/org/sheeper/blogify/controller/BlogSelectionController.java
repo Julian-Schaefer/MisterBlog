@@ -1,5 +1,6 @@
 package org.sheeper.blogify.controller;
 
+import java.security.Principal;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -89,7 +90,10 @@ public class BlogSelectionController {
     }
 
     @GetMapping
-    public List<BlogPost> getBlogPosts() {
+    public List<BlogPost> getBlogPosts(Principal principal) {
+        var userId = principal.getName();
+        System.out.println(principal.getName());
+
         var blogPosts = new LinkedList<BlogPost>();
 
         try {
