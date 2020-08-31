@@ -3,6 +3,7 @@ import { User } from "./user";
 import { auth } from 'firebase/app';
 import { AngularFireAuth } from "@angular/fire/auth";
 import { Router } from "@angular/router";
+import { Observable } from 'rxjs';
 
 @Injectable(
     { providedIn: "root" }
@@ -23,14 +24,6 @@ export class AuthService {
                 this.user = user;
                 localStorage.setItem('user', JSON.stringify(this.user));
                 JSON.parse(localStorage.getItem('user'));
-
-                this.refreshIdToken().then((idToken) => {
-                    this.idToken = idToken;
-
-                    this.ngZone.run(() => {
-                        this.router.navigate(['']);
-                    });
-                });
             } else {
                 this.user = null;
                 localStorage.removeItem('user');
@@ -42,6 +35,12 @@ export class AuthService {
     // Sign in with email/password
     signInWithEmail(email, password) {
         return this.auth.signInWithEmailAndPassword(email, password)
+            .then((result) => {
+                this.user = result.user;
+                localStorage.setItem('user', JSON.stringify(this.user));
+                JSON.parse(localStorage.getItem('user'));
+                this.router.navigate(['']);
+            })
             .catch((error) => {
                 window.alert(error.message)
             })
@@ -84,9 +83,17 @@ export class AuthService {
         return (user !== null && user.emailVerified !== false) ? true : false;
     }
 
-    async refreshIdToken() {
-        let user = await this.auth.currentUser;
-        return user.getIdToken();
+    refreshIdToken(): Observable<string> {
+        return new Observable<string>((observer) => {
+            this.auth.currentUser.then((currentUser) => {
+                if (currentUser) {
+                    currentUser.getIdToken(false).then((idToken) => {
+                        observer.next(idToken);
+                        observer.complete();
+                    });
+                }
+            });
+        });
     }
 
     getIdToken(): string {
@@ -105,6 +112,12 @@ export class AuthService {
     // Auth logic to run auth providers
     private signInWithProvider(provider) {
         return this.auth.signInWithPopup(provider)
+            .then((result) => {
+                this.user = result.user;
+                localStorage.setItem('user', JSON.stringify(this.user));
+                JSON.parse(localStorage.getItem('user'));
+                this.router.navigate(['']);
+            })
             .catch((error) => {
                 window.alert(error)
             });

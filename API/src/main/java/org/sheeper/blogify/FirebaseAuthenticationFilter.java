@@ -35,9 +35,11 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
         if (userId != null) {
             var token = new UsernamePasswordAuthenticationToken(userId, null, null);
             SecurityContextHolder.getContext().setAuthentication(token);
+            filterChain.doFilter(request, response);
+        } else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
         }
-
-        filterChain.doFilter(request, response);
     }
 
     private String verifyToken(String bearerToken) {
