@@ -1,4 +1,7 @@
-<h1>Blogify</h1>
-<p *ngIf="authService.user">User: {{authService.user.email}}</p>
-<button mat-raised-button color="primary" (click)="authService.signOut()">Sign out</button>
+<div style="height: 20%;">
+    <h1>Blogify</h1>
+    <p *ngIf="authService.user">User: {{authService.user.email}}</p>
+    <button mat-raised-button color="primary" (click)="authService.signOut()">Sign out</button>
+</div>
+
 <router-outlet></router-outlet>

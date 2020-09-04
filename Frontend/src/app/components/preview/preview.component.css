@@ -1,14 +1,13 @@
 div#steps {
     float: left;
-    width: 29%;
-    height: 90%;
+    width: 300px;
+    height: 80%;
     border-right: black 2px solid;
+    overflow-y: scroll;
 }
 
 div#preview-div {
-    float: right;
-    width: 70%;
-    height: 90%;
+    height: 80%;
     overflow-y: scroll;
 }
 
