@@ -3,42 +3,28 @@ import { User } from "./user";
 import { auth } from 'firebase/app';
 import { AngularFireAuth } from "@angular/fire/auth";
 import { Router } from "@angular/router";
-import { Observable } from 'rxjs';
+import { Observable, observable } from 'rxjs';
 
 @Injectable(
     { providedIn: "root" }
 )
 export class AuthService {
-    user: User; // Save logged in user data
-    private idToken: string;
+    user: User;
 
     constructor(
-        public auth: AngularFireAuth, // Inject Firebase auth service
+        public auth: AngularFireAuth,
         public router: Router,
-        public ngZone: NgZone // NgZone service to remove outside scope warning
+        public ngZone: NgZone
     ) {
-        /* Saving user data in localstorage when 
-        logged in and setting up null when logged out */
         this.auth.authState.subscribe(user => {
-            if (user) {
-                this.user = user;
-                localStorage.setItem('user', JSON.stringify(this.user));
-                JSON.parse(localStorage.getItem('user'));
-            } else {
-                this.user = null;
-                localStorage.removeItem('user');
-                this.router.navigate(['sign-in']);
-            }
+            this.handleAuthentication(user);
         })
     }
 
-    // Sign in with email/password
     signInWithEmail(email, password) {
         return this.auth.signInWithEmailAndPassword(email, password)
             .then((result) => {
-                this.user = result.user;
-                localStorage.setItem('user', JSON.stringify(this.user));
-                JSON.parse(localStorage.getItem('user'));
+                this.handleAuthentication(result.user);
                 this.router.navigate(['']);
             })
             .catch((error) => {
@@ -46,19 +32,15 @@ export class AuthService {
             })
     }
 
-    // Sign up with email/password
     signUpWithEmail(email, password) {
         return this.auth.createUserWithEmailAndPassword(email, password)
-            .then((result) => {
-                /* Call the SendVerificaitonMail() function when new user sign 
-                up and returns promise */
+            .then((_) => {
                 this.sendVerificationMail();
             }).catch((error) => {
                 window.alert(error.message)
             })
     }
 
-    // Send email verfificaiton when new user sign up
     async sendVerificationMail() {
         let user = await this.auth.currentUser;
         return user.sendEmailVerification()
@@ -67,7 +49,6 @@ export class AuthService {
             })
     }
 
-    // Reset Forggot password
     resetPassword(passwordResetEmail) {
         return this.auth.sendPasswordResetEmail(passwordResetEmail)
             .then(() => {
@@ -77,30 +58,15 @@ export class AuthService {
             })
     }
 
-    // Returns true when user is looged in and email is verified
     get isLoggedIn(): boolean {
         const user = JSON.parse(localStorage.getItem('user'));
         return (user !== null && user.emailVerified !== false) ? true : false;
     }
 
-    refreshIdToken(): Observable<string> {
-        return new Observable<string>((observer) => {
-            this.auth.currentUser.then((currentUser) => {
-                if (currentUser) {
-                    currentUser.getIdToken(false).then((idToken) => {
-                        observer.next(idToken);
-                        observer.complete();
-                    });
-                }
-            });
-        });
+    getIdToken(): Observable<string> {
+        return this.auth.idToken;
     }
 
-    getIdToken(): string {
-        return this.idToken;
-    }
-
-    // Sign in with Google
     signInWithGoogle() {
         return this.signInWithProvider(new auth.GoogleAuthProvider());
     }
@@ -109,13 +75,10 @@ export class AuthService {
         return this.signInWithProvider(new auth.FacebookAuthProvider());
     }
 
-    // Auth logic to run auth providers
     private signInWithProvider(provider) {
         return this.auth.signInWithPopup(provider)
             .then((result) => {
-                this.user = result.user;
-                localStorage.setItem('user', JSON.stringify(this.user));
-                JSON.parse(localStorage.getItem('user'));
+                this.handleAuthentication(result.user);
                 this.router.navigate(['']);
             })
             .catch((error) => {
@@ -123,12 +86,22 @@ export class AuthService {
             });
     }
 
-    // Sign out 
     signOut() {
         return this.auth.signOut()
             .catch((error) => {
                 window.alert(error)
             });
+    }
+
+    handleAuthentication(user: User) {
+        if (user) {
+            this.user = user;
+            localStorage.setItem('user', JSON.stringify(this.user));
+        } else {
+            this.user = null;
+            localStorage.removeItem('user');
+            this.router.navigate(['sign-in']);
+        }
     }
 
 }
