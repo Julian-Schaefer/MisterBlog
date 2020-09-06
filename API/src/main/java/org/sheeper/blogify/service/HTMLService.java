@@ -52,19 +52,17 @@ public class HTMLService {
             int openBracePos = css.indexOf("{", startPos);
             int closedBracePos = css.indexOf("}", openBracePos);
 
-            String selector = css.substring(startPos, openBracePos).trim();
-            String style = css.substring(openBracePos + 1, closedBracePos).trim();
+            String selector = css.substring(startPos, openBracePos).replace("\n", "").trim();
+            String style = css.substring(openBracePos + 1, closedBracePos).replace("\n", "").trim();
 
             if (selector.contains("@")) {
                 startPos = openBracePos + 1;
                 break;
             }
 
-            if (selector.contains("/*")) {
-                System.out.println("vorher: " + selector);
+            while (selector.contains("/*")) {
                 selector = selector.substring(0, selector.indexOf("/*"))
-                        + selector.substring(selector.indexOf("*/") - 1, selector.length() - 1);
-                System.out.println("nachher" + selector);
+                        + selector.substring(selector.indexOf("*/") + 2, selector.length() - 1);
             }
 
             if (!selector.contains(":") && !selector.contains("/*")) {
