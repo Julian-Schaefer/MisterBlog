@@ -1,8 +1,13 @@
 package org.sheeper.blogify.service;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,10 +32,63 @@ public class HTMLService {
             link.removeAttr("href");
         });
 
+        doc.select("link").forEach((link) -> {
+            if (link.attr("rel").equals("stylesheet") && link.attr("href").length() > 0) {
+                String css = downloadCSS(link.attr("href"));
+                applyCSS(bodyElement, css);
+            }
+        });
+
         doc.select("style").forEach((style) -> {
-            bodyElement.children().first().prependChild(style);
+            applyCSS(bodyElement, style.data());
         });
 
         return bodyElement.html();
+    }
+
+    public static void applyCSS(Element rootElement, String css) {
+        int startPos = 0;
+        while (css.indexOf("{", startPos) != -1) {
+            int openBracePos = css.indexOf("{", startPos);
+            int closedBracePos = css.indexOf("}", openBracePos);
+
+            String selector = css.substring(startPos, openBracePos).trim();
+            String style = css.substring(openBracePos + 1, closedBracePos).trim();
+
+            if (selector.contains("@")) {
+                startPos = openBracePos + 1;
+                break;
+            }
+
+            if (selector.contains("/*")) {
+                System.out.println("vorher: " + selector);
+                selector = selector.substring(0, selector.indexOf("/*"))
+                        + selector.substring(selector.indexOf("*/") - 1, selector.length() - 1);
+                System.out.println("nachher" + selector);
+            }
+
+            if (!selector.contains(":") && !selector.contains("/*")) {
+                for (var element : rootElement.select(selector)) {
+                    element.attr("style", element.attr("style") + " " + style + ";");
+                }
+            }
+
+            startPos = closedBracePos + 1;
+        }
+    }
+
+    public static String downloadCSS(String url) {
+        try {
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            return response.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

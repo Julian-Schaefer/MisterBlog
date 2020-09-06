@@ -56,5 +56,5 @@
 </div>
 
 
-<div #previewDiv id="preview-div" [innerHTML]="previewHtml" (click)="onElementSelected($event)"
+<div #previewDiv id="preview-div" [innerHTML]="previewHtml | safeHtml" (click)="onElementSelected($event)"
     (mouseover)="onMouseOver($event)" (mouseout)="onMouseOut($event)"></div>
