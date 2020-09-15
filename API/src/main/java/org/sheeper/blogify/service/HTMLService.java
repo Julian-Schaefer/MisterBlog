@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 public class HTMLService {
 
     public static String getHTML(String url, String headerSelector) throws IOException {
+        url = url.replaceAll("/$", "");
         var doc = Jsoup.connect(url).get();
         var docBody = doc.body();
 
@@ -32,9 +33,14 @@ public class HTMLService {
             link.removeAttr("href");
         });
 
+        final String correctedUrl = url.replaceAll("/$", "");
         doc.select("link").forEach((link) -> {
             if (link.attr("rel").equals("stylesheet") && link.attr("href").length() > 0) {
-                String css = downloadCSS(link.attr("href"));
+                String cssUrl = link.attr("href");
+                if (!cssUrl.startsWith("http://") && !cssUrl.startsWith("https://")) {
+                    cssUrl = correctedUrl + cssUrl;
+                }
+                String css = downloadCSS(cssUrl);
                 applyCSS(bodyElement, css);
             }
         });
@@ -66,8 +72,11 @@ public class HTMLService {
             }
 
             if (!selector.contains(":") && !selector.contains("/*")) {
-                for (var element : rootElement.select(selector)) {
-                    element.attr("style", element.attr("style") + " " + style + ";");
+                try {
+                    for (var element : rootElement.select(selector)) {
+                        element.attr("style", element.attr("style") + " " + style + ";");
+                    }
+                } catch (Exception e) {
                 }
             }
 
