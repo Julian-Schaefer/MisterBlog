@@ -27,7 +27,7 @@ public class BlogifyApplication {
 			FirebaseApp.getInstance();
 		} catch (IllegalStateException ex) {
 			try {
-				FileInputStream serviceAccount = new FileInputStream("/Users/julian/Downloads/firebase.json");
+				FileInputStream serviceAccount = new FileInputStream("C:\\Users\\julia\\Downloads\\firebase.json");
 				FirebaseOptions options = FirebaseOptions.builder()
 						.setCredentials(GoogleCredentials.fromStream(serviceAccount))
 						.setDatabaseUrl("https://blogify-cdb97.firebaseio.com").build();
