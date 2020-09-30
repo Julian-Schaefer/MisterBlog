@@ -1,8 +1,8 @@
 package org.sheeper.blogify;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ByteArrayInputStream;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
@@ -22,19 +22,18 @@ public class BlogifyApplication {
 
 	@EventListener(ApplicationReadyEvent.class)
 	public void initializeFirebase() {
-
 		try {
 			FirebaseApp.getInstance();
 		} catch (IllegalStateException ex) {
 			try {
-				FileInputStream serviceAccount = new FileInputStream("C:\\Users\\julia\\Downloads\\firebase.json");
+				String serviceAccountString = System.getenv("FIREBASE");
+				InputStream serviceAccount = new ByteArrayInputStream(serviceAccountString.getBytes());
+
 				FirebaseOptions options = FirebaseOptions.builder()
 						.setCredentials(GoogleCredentials.fromStream(serviceAccount))
-						.setDatabaseUrl("https://blogify-cdb97.firebaseio.com").build();
+						.setDatabaseUrl(System.getenv("FIREBASE_DATABASE_URL")).build();
 
 				FirebaseApp.initializeApp(options);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
