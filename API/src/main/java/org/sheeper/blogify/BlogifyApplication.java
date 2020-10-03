@@ -18,10 +18,10 @@ import org.springframework.context.event.EventListener;
 @SpringBootApplication
 public class BlogifyApplication {
 
-	@Value("${firebase.location}")
+	@Value("${firebase.location:#{null}}")
 	private String firebaseLocation;
 
-	@Value("${firebase.url}")
+	@Value("${firebase.url:#{null}}")
 	private String firebaseDatabaseUrl;
 
 	public static void main(String[] args) {
