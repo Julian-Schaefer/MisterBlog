@@ -2,12 +2,18 @@ package org.sheeper.blogify.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 
 @Entity
+@IdClass(BlogSelectionId.class)
 public class BlogSelection {
 
     @Id
     private String blogUrl;
+
+    @Id
+    private String userId;
+
     private String postHeaderSelector;
     private String postIntroductionSelector;
     private String oldPostsSelector;
@@ -25,6 +31,14 @@ public class BlogSelection {
 
     public void setBlogUrl(String blogUrl) {
         this.blogUrl = blogUrl;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getPostHeaderSelector() {

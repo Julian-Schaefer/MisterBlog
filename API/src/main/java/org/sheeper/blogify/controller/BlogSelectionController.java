@@ -30,7 +30,9 @@ public class BlogSelectionController {
     private BlogSelectionRepository blogSelectionRepository;
 
     @PostMapping
-    public ResponseEntity<String> registerBlogSelection(@RequestBody BlogSelection blogSelection) {
+    public ResponseEntity<String> registerBlogSelection(@RequestBody BlogSelection blogSelection, Principal principal) {
+        var userId = principal.getName();
+
         try {
             var blogPostListDocument = Jsoup.connect(blogSelection.getBlogUrl()).get();
             var blogPostListDocumentBody = blogPostListDocument.body();
@@ -81,6 +83,10 @@ public class BlogSelectionController {
 
             var authorElement = blogPostDocumentBody.select(blogSelection.getAuthorSelector());
             if (authorElement.size() != 1) {
+                for (var author : authorElement) {
+                    System.out.println(author.html());
+                }
+
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body("mehrere autor elemente gefunden: " + authorElement.size());
             }
@@ -95,6 +101,7 @@ public class BlogSelectionController {
                 }
             }
 
+            blogSelection.setUserId(userId);
             blogSelectionRepository.save(blogSelection);
 
             return ResponseEntity.ok().body("Success");
@@ -105,10 +112,7 @@ public class BlogSelectionController {
     }
 
     @GetMapping
-    public List<BlogPost> getBlogPosts(Principal principal) {
-        var userId = principal.getName();
-        System.out.println(userId);
-
+    public List<BlogPost> getBlogPosts() {
         var blogPosts = new LinkedList<BlogPost>();
 
         try {

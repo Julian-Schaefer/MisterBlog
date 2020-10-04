@@ -1,6 +1,6 @@
-<div style="height: 20%;">
+<div style="height: 80px; background-color: darkblue; position: fixed; top: 0; width: 100%;">
     <h1>Blogify</h1>
-    <p *ngIf="authService.user">User: {{authService.user.email}}</p>
+    <p *ngIf="authService.user">Hello, {{authService.user.displayName}}!</p>
     <button mat-raised-button color="primary" (click)="authService.signOut()">Sign out</button>
 </div>
 
