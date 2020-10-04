@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorDialogComponent } from '../error-dialog/error-dialog.component';
 import { HTMLService } from '../../services/html.service';
@@ -47,7 +47,7 @@ export class PreviewComponent implements OnInit {
   selectedElements: any[] = [];
   nextButtonEnabled = false;
 
-  constructor(private dialog: MatDialog, private htmlService: HTMLService, public activatedRoute: ActivatedRoute, private formBuilder: FormBuilder) {
+  constructor(private dialog: MatDialog, private htmlService: HTMLService, public activatedRoute: ActivatedRoute, private router: Router, private formBuilder: FormBuilder) {
     this.blogUrl = this.activatedRoute.snapshot.queryParamMap.get('url');
     this.htmlService.getBlogPosts(this.blogUrl).subscribe((data) => this.previewHtml = data);
   }
@@ -138,8 +138,10 @@ export class PreviewComponent implements OnInit {
 
     console.log(articleSelection);
 
-    this.htmlService.createBlogSelection(articleSelection).subscribe(data => {
-      console.log(data);
+    this.htmlService.createBlogSelection(articleSelection).subscribe(_ => {
+      this.router.navigate(["list"]);
+    }, error => {
+      this.dialog.open(ErrorDialogComponent, { data: error });
     });
   }
 

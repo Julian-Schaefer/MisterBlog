@@ -14,6 +14,8 @@ import org.sheeper.blogify.model.BlogPost;
 import org.sheeper.blogify.model.BlogSelection;
 import org.sheeper.blogify.repository.BlogSelectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +30,7 @@ public class BlogSelectionController {
     private BlogSelectionRepository blogSelectionRepository;
 
     @PostMapping
-    public String registerBlogSelection(@RequestBody BlogSelection blogSelection) {
+    public ResponseEntity<String> registerBlogSelection(@RequestBody BlogSelection blogSelection) {
         try {
             var blogPostListDocument = Jsoup.connect(blogSelection.getBlogUrl()).get();
             var blogPostListDocumentBody = blogPostListDocument.body();
@@ -38,26 +40,27 @@ public class BlogSelectionController {
 
             String blogPostUrl = null;
             if (postHeaderElements.size() == 0 || postHeaderElements.size() != postIntroductionElements.size()) {
-                throw new RuntimeException(
-                        "Das hat funktioniert " + postHeaderElements.size() + " " + postIntroductionElements.size());
+                throw new RuntimeException("Das hat nicht funktioniert " + postHeaderElements.size() + " "
+                        + postIntroductionElements.size());
             } else {
                 var linkElements = postHeaderElements.first().select("a[href]");
                 if (linkElements.size() > 0) {
                     blogPostUrl = linkElements.first().attr("href");
                 } else {
-                    return "kein Blog Post Link gefunden";
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("kein Blog Post Link gefunden");
                 }
             }
 
             var oldPostsElement = blogPostListDocumentBody.select(blogSelection.getOldPostsSelector());
             if (oldPostsElement.size() != 1) {
-                return "mehrere old posts elemente gefunden: " + oldPostsElement.size();
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("mehrere old posts elemente gefunden: " + oldPostsElement.size());
             } else {
                 var linkElements = oldPostsElement.first().select("a[href]");
                 if (linkElements.size() > 0) {
                     var oldPostsUrl = linkElements.first().attr("href");
                 } else {
-                    return "kein Old Post Link gefunden";
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("kein Old Post Link gefunden");
                 }
             }
 
@@ -66,34 +69,38 @@ public class BlogSelectionController {
 
             var headerElement = blogPostDocumentBody.select(blogSelection.getHeaderSelector());
             if (headerElement.size() != 1) {
-                return "mehrere header elemente gefunden: " + headerElement.size();
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("mehrere header elemente gefunden: " + headerElement.size());
             }
 
             var contentElement = blogPostDocumentBody.select(blogSelection.getContentSelector());
             if (contentElement.size() != 1) {
-                return "mehrere content elemente gefunden: " + contentElement.size();
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("mehrere content elemente gefunden: " + contentElement.size());
             }
 
             var authorElement = blogPostDocumentBody.select(blogSelection.getAuthorSelector());
             if (authorElement.size() != 1) {
-                return "mehrere autor elemente gefunden: " + authorElement.size();
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("mehrere autor elemente gefunden: " + authorElement.size());
             }
 
             var dateElement = blogPostDocumentBody.select(blogSelection.getDateSelector());
             if (dateElement.size() != 1) {
-                return "mehrere datums elemente gefunden: " + dateElement.size();
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("mehrere datums elemente gefunden: " + dateElement.size());
             } else {
                 if (parseDate(dateElement.text()) == null) {
-                    return "Date Format gibbet nicht";
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Date Format gibbet nicht");
                 }
             }
 
             blogSelectionRepository.save(blogSelection);
 
-            return "das hat funktioniert!";
+            return ResponseEntity.ok().body("Success");
         } catch (Exception e) {
             e.printStackTrace();
-            return e.getMessage();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
