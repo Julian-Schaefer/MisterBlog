@@ -1,9 +1,11 @@
 package org.sheeper.blogify.model;
 
+import java.util.Date;
+
 public class BlogPost {
 
     private String title;
-    private String date;
+    private Date date;
     private String author;
     private String introduction;
     private String content;
@@ -21,11 +23,11 @@ public class BlogPost {
         this.title = title;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

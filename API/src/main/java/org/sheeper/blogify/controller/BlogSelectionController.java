@@ -1,9 +1,13 @@
 package org.sheeper.blogify.controller;
 
 import java.security.Principal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import org.jsoup.Jsoup;
 import org.sheeper.blogify.model.BlogPost;
@@ -78,6 +82,10 @@ public class BlogSelectionController {
             var dateElement = blogPostDocumentBody.select(blogSelection.getDateSelector());
             if (dateElement.size() != 1) {
                 return "mehrere datums elemente gefunden: " + dateElement.size();
+            } else {
+                if (parseDate(dateElement.text()) == null) {
+                    return "Date Format gibbet nicht";
+                }
             }
 
             blogSelectionRepository.save(blogSelection);
@@ -128,7 +136,8 @@ public class BlogSelectionController {
                     blogPost.setTitle(headerElement.text());
                     blogPost.setIntroduction(postIntroductionElement.text());
                     blogPost.setAuthor(authorElement.text());
-                    blogPost.setDate(dateElement.text());
+                    var date = parseDate(dateElement.text());
+                    blogPost.setDate(date);
                     blogPost.setContent(contentElement.html());
                     blogPosts.add(blogPost);
                 }
@@ -139,10 +148,38 @@ public class BlogSelectionController {
 
         blogPosts.sort(new Comparator<BlogPost>() {
             public int compare(BlogPost a, BlogPost b) {
-                return a.getDate().compareTo(b.getDate());
+                return a.getDate().compareTo(b.getDate()) * -1;
             }
         });
 
         return blogPosts;
+    }
+
+    public static Date parseDate(String dateString) {
+        List<String> dateFormats = new LinkedList<String>();
+        dateFormats.add("MM/dd/yyyy");
+        dateFormats.add("dd.MM.yyyy");
+        dateFormats.add("dd-MM-yyyy");
+        dateFormats.add("MM/dd/yyyy");
+        dateFormats.add("dd-M-yyyy hh:mm:ss");
+        dateFormats.add("MMMM dd, yyyy");
+        dateFormats.add("dd MMMM yyyy");
+        dateFormats.add("dd MMMM yyyy zzzz");
+        dateFormats.add("E, dd MMM yyyy HH:mm:ss z");
+
+        var locales = new Locale[] { Locale.US, Locale.CHINA, Locale.GERMAN, Locale.FRANCE, Locale.ITALIAN };
+
+        Date parsedDate = null;
+        for (String dateFormat : dateFormats) {
+            for (Locale locale : locales) {
+                SimpleDateFormat dateFormatter = new SimpleDateFormat(dateFormat, locale);
+                try {
+                    parsedDate = dateFormatter.parse(dateString);
+                } catch (ParseException e) {
+                }
+            }
+        }
+
+        return parsedDate;
     }
 }
