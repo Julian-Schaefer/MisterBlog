@@ -1,15 +1,24 @@
-<div style="width: 600px; margin: auto;">
-    <mat-spinner *ngIf="loading"></mat-spinner>
-    <button *ngIf="!loading" mat-raised-button color="primary" (click)="loadBlogPosts()">Reload</button>
+<div style="width: 1000px; margin: auto;">
+    <div style="width: 600px; float: left;">
+        <mat-spinner *ngIf="loading"></mat-spinner>
 
-    <div *ngIf="blogPosts && blogPosts.length > 0">
-        <mat-card style="margin-bottom: 30px;" *ngFor="let blogPost of blogPosts">
-            <a routerLink="/post" [state]="{ data: blogPost }">
-                <h2>{{blogPost.title}}</h2>
-            </a>
-            <p>From {{blogPost.url}}</p>
-            <p>{{blogPost.author}} on {{blogPost.date}}</p>
-            <p>{{blogPost.introduction}}</p>
-        </mat-card>
+        <div *ngIf="blogPosts && blogPosts.length > 0">
+            <mat-card style="margin-bottom: 30px;" *ngFor="let blogPost of blogPosts">
+                <a routerLink="/post" [state]="{ data: blogPost }">
+                    <h2>{{blogPost.title}}</h2>
+                </a>
+                <p>From {{blogPost.url}}</p>
+                <p>{{blogPost.author}} on {{blogPost.date}}</p>
+                <p>{{blogPost.introduction}}</p>
+            </mat-card>
+        </div>
+    </div>
+
+    <div style="width: 360px; float: right; padding-left: 20px; padding-right: 20px;">
+        <button *ngIf="!loading" mat-raised-button color="primary" (click)="loadBlogPosts()">Refresh</button>
+        <div style="border: 1px solid black; border-radius: 8px;">
+            <h1>Selected Blogs:</h1>
+            <p>waldo.be</p>
+        </div>
     </div>
 </div>
