@@ -1,3 +1,8 @@
 h2 {
     color: black;
 }
+
+ul {
+    list-style-type: none;
+    margin-top: 12px;
+}

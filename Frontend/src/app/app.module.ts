@@ -14,6 +14,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatStepperModule } from '@angular/material/stepper';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -72,7 +73,8 @@ import { AuthenticationInterceptor } from './interceptors/authentication.interce
     MatGridListModule,
     MatCardModule,
     MatProgressSpinnerModule,
-    MatStepperModule
+    MatStepperModule,
+    MatCheckboxModule
   ],
   entryComponents: [AddBlogDialog],
   providers: [AuthService, {
