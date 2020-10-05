@@ -1,6 +1,9 @@
-<div style="width: 1000px; margin: auto;">
-    <div style="width: 600px; float: left; margin-top: 20px;">
-        <mat-spinner *ngIf="loading" diameter="48" style="margin: auto;"></mat-spinner>
+<div style="width: 1000px; margin-left: auto; margin-right: auto; margin-top: 20px; margin-bottom: 20;">
+    <div style="width: 600px;">
+        <div style="margin-bottom: 20px;">
+            <mat-spinner *ngIf="loading" diameter="42" style="margin: auto;"></mat-spinner>
+            <button *ngIf="!loading" mat-raised-button color="primary" (click)="loadBlogPosts()">Refresh</button>
+        </div>
 
         <div *ngIf="blogPosts && blogPosts.length > 0">
             <mat-card style="margin-bottom: 30px;" *ngFor="let blogPost of blogPosts">
@@ -14,12 +17,11 @@
         </div>
     </div>
 
-    <div style="width: 360px; position: fixed; left: 50%; top: 70px; margin-left: 120px; margin-top: 20px;">
-        <button *ngIf="!loading" mat-raised-button color="primary" (click)="loadBlogPosts()">Refresh</button>
+    <div style="width: 348px; position: fixed; left: 50%; top: 70px; margin-left: 132px; margin-top: 20px;">
         <mat-card>
             <h1>Selected Blogs:</h1>
             <p>waldo.be</p>
-            <button mat-raised-button color="primary">Add Blog</button>
+            <button mat-raised-button color="primary" (click)="openDialog()">Add Blog</button>
         </mat-card>
     </div>
 </div>

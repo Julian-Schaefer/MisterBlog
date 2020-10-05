@@ -139,7 +139,7 @@ export class PreviewComponent implements OnInit {
     console.log(articleSelection);
 
     this.htmlService.createBlogSelection(articleSelection).subscribe(_ => {
-      this.router.navigate(["list"]);
+      this.router.navigate([""]);
     }, error => {
       this.dialog.open(ErrorDialogComponent, { data: error });
     });

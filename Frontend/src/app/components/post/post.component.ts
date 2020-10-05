@@ -16,5 +16,4 @@ export class PostComponent {
     this.blogPost = this.router.getCurrentNavigation().extras.state.data as BlogPost;
     this.contentHtml = this.blogPost.content;
   }
-
 }

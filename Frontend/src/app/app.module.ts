@@ -18,7 +18,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { PreviewComponent } from './components/preview/preview.component';
-import { HomeComponent, AddBlogDialog } from './components/home/home.component';
+import { AddBlogDialog } from './components/post-list/post-list.component';
 import { ErrorDialogComponent } from './components/error-dialog/error-dialog.component';
 import { SignInComponent } from './components/authentication/sign-in/sign-in.component';
 import { SignUpComponent } from './components/authentication/sign-up/sign-up.component';
@@ -36,7 +36,6 @@ import { AuthenticationInterceptor } from './interceptors/authentication.interce
   declarations: [
     AppComponent,
     PreviewComponent,
-    HomeComponent,
     AddBlogDialog,
     ErrorDialogComponent,
     SignInComponent,
