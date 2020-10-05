@@ -1,7 +1,14 @@
-<div style="height: 80px; background-color: darkblue; position: fixed; top: 0; width: 100%;">
-    <h1>Blogify</h1>
-    <p *ngIf="authService.user">Hello, {{authService.user.displayName}}!</p>
-    <button mat-raised-button color="primary" (click)="authService.signOut()">Sign out</button>
+<div id="header">
+    <div style="float: left;">
+        <h1>Blogify</h1>
+    </div>
+
+    <div style="float: right;">
+        <p *ngIf="authService.user" style="float: left;">Hello, {{authService.user.displayName}}!</p>
+        <button mat-raised-button color="primary" (click)="authService.signOut()" style="float: left;">Sign out</button>
+    </div>
 </div>
 
-<router-outlet></router-outlet>
+<div style="margin-top: 70px;">
+    <router-outlet></router-outlet>
+</div>
