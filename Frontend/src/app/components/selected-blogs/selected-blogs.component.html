@@ -7,7 +7,9 @@
 
         <ul>
             <li *ngFor="let selectedBlog of selectedBlogs">
-                <mat-checkbox [checked]="selectedBlog.selected">{{selectedBlog.blogUrl}}</mat-checkbox>
+                <mat-checkbox [checked]="selectedBlog.selected" [(ngModel)]="selectedBlog.selected"
+                    (change)="updateSelectedBlogs()">
+                    {{selectedBlog.blogUrl}}</mat-checkbox>
             </li>
         </ul>
 

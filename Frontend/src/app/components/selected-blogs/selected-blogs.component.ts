@@ -1,4 +1,5 @@
-import { Component, Inject } from '@angular/core';
+import { Component, EventEmitter, Inject, Output } from '@angular/core';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BlogService } from 'src/app/services/blog.service';
@@ -10,6 +11,7 @@ import { SelectedBlog } from 'src/app/services/SelectedBlog';
   styleUrls: ['./selected-blogs.component.css']
 })
 export class SelectedBlogsComponent {
+  @Output() selectedBlogsUpdated = new EventEmitter<string>();
 
   loading: boolean;
   selectedBlogs: SelectedBlog[];
@@ -18,6 +20,7 @@ export class SelectedBlogsComponent {
     this.loadSelectedBlogs();
   }
 
+
   loadSelectedBlogs(): void {
     this.loading = true;
     this.blogService.getSelectedBlogs().subscribe(data => {
@@ -25,6 +28,13 @@ export class SelectedBlogsComponent {
       this.loading = false;
     });
   }
+
+  updateSelectedBlogs(): void {
+    this.blogService.setSelectedBlogs(this.selectedBlogs).subscribe(_ => {
+      this.selectedBlogsUpdated.emit();
+    });
+  }
+
   openDialog(): void {
     const dialogRef = this.dialog.open(AddBlogDialog, { data: { url: '' } });
     dialogRef.afterClosed().subscribe(result => {

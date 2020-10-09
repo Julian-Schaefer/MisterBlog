@@ -21,4 +21,8 @@ export class BlogService {
   getSelectedBlogs(): Observable<SelectedBlog[]> {
     return this.http.get<SelectedBlog[]>(this.baseUrl + "/blog-selection/selected");
   }
+
+  setSelectedBlogs(selectedBlogs: SelectedBlog[]): Observable<void> {
+    return this.http.post<void>(this.baseUrl + "/blog-selection/selected", selectedBlogs);
+  }
 }

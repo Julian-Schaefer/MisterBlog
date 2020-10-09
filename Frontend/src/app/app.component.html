@@ -1,11 +1,14 @@
 <div id="header">
     <div style="float: left;">
-        <h1>Blogify</h1>
+        <h1 id="heading">Blogify</h1>
     </div>
 
     <div style="float: right;">
-        <p *ngIf="authService.user" style="float: left;">Hello, {{authService.user.displayName}}!</p>
-        <button mat-raised-button color="primary" (click)="authService.signOut()" style="float: left;">Sign out</button>
+        <p id="greeting" *ngIf="authService.user" style="float: left;">Hello, {{authService.user.displayName}}!</p>
+        <div id="sign-out-container">
+            <button mat-raised-button color="primary" (click)="authService.signOut()" style="float: left;">Sign
+                out</button>
+        </div>
     </div>
 </div>
 

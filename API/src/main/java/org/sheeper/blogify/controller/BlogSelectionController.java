@@ -14,10 +14,12 @@ import org.modelmapper.ModelMapper;
 import org.sheeper.blogify.dto.SelectedBlogDTO;
 import org.sheeper.blogify.model.BlogPost;
 import org.sheeper.blogify.model.BlogSelection;
+import org.sheeper.blogify.model.BlogSelectionId;
 import org.sheeper.blogify.repository.BlogSelectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -184,6 +186,18 @@ public class BlogSelectionController {
         }
 
         return selectedBlogDTOs;
+    }
+
+    @PostMapping("/selected")
+    public void setSelectedBlogs(@RequestBody List<SelectedBlogDTO> selectedBlogDTOs, Principal principal) {
+        var userId = principal.getName();
+
+        for (var selectedBlogDTO : selectedBlogDTOs) {
+            var blogSelection = blogSelectionRepository
+                    .getOne(new BlogSelectionId(selectedBlogDTO.getBlogUrl(), userId));
+            blogSelection.setSelected(selectedBlogDTO.isSelected());
+            blogSelectionRepository.save(blogSelection);
+        }
     }
 
     public static Date parseDate(String dateString) {
