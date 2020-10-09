@@ -14,6 +14,7 @@ public class BlogSelection {
     @Id
     private String userId;
 
+    private boolean isSelected;
     private String postHeaderSelector;
     private String postIntroductionSelector;
     private String oldPostsSelector;
@@ -23,6 +24,7 @@ public class BlogSelection {
     private String contentSelector;
 
     public BlogSelection() {
+        this.isSelected = true;
     }
 
     public String getBlogUrl() {
@@ -39,6 +41,14 @@ public class BlogSelection {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean isSelected) {
+        this.isSelected = isSelected;
     }
 
     public String getPostHeaderSelector() {

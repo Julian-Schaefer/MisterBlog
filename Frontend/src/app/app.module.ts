@@ -19,7 +19,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { PreviewComponent } from './components/preview/preview.component';
-import { AddBlogDialog } from './components/post-list/post-list.component';
+import { AddBlogDialog } from './components/selected-blogs/selected-blogs.component';
 import { ErrorDialogComponent } from './components/error-dialog/error-dialog.component';
 import { SignInComponent } from './components/authentication/sign-in/sign-in.component';
 import { SignUpComponent } from './components/authentication/sign-up/sign-up.component';
@@ -28,6 +28,7 @@ import { VerifyEmailComponent } from './components/authentication/verify-email/v
 import { AuthService } from './services/auth.service';
 import { PostListComponent } from './components/post-list/post-list.component';
 import { PostComponent } from './components/post/post.component';
+import { SelectedBlogsComponent } from './components/selected-blogs/selected-blogs.component';
 
 import { SafeHtmlPipe } from './util/SafeHtmlPipe';
 
@@ -45,7 +46,8 @@ import { AuthenticationInterceptor } from './interceptors/authentication.interce
     VerifyEmailComponent,
     PostListComponent,
     PostComponent,
-    SafeHtmlPipe
+    SafeHtmlPipe,
+    SelectedBlogsComponent
   ],
   imports: [
     BrowserModule,

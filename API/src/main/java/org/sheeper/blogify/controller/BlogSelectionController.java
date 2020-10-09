@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Locale;
 
 import org.jsoup.Jsoup;
+import org.modelmapper.ModelMapper;
+import org.sheeper.blogify.dto.SelectedBlogDTO;
 import org.sheeper.blogify.model.BlogPost;
 import org.sheeper.blogify.model.BlogSelection;
 import org.sheeper.blogify.repository.BlogSelectionRepository;
@@ -25,6 +27,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/blog-selection")
 public class BlogSelectionController {
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Autowired
     private BlogSelectionRepository blogSelectionRepository;
@@ -112,11 +117,12 @@ public class BlogSelectionController {
     }
 
     @GetMapping
-    public List<BlogPost> getBlogPosts() {
+    public List<BlogPost> getBlogPosts(Principal principal) {
+        var userId = principal.getName();
         var blogPosts = new LinkedList<BlogPost>();
 
         try {
-            var blogSelections = blogSelectionRepository.findAll();
+            var blogSelections = blogSelectionRepository.findAllByUserIdAndIsSelectedTrue(userId);
 
             for (var blogSelection : blogSelections) {
                 var blogPostListDocument = Jsoup.connect(blogSelection.getBlogUrl()).get();
@@ -164,6 +170,20 @@ public class BlogSelectionController {
         });
 
         return blogPosts;
+    }
+
+    @GetMapping("/selected")
+    public List<SelectedBlogDTO> getSelectedBlogs(Principal principal) {
+        var userId = principal.getName();
+        var blogSelections = blogSelectionRepository.findAllByUserId(userId);
+        var selectedBlogDTOs = new LinkedList<SelectedBlogDTO>();
+
+        for (var blogSelection : blogSelections) {
+            var selectedBlogDTO = modelMapper.map(blogSelection, SelectedBlogDTO.class);
+            selectedBlogDTOs.add(selectedBlogDTO);
+        }
+
+        return selectedBlogDTOs;
     }
 
     public static Date parseDate(String dateString) {
