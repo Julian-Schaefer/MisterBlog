@@ -5,7 +5,7 @@
 
     <div style="float: right;">
         <p id="greeting" *ngIf="authService.user" style="float: left;">Hello, {{authService.user.displayName}}!</p>
-        <div id="sign-out-container">
+        <div *ngIf="authService.user" id="sign-out-container">
             <button mat-raised-button color="primary" (click)="authService.signOut()" style="float: left;">Sign
                 out</button>
         </div>

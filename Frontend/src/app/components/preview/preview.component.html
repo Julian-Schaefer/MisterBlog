@@ -1,60 +1,64 @@
-<div id="steps">
-    <h2>Steps</h2>
+<div id="container">
+    <div id="steps">
+        <h2>Steps</h2>
 
-    <h3>First Article</h3>
-    <p [ngClass]="{selected: step === 0}">1. Select Header of first Article</p>
-    <p [ngClass]="{selected: step === 1}">2. Select Introduction of first Article</p>
-    <br>
+        <h3>First Article</h3>
+        <p [ngClass]="{selected: step === 0}">1. Select Header of first Article</p>
+        <p [ngClass]="{selected: step === 1}">2. Select Introduction of first Article</p>
+        <br>
 
-    <h3>Second Article</h3>
-    <p [ngClass]="{selected: step === 2}">3. Select Header of second Article</p>
-    <p [ngClass]="{selected: step === 3}">4. Select Introduction of second Article</p>
-    <br>
+        <h3>Second Article</h3>
+        <p [ngClass]="{selected: step === 2}">3. Select Header of second Article</p>
+        <p [ngClass]="{selected: step === 3}">4. Select Introduction of second Article</p>
+        <br>
 
-    <h3>Old Articles</h3>
-    <p [ngClass]="{selected: step === 4}">5. Select the Link to the second Page/older Posts of the Blog</p>
+        <h3>Old Articles</h3>
+        <p [ngClass]="{selected: step === 4}">5. Select the Link to the second Page/older Posts of the Blog</p>
 
-    <h3>Article</h3>
-    <p [ngClass]="{selected: step === 5}">6. Select Article Header</p>
-    <p [ngClass]="{selected: step === 6}">7. Select Article Content</p>
-    <p [ngClass]="{selected: step === 7}">8. Select Article Date</p>
-    <p [ngClass]="{selected: step === 8}">9. Select Article Author</p>
+        <h3>Article</h3>
+        <p [ngClass]="{selected: step === 5}">6. Select Article Header</p>
+        <p [ngClass]="{selected: step === 6}">7. Select Article Content</p>
+        <p [ngClass]="{selected: step === 7}">8. Select Article Date</p>
+        <p [ngClass]="{selected: step === 8}">9. Select Article Author</p>
 
-    <button mat-raised-button (click)="onBackClick()" [disabled]="step === 0">Back</button>
-    <button mat-raised-button color="primary" (click)="onNextClick()" [disabled]="!nextButtonEnabled"
-        *ngIf="step !== 8">Next</button>
-    <button mat-raised-button color="primary" (click)="onFinishClick()" [disabled]="!nextButtonEnabled"
-        *ngIf="step === 8">Finish</button>
+        <button mat-raised-button (click)="onBackClick()" [disabled]="step === 0">Back</button>
+        <button mat-raised-button color="primary" (click)="onNextClick()" [disabled]="!nextButtonEnabled"
+            *ngIf="step !== 8">Next</button>
+        <button mat-raised-button color="primary" (click)="onFinishClick()" [disabled]="!nextButtonEnabled"
+            *ngIf="step === 8">Finish</button>
 
-    <mat-vertical-stepper [linear]="true" #stepper>
-        <mat-step [stepControl]="firstFormGroup">
-            <form [formGroup]="firstFormGroup">
-                <ng-template matStepLabel>Fill out your name</ng-template>
-                <div>
-                    <button mat-raised-button color="primary" matStepperNext>Next</button>
-                </div>
-            </form>
-        </mat-step>
-        <mat-step [stepControl]="secondFormGroup">
-            <form [formGroup]="secondFormGroup">
-                <ng-template matStepLabel>Fill out your address</ng-template>
+        <mat-vertical-stepper [linear]="true" #stepper>
+            <mat-step [stepControl]="firstFormGroup">
+                <form [formGroup]="firstFormGroup">
+                    <ng-template matStepLabel>Fill out your name</ng-template>
+                    <div>
+                        <button mat-raised-button color="primary" matStepperNext>Next</button>
+                    </div>
+                </form>
+            </mat-step>
+            <mat-step [stepControl]="secondFormGroup">
+                <form [formGroup]="secondFormGroup">
+                    <ng-template matStepLabel>Fill out your address</ng-template>
+                    <div>
+                        <button mat-raised-button color="primary" matStepperPrevious>Back</button>
+                        <button mat-raised-button color="primary" matStepperNext>Next</button>
+                    </div>
+                </form>
+            </mat-step>
+            <mat-step>
+                <ng-template matStepLabel>Done</ng-template>
+                <p>You are now done.</p>
                 <div>
                     <button mat-raised-button color="primary" matStepperPrevious>Back</button>
-                    <button mat-raised-button color="primary" matStepperNext>Next</button>
+                    <button mat-raised-button color="primary" (click)="stepper.reset()">Finish</button>
                 </div>
-            </form>
-        </mat-step>
-        <mat-step>
-            <ng-template matStepLabel>Done</ng-template>
-            <p>You are now done.</p>
-            <div>
-                <button mat-raised-button color="primary" matStepperPrevious>Back</button>
-                <button mat-raised-button color="primary" (click)="stepper.reset()">Finish</button>
-            </div>
-        </mat-step>
-    </mat-vertical-stepper>
+            </mat-step>
+        </mat-vertical-stepper>
+    </div>
+
+    <iframe #previewIframe id="preview" sandbox title="Blog Preview"></iframe>
+
+    <!-- <div #previewDiv id="preview-div" [innerHTML]="previewHtml | safeHtml" (click)="onElementSelected($event)"
+    (mouseover)="onMouseOver($event)" (mouseout)="onMouseOut($event)"></div> -->
+
 </div>
-
-
-<div #previewDiv id="preview-div" [innerHTML]="previewHtml | safeHtml" (click)="onElementSelected($event)"
-    (mouseover)="onMouseOver($event)" (mouseout)="onMouseOut($event)"></div>

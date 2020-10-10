@@ -31,6 +31,7 @@ import { PostComponent } from './components/post/post.component';
 import { SelectedBlogsComponent } from './components/selected-blogs/selected-blogs.component';
 
 import { SafeHtmlPipe } from './util/SafeHtmlPipe';
+import { SafeURLPipe } from './util/SafeURLPipe';
 
 import { AuthenticationInterceptor } from './interceptors/authentication.interceptor';
 
@@ -47,6 +48,7 @@ import { AuthenticationInterceptor } from './interceptors/authentication.interce
     PostListComponent,
     PostComponent,
     SafeHtmlPipe,
+    SafeURLPipe,
     SelectedBlogsComponent
   ],
   imports: [

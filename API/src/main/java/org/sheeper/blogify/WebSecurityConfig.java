@@ -12,9 +12,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()).and().csrf()
-                .disable().formLogin().disable().httpBasic().disable().authorizeRequests().anyRequest().authenticated()
-                .and().addFilterBefore(new FirebaseAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+        http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()).and().headers()
+                .frameOptions().disable().and().csrf().disable().formLogin().disable().httpBasic().disable()
+                .authorizeRequests().anyRequest().authenticated().and()
+                .addFilterBefore(new FirebaseAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 

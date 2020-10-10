@@ -41,6 +41,7 @@ export class PreviewComponent implements OnInit {
   blogUrl: string;
   previewHtml: string;
   @ViewChild("previewDiv") previewDiv: ElementRef<HTMLElement>;
+  @ViewChild("previewIframe") previewIframe: ElementRef<HTMLIFrameElement>;
 
   step = Step.SELECT_FIRST_BLOG_POST_HEADER;
   selectedElement: any;
@@ -49,7 +50,11 @@ export class PreviewComponent implements OnInit {
 
   constructor(private dialog: MatDialog, private htmlService: HTMLService, public activatedRoute: ActivatedRoute, private router: Router, private formBuilder: FormBuilder) {
     this.blogUrl = this.activatedRoute.snapshot.queryParamMap.get('url');
-    this.htmlService.getBlogPosts(this.blogUrl).subscribe((data) => this.previewHtml = data);
+    //this.blogUrl = "http://localhost:8080/html?url=" + this.blogUrl;
+    this.htmlService.getBlogPosts(this.blogUrl).subscribe((data) => {
+      console.log(data);
+      this.previewIframe.nativeElement.src = URL.createObjectURL(data);
+    });
   }
 
   ngOnInit() {
@@ -72,7 +77,7 @@ export class PreviewComponent implements OnInit {
     if (this.step === Step.SELECT_BLOG_POST_HEADER) {
       this.htmlService.getBlogPosts(this.blogUrl).subscribe((data) => {
         this.step -= 1;
-        this.previewHtml = data;
+        //this.previewHtml = data;
         this.selectElement(this.selectedElements[this.step]);
       });
     } else {

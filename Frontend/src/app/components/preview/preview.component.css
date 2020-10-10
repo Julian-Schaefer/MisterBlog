@@ -1,14 +1,16 @@
-div#steps {
-    float: left;
-    width: 300px;
-    height: 80%;
-    border-right: black 2px solid;
-    overflow-y: scroll;
+div#container {
+    display: flex;
 }
 
-div#preview-div {
-    height: 80%;
-    overflow-y: scroll;
+div#steps {
+    width: 300px;
+    border-right: black 2px solid;
+    overflow-y: auto;
+}
+
+iframe#preview {
+    flex-grow: 100;
+    overflow-y: auto;
 }
 
 p.selected {
