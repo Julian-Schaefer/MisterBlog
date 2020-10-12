@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ErrorDialogComponent } from '../error-dialog/error-dialog.component';
 import { HTMLService } from '../../services/html.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatStepper } from '@angular/material/stepper';
 
 enum Step {
   SELECT_FIRST_BLOG_POST_HEADER = 0,
@@ -43,6 +44,8 @@ export class PreviewComponent implements OnInit {
   @ViewChild("previewDiv") previewDiv: ElementRef<HTMLElement>;
   @ViewChild("previewIframe") previewIframe: ElementRef<HTMLIFrameElement>;
 
+  @ViewChild('stepper') stepper: MatStepper;
+
   step = Step.SELECT_FIRST_BLOG_POST_HEADER;
   selectedElement: any;
   selectedElements: any[] = [];
@@ -50,10 +53,8 @@ export class PreviewComponent implements OnInit {
 
   constructor(private dialog: MatDialog, private htmlService: HTMLService, public activatedRoute: ActivatedRoute, private router: Router, private formBuilder: FormBuilder) {
     this.blogUrl = this.activatedRoute.snapshot.queryParamMap.get('url');
-    //this.blogUrl = "http://localhost:8080/html?url=" + this.blogUrl;
     this.htmlService.getBlogPosts(this.blogUrl).subscribe((data) => {
-      console.log(data);
-      this.previewIframe.nativeElement.src = URL.createObjectURL(data);
+      this.previewHtml = data;
     });
   }
 
@@ -122,6 +123,9 @@ export class PreviewComponent implements OnInit {
     }
 
     this.selectElement(this.selectedElements[this.step]);
+
+    this.stepper.selected.completed = true;
+    this.stepper.next();
   }
 
   onFinishClick(): void {

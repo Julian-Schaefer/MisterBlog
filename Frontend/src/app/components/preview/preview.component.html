@@ -28,24 +28,22 @@
             *ngIf="step === 8">Finish</button>
 
         <mat-vertical-stepper [linear]="true" #stepper>
-            <mat-step [stepControl]="firstFormGroup">
-                <form [formGroup]="firstFormGroup">
-                    <ng-template matStepLabel>Fill out your name</ng-template>
-                    <div>
-                        <button mat-raised-button color="primary" matStepperNext>Next</button>
-                    </div>
-                </form>
+            <mat-step completed="false">
+                <ng-template matStepLabel>Fill out your name</ng-template>
+                <div>
+                    <button mat-raised-button color="primary" (click)="onNextClick()"
+                        [disabled]="!nextButtonEnabled">Next</button>
+                </div>
             </mat-step>
-            <mat-step [stepControl]="secondFormGroup">
-                <form [formGroup]="secondFormGroup">
-                    <ng-template matStepLabel>Fill out your address</ng-template>
-                    <div>
-                        <button mat-raised-button color="primary" matStepperPrevious>Back</button>
-                        <button mat-raised-button color="primary" matStepperNext>Next</button>
-                    </div>
-                </form>
+            <mat-step completed="false">
+                <ng-template matStepLabel>Fill out your address</ng-template>
+                <div>
+                    <button mat-raised-button (click)="onBackClick()">Back</button>
+                    <button mat-raised-button color="primary" (click)="onNextClick()"
+                        [disabled]="!nextButtonEnabled">Next</button>
+                </div>
             </mat-step>
-            <mat-step>
+            <mat-step completed="false">
                 <ng-template matStepLabel>Done</ng-template>
                 <p>You are now done.</p>
                 <div>
@@ -56,9 +54,10 @@
         </mat-vertical-stepper>
     </div>
 
-    <iframe #previewIframe id="preview" sandbox title="Blog Preview"></iframe>
+    <!-- <iframe #previewIframe id="preview" sandbox title="Blog Preview"></iframe> -->
 
-    <!-- <div #previewDiv id="preview-div" [innerHTML]="previewHtml | safeHtml" (click)="onElementSelected($event)"
-    (mouseover)="onMouseOver($event)" (mouseout)="onMouseOut($event)"></div> -->
+    <div #previewDiv id=" preview" [innerHTML]="previewHtml | safeHtml" (click)="onElementSelected($event)"
+        (mouseover)="onMouseOver($event)" (mouseout)="onMouseOut($event)">
+    </div>
 
 </div>

@@ -13,8 +13,8 @@ export class HTMLService {
 
   constructor(private http: HttpClient) { }
 
-  getBlogPosts(blogUrl: string): Observable<Blob> {
-    return this.http.get(this.baseUrl + "/html?url=" + blogUrl, { responseType: 'blob' });
+  getBlogPosts(blogUrl: string): Observable<string> {
+    return this.http.get(this.baseUrl + "/html?url=" + blogUrl, { responseType: 'text' });
   }
 
   getSpecificBlogPost(blogUrl: string, headerSelector: string): Observable<string> {

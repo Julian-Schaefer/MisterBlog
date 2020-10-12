@@ -22,7 +22,7 @@ public class HTMLService {
         var linkElement = headerElement.select("a[href]");
         var blogPostUrl = linkElement.attr("href");
 
-        return doc.toString();
+        return HTMLService.getHTML(blogPostUrl);
     }
 
     public static String getHTML(String url) throws IOException {
@@ -49,7 +49,7 @@ public class HTMLService {
             applyCSS(bodyElement, style.data());
         });
 
-        return doc.toString();
+        return bodyElement.html();
     }
 
     public static void applyCSS(Element rootElement, String css) {
