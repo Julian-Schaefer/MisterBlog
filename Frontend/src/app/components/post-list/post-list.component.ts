@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { BlogService } from 'src/app/services/blog.service';
 import { BlogPost } from 'src/app/services/BlogPost';
+import { ServiceResultStatus } from 'src/app/services/ServiceResult';
 
 @Component({
   selector: 'app-post-list',
@@ -19,9 +20,12 @@ export class PostListComponent {
 
   loadBlogPosts(): void {
     this.loading = true;
-    this.blogService.getBlogPosts().subscribe(data => {
-      this.blogPosts = data;
-      this.loading = false;
+    this.blogService.getBlogPosts().subscribe(result => {
+      this.blogPosts = result.content;
+
+      if (result.status == ServiceResultStatus.FINISHED) {
+        this.loading = false;
+      }
     });
   }
 }
