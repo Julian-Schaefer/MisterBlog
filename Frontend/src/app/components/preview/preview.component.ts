@@ -41,9 +41,8 @@ export class PreviewComponent implements OnInit {
 
   blogUrl: string;
   previewHtml: string;
-  @ViewChild("previewDiv") previewDiv: ElementRef<HTMLElement>;
-  @ViewChild("previewIframe") previewIframe: ElementRef<HTMLIFrameElement>;
 
+  @ViewChild('previewDiv') previewDiv: ElementRef<HTMLElement>;
   @ViewChild('stepper') stepper: MatStepper;
 
   step = Step.SELECT_FIRST_BLOG_POST_HEADER;

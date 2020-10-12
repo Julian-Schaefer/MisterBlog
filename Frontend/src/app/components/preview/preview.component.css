@@ -4,7 +4,9 @@ div#container {
 }
 
 div#steps {
-    width: 500px;
+    min-width: 400px;
+    width: 30%;
+    max-width: 500px;
     border-right: black 2px solid;
     overflow-y: auto;
 }
