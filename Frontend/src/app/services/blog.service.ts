@@ -18,7 +18,7 @@ export class BlogService {
 
   constructor(private http: HttpClient) { }
 
-  getBlogPosts(): Observable<ServiceResult<BlogPost[]>> {
+  getBlogPosts(offset: number = 0): Observable<ServiceResult<BlogPost[]>> {
     return new Observable<ServiceResult<BlogPost[]>>(observer => {
       let blogPostString = localStorage.getItem(this.BLOG_POST_KEY);
       if (blogPostString) {
@@ -26,10 +26,20 @@ export class BlogService {
         observer.next({ status: ServiceResultStatus.STARTED, content: blogPosts });
       }
 
+      let relativeUrl = "/blog-selection";
+      if (offset > 0) {
+        relativeUrl += "?offset=" + offset;
+      }
+
       this.http.get<BlogPost[]>(this.baseUrl + "/blog-selection").subscribe(blogPosts => {
+        if (offset > 0) {
+          let previousBlogPosts = JSON.parse(blogPostString) as BlogPost[];
+          blogPosts = previousBlogPosts.concat(blogPosts);
+        }
+
         localStorage.setItem(this.BLOG_POST_KEY, JSON.stringify(blogPosts));
         observer.next({ status: ServiceResultStatus.FINISHED, content: blogPosts });
-      })
+      });
     });
   }
 

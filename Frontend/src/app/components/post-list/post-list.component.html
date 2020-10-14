@@ -15,6 +15,8 @@
                 <p>{{blogPost.introduction}}</p>
             </mat-card>
         </div>
+
+        <mat-spinner *ngIf="loadingMore" diameter="42" style="margin: auto;"></mat-spinner>
     </div>
 
     <div style="width: 348px; position: fixed; left: 50%; top: 70px; margin-left: 132px; margin-top: 20px;">
