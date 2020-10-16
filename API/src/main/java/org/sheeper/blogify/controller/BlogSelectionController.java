@@ -16,6 +16,7 @@ import org.sheeper.blogify.model.BlogPost;
 import org.sheeper.blogify.model.BlogSelection;
 import org.sheeper.blogify.model.BlogSelectionId;
 import org.sheeper.blogify.repository.BlogSelectionRepository;
+import org.sheeper.blogify.service.BlogSelectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -34,6 +36,9 @@ public class BlogSelectionController {
 
     @Autowired
     private BlogSelectionRepository blogSelectionRepository;
+
+    @Autowired
+    private BlogSelectionService blogSelectionService;
 
     @PostMapping
     public ResponseEntity<String> registerBlogSelection(@RequestBody BlogSelection blogSelection, Principal principal) {
@@ -118,50 +123,15 @@ public class BlogSelectionController {
     }
 
     @GetMapping
-    public List<BlogPost> getBlogPosts(Principal principal) {
+    public List<BlogPost> getBlogPosts(@RequestParam("offset") int offset, @RequestParam("limit") int limit,
+            Principal principal) {
         var userId = principal.getName();
         var blogPosts = new LinkedList<BlogPost>();
 
-        try {
-            var blogSelections = blogSelectionRepository.findAllByUserIdAndIsSelectedTrue(userId);
+        var blogSelections = blogSelectionRepository.findAllByUserIdAndIsSelectedTrue(userId);
 
-            for (var blogSelection : blogSelections) {
-                var blogPostListDocument = Jsoup.connect(blogSelection.getBlogUrl()).get();
-                var blogPostListDocumentBody = blogPostListDocument.body();
-
-                var postHeaderElements = blogPostListDocumentBody.select(blogSelection.getPostHeaderSelector());
-                var postIntroductionElements = blogPostListDocumentBody
-                        .select(blogSelection.getPostIntroductionSelector());
-                for (int i = 0; i < postHeaderElements.size(); i++) {
-                    var postHeaderElement = postHeaderElements.get(i);
-                    var postIntroductionElement = postIntroductionElements.get(i);
-
-                    var linkElements = postHeaderElement.select("a[href]");
-                    var blogPostUrl = linkElements.first().attr("href");
-
-                    var blogPostDocument = Jsoup.connect(blogPostUrl).get();
-                    var blogPostDocumentBody = blogPostDocument.body();
-                    var headerElement = blogPostDocumentBody.select(blogSelection.getHeaderSelector()).first();
-                    var authorElement = blogPostDocumentBody.select(blogSelection.getAuthorSelector()).first();
-                    var dateElement = blogPostDocumentBody.select(blogSelection.getDateSelector()).first();
-                    var contentElement = blogPostDocumentBody.select(blogSelection.getContentSelector()).first();
-                    contentElement.select("*").forEach((element) -> {
-                        element.attr("style", "overflow: auto;");
-                    });
-
-                    BlogPost blogPost = new BlogPost();
-                    blogPost.setUrl(blogPostUrl);
-                    blogPost.setTitle(headerElement.text());
-                    blogPost.setIntroduction(postIntroductionElement.text());
-                    blogPost.setAuthor(authorElement.text());
-                    var date = parseDate(dateElement.text());
-                    blogPost.setDate(date);
-                    blogPost.setContent(contentElement.html());
-                    blogPosts.add(blogPost);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        for (var blogSelection : blogSelections) {
+            blogSelectionService.getBlogPostFromBlogSelection(blogSelection, 0);
         }
 
         blogPosts.sort(new Comparator<BlogPost>() {
