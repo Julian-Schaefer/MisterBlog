@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
 public class BlogSelectionService {
 
     public List<BlogPost> getBlogPostFromBlogSelection(BlogSelection blogSelection, int page) {
+        var blogPosts = new LinkedList<BlogPost>();
+
         try {
             var blogPostListDocument = Jsoup.connect(blogSelection.getBlogUrl()).get();
 
@@ -67,12 +69,13 @@ public class BlogSelectionService {
                 var date = parseDate(dateElement.text());
                 blogPost.setDate(date);
                 blogPost.setContent(contentElement.html());
+                blogPosts.add(blogPost);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return null;
+        return blogPosts;
     }
 
     public Date parseDate(String dateString) {

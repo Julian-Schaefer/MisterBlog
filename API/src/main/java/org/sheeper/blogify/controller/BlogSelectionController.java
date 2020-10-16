@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import org.jsoup.Jsoup;
 import org.modelmapper.ModelMapper;
@@ -123,15 +124,16 @@ public class BlogSelectionController {
     }
 
     @GetMapping
-    public List<BlogPost> getBlogPosts(@RequestParam("offset") int offset, @RequestParam("limit") int limit,
-            Principal principal) {
+    public List<BlogPost> getBlogPosts(@RequestParam("offset") Optional<Integer> offset,
+            @RequestParam("limit") Optional<Integer> limit, Principal principal) {
         var userId = principal.getName();
         var blogPosts = new LinkedList<BlogPost>();
 
         var blogSelections = blogSelectionRepository.findAllByUserIdAndIsSelectedTrue(userId);
 
         for (var blogSelection : blogSelections) {
-            blogSelectionService.getBlogPostFromBlogSelection(blogSelection, 0);
+            var additionalBlogPosts = blogSelectionService.getBlogPostFromBlogSelection(blogSelection, 0);
+            blogPosts.addAll(additionalBlogPosts);
         }
 
         blogPosts.sort(new Comparator<BlogPost>() {
