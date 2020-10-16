@@ -2,4 +2,9 @@
     <h1><b>{{blogPost.title}}</b></h1>
     <p>{{blogPost.date}} on {{blogPost.author}}</p>
     <div [innerHTML]="contentHtml | safeHtml"></div>
+
+    <mat-divider></mat-divider>
+    <button id="original-post-button" mat-raised-button color="primary">
+        <a id="original-post-link" target="_blank" rel="noopener noreferrer" href="{{blogPost.url}}">Go to original
+            Post</a></button>
 </mat-card>
