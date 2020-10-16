@@ -6,9 +6,9 @@
         </div>
 
         <div *ngIf="blogPosts && blogPosts.length > 0">
-            <mat-card style="margin-bottom: 30px;" *ngFor="let blogPost of blogPosts">
-                <a routerLink="/post" [state]="{ data: blogPost }">
-                    <h2>{{blogPost.title}}</h2>
+            <mat-card id="blog-post-card" *ngFor="let blogPost of blogPosts">
+                <a id="blog-post-link" routerLink="/post" [state]="{ data: blogPost }">
+                    <h2 id="blog-post-title">{{blogPost.title}}</h2>
                 </a>
                 <p>From {{blogPost.url}}</p>
                 <p>{{blogPost.author}} on {{blogPost.date}}</p>

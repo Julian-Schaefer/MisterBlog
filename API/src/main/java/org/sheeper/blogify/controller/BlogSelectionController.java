@@ -124,16 +124,25 @@ public class BlogSelectionController {
     }
 
     @GetMapping
-    public List<BlogPost> getBlogPosts(@RequestParam("offset") Optional<Integer> offset,
-            @RequestParam("limit") Optional<Integer> limit, Principal principal) {
+    public List<BlogPost> getBlogPosts(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
+            @RequestParam(value = "limit", required = false, defaultValue = "20") int limit, Principal principal) {
         var userId = principal.getName();
         var blogPosts = new LinkedList<BlogPost>();
 
         var blogSelections = blogSelectionRepository.findAllByUserIdAndIsSelectedTrue(userId);
 
-        for (var blogSelection : blogSelections) {
-            var additionalBlogPosts = blogSelectionService.getBlogPostFromBlogSelection(blogSelection, 0);
-            blogPosts.addAll(additionalBlogPosts);
+        if (blogSelections.size() == 0) {
+            return blogPosts;
+        }
+
+        int page = 0;
+        while ((blogPosts.size() - offset) < limit) {
+            for (var blogSelection : blogSelections) {
+                var additionalBlogPosts = blogSelectionService.getBlogPostFromBlogSelection(blogSelection, page);
+                blogPosts.addAll(additionalBlogPosts);
+            }
+
+            page++;
         }
 
         blogPosts.sort(new Comparator<BlogPost>() {
@@ -142,7 +151,7 @@ public class BlogSelectionController {
             }
         });
 
-        return blogPosts;
+        return blogPosts.subList(offset, blogPosts.size());
     }
 
     @GetMapping("/selected")

@@ -1,0 +1,12 @@
+#blog-post-card {
+    margin-bottom: 32px;
+}
+
+a#blog-post-link {
+    text-decoration: none;
+}
+
+h2#blog-post-title {
+    color: black;
+    font-size: 18pt;
+}

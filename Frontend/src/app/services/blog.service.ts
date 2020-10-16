@@ -31,7 +31,7 @@ export class BlogService {
         relativeUrl += "?offset=" + offset;
       }
 
-      this.http.get<BlogPost[]>(this.baseUrl + "/blog-selection").subscribe(blogPosts => {
+      this.http.get<BlogPost[]>(this.baseUrl + relativeUrl).subscribe(blogPosts => {
         if (offset > 0) {
           let previousBlogPosts = JSON.parse(blogPostString) as BlogPost[];
           blogPosts = previousBlogPosts.concat(blogPosts);
