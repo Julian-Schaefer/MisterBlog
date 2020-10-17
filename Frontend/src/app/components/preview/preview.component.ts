@@ -63,6 +63,7 @@ export class PreviewComponent {
     this.unselectElement();
 
     if (this.step === Step.SELECT_BLOG_POST_HEADER) {
+      this.previewHtml = undefined;
       this.htmlService.getBlogPosts(this.blogUrl).subscribe((data) => {
         this.previousStep();
         this.previewHtml = data;
