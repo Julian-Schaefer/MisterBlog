@@ -12,7 +12,8 @@
 
         <div id="steps-container">
 
-            <mat-vertical-stepper [linear]="true" #stepper>
+            <mat-vertical-stepper [linear]="true" #stepper (selectionChange)="onSelectionChange($event)"
+                [disableRipple]>
                 <mat-step completed="false">
                     <ng-template matStepLabel>Select the Headline of the first Blog-Post</ng-template>
                     <div>

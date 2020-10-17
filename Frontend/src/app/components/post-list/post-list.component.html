@@ -7,8 +7,9 @@
 
         <div *ngIf="blogPosts && blogPosts.length > 0">
             <mat-card id="blog-post-card" *ngFor="let blogPost of blogPosts">
-                <a id="blog-post-link" routerLink="/post" [state]="{ data: blogPost }">
-                    <h2 id="blog-post-title">{{blogPost.title}}</h2>
+                <a id="blog-post-link" routerLink="/post" [state]="{ data: blogPost }"
+                    [queryParams]="{ url: blogPost.url }">
+                    <h2 id=" blog-post-title">{{blogPost.title}}</h2>
                 </a>
                 <p>From {{blogPost.url}}</p>
                 <p>{{blogPost.author}} on {{blogPost.date}}</p>
@@ -22,5 +23,4 @@
     <div style="width: 348px; position: fixed; left: 50%; top: 70px; margin-left: 132px; margin-top: 20px;">
         <selected-blogs (selectedBlogsUpdated)="loadBlogPosts()"></selected-blogs>
     </div>
-
 </div>

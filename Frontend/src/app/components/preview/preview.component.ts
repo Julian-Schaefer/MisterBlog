@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ErrorDialogComponent } from '../error-dialog/error-dialog.component';
 import { HTMLService } from '../../services/html.service';
 import { MatStepper } from '@angular/material/stepper';
+import { StepperSelectionEvent } from '@angular/cdk/stepper';
 
 enum Step {
   SELECT_FIRST_BLOG_POST_HEADER = 0,
@@ -138,6 +139,22 @@ export class PreviewComponent {
     }, error => {
       this.dialog.open(ErrorDialogComponent, { data: error });
     });
+  }
+
+  onSelectionChange(event: StepperSelectionEvent): void {
+    this.unselectElement();
+
+    if (this.step > Step.SELECT_OLD_BLOG_POSTS_LINK && event.selectedIndex <= Step.SELECT_OLD_BLOG_POSTS_LINK) {
+      this.previewHtml = undefined;
+      this.htmlService.getBlogPosts(this.blogUrl).subscribe((data) => {
+        this.step = event.selectedIndex;
+        this.previewHtml = data;
+        this.selectElement(this.selectedElements[this.step]);
+      });
+    } else {
+      this.step = event.selectedIndex;
+      this.selectElement(this.selectedElements[this.step]);
+    }
   }
 
   nextStep(): void {

@@ -4,9 +4,9 @@
 
 a#blog-post-link {
     text-decoration: none;
+    color: black;
 }
 
 h2#blog-post-title {
-    color: black;
     font-size: 18pt;
 }

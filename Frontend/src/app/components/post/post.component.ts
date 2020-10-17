@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { BlogPost } from 'src/app/services/BlogPost';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-post',
@@ -10,10 +10,12 @@ import { Router } from '@angular/router';
 })
 export class PostComponent {
   blogPost: BlogPost;
-  contentHtml: string;
 
-  constructor(private router: Router) {
-    this.blogPost = this.router.getCurrentNavigation().extras.state.data as BlogPost;
-    this.contentHtml = this.blogPost.content;
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
+    if (this.router.getCurrentNavigation().extras.state) {
+      this.blogPost = this.router.getCurrentNavigation().extras.state.data as BlogPost;
+    } else {
+      console.log(this.activatedRoute.snapshot.queryParamMap.get('url'));
+    }
   }
 }

@@ -1,7 +1,10 @@
-<mat-card style="width: 1000px; margin-left: auto; margin-right: auto; margin-top: 20px; margin-bottom: 20px;">
+<mat-spinner *ngIf="!blogPost" diameter="60" style="margin: auto; margin-top: 42px;"></mat-spinner>
+
+<mat-card *ngIf="blogPost"
+    style="width: 1000px; margin-left: auto; margin-right: auto; margin-top: 20px; margin-bottom: 20px;">
     <h1><b>{{blogPost.title}}</b></h1>
     <p>{{blogPost.date}} on {{blogPost.author}}</p>
-    <div [innerHTML]="contentHtml | safeHtml"></div>
+    <div [innerHTML]="blogPost.content | safeHtml"></div>
 
     <mat-divider></mat-divider>
     <button id="original-post-button" mat-raised-button color="primary">
