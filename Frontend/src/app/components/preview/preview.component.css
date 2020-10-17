@@ -1,21 +1,31 @@
-div#container {
-    display: flex;
-    height: 100%;
+#steps {
+    position: fixed;
+    top: 90px;
+    left: 20px;
+    z-index: 100000;
 }
 
-div#steps {
-    min-width: 400px;
-    width: 30%;
-    max-width: 500px;
-    border-right: black 2px solid;
-    overflow-y: auto;
+div#steps-container {
+    overflow-y: hidden;
+}
+
+button.stepper-button {
+    margin-top: 12px;
+}
+
+button.mat-primary {
+    margin-left: 12px;
 }
 
 div#preview {
-    flex-grow: 100;
+    width: 100%;
     overflow-y: auto;
 }
 
 p.selected {
     color: red;
+}
+
+.mat-vertical-stepper-header, .mat-step-header {
+    pointer-events: none;
 }

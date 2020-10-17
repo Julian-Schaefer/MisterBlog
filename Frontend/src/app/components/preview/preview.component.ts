@@ -1,9 +1,8 @@
-import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorDialogComponent } from '../error-dialog/error-dialog.component';
 import { HTMLService } from '../../services/html.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 
 enum Step {
@@ -34,9 +33,7 @@ export interface IBlogSelection {
   templateUrl: './preview.component.html',
   styleUrls: ['./preview.component.css']
 })
-export class PreviewComponent implements OnInit {
-  firstFormGroup: FormGroup;
-  secondFormGroup: FormGroup;
+export class PreviewComponent {
   isOptional = false;
 
   blogUrl: string;
@@ -50,19 +47,10 @@ export class PreviewComponent implements OnInit {
   selectedElements: any[] = [];
   nextButtonEnabled = false;
 
-  constructor(private dialog: MatDialog, private htmlService: HTMLService, public activatedRoute: ActivatedRoute, private router: Router, private formBuilder: FormBuilder) {
+  constructor(private dialog: MatDialog, private htmlService: HTMLService, public activatedRoute: ActivatedRoute, private router: Router) {
     this.blogUrl = this.activatedRoute.snapshot.queryParamMap.get('url');
     this.htmlService.getBlogPosts(this.blogUrl).subscribe((data) => {
       this.previewHtml = data;
-    });
-  }
-
-  ngOnInit() {
-    this.firstFormGroup = this.formBuilder.group({
-      firstCtrl: ''
-    });
-    this.secondFormGroup = this.formBuilder.group({
-      secondCtrl: ''
     });
   }
 
@@ -76,12 +64,12 @@ export class PreviewComponent implements OnInit {
 
     if (this.step === Step.SELECT_BLOG_POST_HEADER) {
       this.htmlService.getBlogPosts(this.blogUrl).subscribe((data) => {
-        this.step -= 1;
-        //this.previewHtml = data;
+        this.previousStep();
+        this.previewHtml = data;
         this.selectElement(this.selectedElements[this.step]);
       });
     } else {
-      this.step -= 1;
+      this.previousStep();
       this.selectElement(this.selectedElements[this.step]);
     }
   }
@@ -94,7 +82,7 @@ export class PreviewComponent implements OnInit {
       case Step.SELECT_SECOND_BLOG_POST_HEADER:
         try {
           this.htmlService.checkElementTypesAndDepths(this.selectedElements[Step.SELECT_FIRST_BLOG_POST_HEADER], this.selectedElements[Step.SELECT_SECOND_BLOG_POST_HEADER]);
-          this.step += 1;
+          this.nextStep();
         } catch (e) {
           this.dialog.open(ErrorDialogComponent, { data: e })
         }
@@ -102,29 +90,27 @@ export class PreviewComponent implements OnInit {
       case Step.SELECT_SECOND_BLOG_POST_INTRODUCTION:
         try {
           this.htmlService.checkElementTypesAndDepths(this.selectedElements[Step.SELECT_FIRST_BLOG_POST_INTRODUCTION], this.selectedElements[Step.SELECT_SECOND_BLOG_POST_INTRODUCTION]);
-          this.step += 1;
+          this.nextStep();
         } catch (e) {
           this.dialog.open(ErrorDialogComponent, { data: e })
         }
         break;
       case Step.SELECT_OLD_BLOG_POSTS_LINK:
+        this.previewHtml = undefined;
         let headerElement = this.selectedElements[Step.SELECT_FIRST_BLOG_POST_HEADER];
         let headerSelectionArray = this.getSelectorArray(headerElement);
         let headerSelector = this.htmlService.buildSelectorString(headerSelectionArray);
         this.htmlService.getSpecificBlogPost(this.blogUrl, headerSelector).subscribe((data) => {
           this.previewHtml = data;
-          this.step += 1;
+          this.nextStep();
         });
         break;
       default:
-        this.step += 1;
+        this.nextStep();
         break;
     }
 
     this.selectElement(this.selectedElements[this.step]);
-
-    this.stepper.selected.completed = true;
-    this.stepper.next();
   }
 
   onFinishClick(): void {
@@ -151,6 +137,18 @@ export class PreviewComponent implements OnInit {
     }, error => {
       this.dialog.open(ErrorDialogComponent, { data: error });
     });
+  }
+
+  nextStep(): void {
+    this.step += 1;
+    this.stepper.selected.completed = true;
+    this.stepper.next();
+  }
+
+  previousStep(): void {
+    this.step -= 1;
+    this.stepper.selected.completed = false;
+    this.stepper.previous();
   }
 
   getSelectorArray(element: HTMLElement): { tagName: string, siblingIndex: number }[] {
