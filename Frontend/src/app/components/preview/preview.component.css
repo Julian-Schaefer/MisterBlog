@@ -1,8 +1,25 @@
-#steps {
+.step-boundary {
     position: fixed;
     top: 90px;
+    bottom: 20px;
     left: 20px;
+    right: 20px;
     z-index: 100000;
+    visibility: hidden;
+    pointer-events: visible;
+}
+
+#steps {
+    pointer-events: all;
+    width: fit-content;
+    visibility: visible;
+}
+
+div#steps-handle {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    cursor: move;
 }
 
 div#steps-container {

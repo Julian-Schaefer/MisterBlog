@@ -1,91 +1,101 @@
-<mat-card id="steps">
-    <h2>Steps</h2>
+<div class="step-boundary">
+    <mat-card id="steps" cdkDragBoundary=".step-boundary" cdkDrag>
+        <h2>Steps</h2>
+        <div id="steps-handle" cdkDragHandle>
+            <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                    d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z">
+                </path>
+                <path d="M0 0h24v24H0z" fill="none"></path>
+            </svg>
+        </div>
 
-    <div id="steps-container">
+        <div id="steps-container">
 
-        <mat-vertical-stepper [linear]="true" #stepper>
-            <mat-step completed="false">
-                <ng-template matStepLabel>Select the Headline of the first Blog-Post</ng-template>
-                <div>
-                    <button mat-raised-button class="stepper-button" color="primary" (click)="onNextClick()"
-                        [disabled]="!nextButtonEnabled">Next</button>
-                </div>
-            </mat-step>
+            <mat-vertical-stepper [linear]="true" #stepper>
+                <mat-step completed="false">
+                    <ng-template matStepLabel>Select the Headline of the first Blog-Post</ng-template>
+                    <div>
+                        <button mat-raised-button class="stepper-button" color="primary" (click)="onNextClick()"
+                            [disabled]="!nextButtonEnabled">Next</button>
+                    </div>
+                </mat-step>
 
-            <mat-step completed="false">
-                <ng-template matStepLabel>Select the Introduction of the first Blog-Post</ng-template>
-                <div>
-                    <button mat-raised-button class="stepper-button" (click)="onBackClick()">Back</button>
-                    <button mat-raised-button class="stepper-button" color="primary" (click)="onNextClick()"
-                        [disabled]="!nextButtonEnabled">Next</button>
-                </div>
-            </mat-step>
+                <mat-step completed="false">
+                    <ng-template matStepLabel>Select the Introduction of the first Blog-Post</ng-template>
+                    <div>
+                        <button mat-raised-button class="stepper-button" (click)="onBackClick()">Back</button>
+                        <button mat-raised-button class="stepper-button" color="primary" (click)="onNextClick()"
+                            [disabled]="!nextButtonEnabled">Next</button>
+                    </div>
+                </mat-step>
 
-            <mat-step completed="false">
-                <ng-template matStepLabel>Select the Headline of the second Blog-Post</ng-template>
-                <div>
-                    <button mat-raised-button class="stepper-button" (click)="onBackClick()">Back</button>
-                    <button mat-raised-button class="stepper-button" color="primary" (click)="onNextClick()"
-                        [disabled]="!nextButtonEnabled">Next</button>
-                </div>
-            </mat-step>
+                <mat-step completed="false">
+                    <ng-template matStepLabel>Select the Headline of the second Blog-Post</ng-template>
+                    <div>
+                        <button mat-raised-button class="stepper-button" (click)="onBackClick()">Back</button>
+                        <button mat-raised-button class="stepper-button" color="primary" (click)="onNextClick()"
+                            [disabled]="!nextButtonEnabled">Next</button>
+                    </div>
+                </mat-step>
 
-            <mat-step completed="false">
-                <ng-template matStepLabel>Select the Introduction of the second Blog-Post</ng-template>
-                <div>
-                    <button mat-raised-button class="stepper-button" (click)="onBackClick()">Back</button>
-                    <button mat-raised-button class="stepper-button" color="primary" (click)="onNextClick()"
-                        [disabled]="!nextButtonEnabled">Next</button>
-                </div>
-            </mat-step>
+                <mat-step completed="false">
+                    <ng-template matStepLabel>Select the Introduction of the second Blog-Post</ng-template>
+                    <div>
+                        <button mat-raised-button class="stepper-button" (click)="onBackClick()">Back</button>
+                        <button mat-raised-button class="stepper-button" color="primary" (click)="onNextClick()"
+                            [disabled]="!nextButtonEnabled">Next</button>
+                    </div>
+                </mat-step>
 
-            <mat-step completed="false">
-                <ng-template matStepLabel>Select the Link to the second Page/older Posts of the Blog</ng-template>
-                <div>
-                    <button mat-raised-button class="stepper-button" (click)="onBackClick()">Back</button>
-                    <button mat-raised-button class="stepper-button" color="primary" (click)="onNextClick()"
-                        [disabled]="!nextButtonEnabled">Next</button>
-                </div>
-            </mat-step>
+                <mat-step completed="false">
+                    <ng-template matStepLabel>Select the Link to the second Page/older Posts of the Blog</ng-template>
+                    <div>
+                        <button mat-raised-button class="stepper-button" (click)="onBackClick()">Back</button>
+                        <button mat-raised-button class="stepper-button" color="primary" (click)="onNextClick()"
+                            [disabled]="!nextButtonEnabled">Next</button>
+                    </div>
+                </mat-step>
 
-            <mat-step completed="false">
-                <ng-template matStepLabel>Select the Headline of the Blog-Post</ng-template>
-                <div>
-                    <button mat-raised-button class="stepper-button" (click)="onBackClick()">Back</button>
-                    <button mat-raised-button class="stepper-button" color="primary" (click)="onNextClick()"
-                        [disabled]="!nextButtonEnabled">Next</button>
-                </div>
-            </mat-step>
+                <mat-step completed="false">
+                    <ng-template matStepLabel>Select the Headline of the Blog-Post</ng-template>
+                    <div>
+                        <button mat-raised-button class="stepper-button" (click)="onBackClick()">Back</button>
+                        <button mat-raised-button class="stepper-button" color="primary" (click)="onNextClick()"
+                            [disabled]="!nextButtonEnabled">Next</button>
+                    </div>
+                </mat-step>
 
-            <mat-step completed="false">
-                <ng-template matStepLabel>Select the Content of the Blog-Post</ng-template>
-                <div>
-                    <button mat-raised-button class="stepper-button" (click)="onBackClick()">Back</button>
-                    <button mat-raised-button class="stepper-button" color="primary" (click)="onNextClick()"
-                        [disabled]="!nextButtonEnabled">Next</button>
-                </div>
-            </mat-step>
+                <mat-step completed="false">
+                    <ng-template matStepLabel>Select the Content of the Blog-Post</ng-template>
+                    <div>
+                        <button mat-raised-button class="stepper-button" (click)="onBackClick()">Back</button>
+                        <button mat-raised-button class="stepper-button" color="primary" (click)="onNextClick()"
+                            [disabled]="!nextButtonEnabled">Next</button>
+                    </div>
+                </mat-step>
 
-            <mat-step completed="false">
-                <ng-template matStepLabel>Select the Date of the Blog-Post</ng-template>
-                <div>
-                    <button mat-raised-button class="stepper-button" (click)="onBackClick()">Back</button>
-                    <button mat-raised-button class="stepper-button" color="primary" (click)="onNextClick()"
-                        [disabled]="!nextButtonEnabled">Next</button>
-                </div>
-            </mat-step>
+                <mat-step completed="false">
+                    <ng-template matStepLabel>Select the Date of the Blog-Post</ng-template>
+                    <div>
+                        <button mat-raised-button class="stepper-button" (click)="onBackClick()">Back</button>
+                        <button mat-raised-button class="stepper-button" color="primary" (click)="onNextClick()"
+                            [disabled]="!nextButtonEnabled">Next</button>
+                    </div>
+                </mat-step>
 
-            <mat-step completed="false">
-                <ng-template matStepLabel>Select the Author of the Blog-Post</ng-template>
-                <div>
-                    <button mat-raised-button class="stepper-button" (click)="onBackClick()">Back</button>
-                    <button mat-raised-button class="stepper-button" color="primary" (click)="onFinishClick()"
-                        [disabled]="!nextButtonEnabled">Finish</button>
-                </div>
-            </mat-step>
-        </mat-vertical-stepper>
-    </div>
-</mat-card>
+                <mat-step completed="false">
+                    <ng-template matStepLabel>Select the Author of the Blog-Post</ng-template>
+                    <div>
+                        <button mat-raised-button class="stepper-button" (click)="onBackClick()">Back</button>
+                        <button mat-raised-button class="stepper-button" color="primary" (click)="onFinishClick()"
+                            [disabled]="!nextButtonEnabled">Finish</button>
+                    </div>
+                </mat-step>
+            </mat-vertical-stepper>
+        </div>
+    </mat-card>
+</div>
 
 <!-- <iframe #previewIframe id="preview" sandbox title="Blog Preview"></iframe> -->
 
