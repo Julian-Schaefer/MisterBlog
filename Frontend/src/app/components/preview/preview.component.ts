@@ -40,6 +40,7 @@ export class PreviewComponent {
   blogUrl: string;
   previewHtml: string;
 
+  @ViewChild('previewIframe') previewIframe: ElementRef<HTMLIFrameElement>;
   @ViewChild('previewDiv') previewDiv: ElementRef<HTMLElement>;
   @ViewChild('stepper') stepper: MatStepper;
 
@@ -51,7 +52,22 @@ export class PreviewComponent {
   constructor(private dialog: MatDialog, private htmlService: HTMLService, public activatedRoute: ActivatedRoute, private router: Router) {
     this.blogUrl = this.activatedRoute.snapshot.queryParamMap.get('url');
     this.htmlService.getBlogPosts(this.blogUrl).subscribe((data) => {
-      this.previewHtml = data;
+      const blob = new Blob([data], { type: "text/html" });
+      this.previewIframe.nativeElement.src = URL.createObjectURL(blob);
+
+      this.previewIframe.nativeElement.onload = (_) => {
+        this.previewIframe.nativeElement.contentWindow.document.body.onmouseover = (e) => {
+          this.onMouseOver(e);
+        }
+
+        this.previewIframe.nativeElement.contentWindow.document.body.onmouseout = (e) => {
+          this.onMouseOut(e);
+        }
+
+        this.previewIframe.nativeElement.contentWindow.document.body.onmousedown = (e) => {
+          this.onElementSelected(e);
+        }
+      }
     });
   }
 
@@ -192,7 +208,7 @@ export class PreviewComponent {
   }
 
   selectElement(element: any): void {
-    element = this.getDOMElement(element);
+    //element = this.getDOMElement(element);
 
     if (element) {
       this.selectedElement = element;

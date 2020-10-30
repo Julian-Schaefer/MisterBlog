@@ -98,9 +98,9 @@
     </mat-card>
 </div>
 
-<!-- <iframe #previewIframe id="preview" sandbox title="Blog Preview"></iframe> -->
-
+<iframe #previewIframe id="preview" title="Blog Preview" sandbox="allow-same-origin"></iframe>
+<!-- 
 <mat-spinner *ngIf="!previewHtml" diameter="60" style="margin: auto; margin-top: 42px;"></mat-spinner>
 <div #previewDiv id="preview" *ngIf="previewHtml" [innerHTML]="previewHtml | safeHtml"
     (click)="onElementSelected($event)" (mouseover)="onMouseOver($event)" (mouseout)="onMouseOut($event)">
-</div>
+</div> -->
