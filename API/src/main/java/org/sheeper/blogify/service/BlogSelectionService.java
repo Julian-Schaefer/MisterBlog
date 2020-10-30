@@ -10,9 +10,9 @@ import java.util.Locale;
 import org.jsoup.Jsoup;
 import org.sheeper.blogify.model.BlogPost;
 import org.sheeper.blogify.model.BlogSelection;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class BlogSelectionService {
 
     public List<BlogPost> getBlogPostFromBlogSelection(BlogSelection blogSelection, int page) {
