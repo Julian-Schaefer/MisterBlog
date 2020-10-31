@@ -1,25 +1,18 @@
-.step-boundary {
-    position: fixed;
-    top: 90px;
-    bottom: 20px;
-    left: 20px;
-    right: 20px;
-    z-index: 100000;
-    visibility: hidden;
-    pointer-events: visible;
+div#height-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
-#steps {
-    pointer-events: all;
-    width: fit-content;
-    visibility: visible;
+div#container {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
 }
 
-div#steps-handle {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    cursor: move;
+div#steps {
+    width: 450px;
+    border-right: black 1px solid;
 }
 
 div#steps-container {
@@ -35,9 +28,7 @@ button.mat-primary {
 }
 
 #preview {
-    width: 100%;
-    height: 1000px;
-    overflow-y: auto;
+    flex: 1;
 }
 
 p.selected {
