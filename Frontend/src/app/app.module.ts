@@ -16,7 +16,6 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
-import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -81,8 +80,7 @@ import { AuthenticationInterceptor } from './interceptors/authentication.interce
     MatProgressSpinnerModule,
     MatStepperModule,
     MatCheckboxModule,
-    MatDividerModule,
-    DragDropModule
+    MatDividerModule
   ],
   entryComponents: [AddBlogDialog],
   providers: [AuthService, {
