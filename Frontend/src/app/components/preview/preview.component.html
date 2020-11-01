@@ -91,7 +91,9 @@
             </div>
         </div>
 
-        <iframe #previewIframe id="preview" title="Blog Preview" sandbox="allow-same-origin"></iframe>
+        <mat-spinner *ngIf="previewLoading" diameter="60" style="margin: auto; margin-top: 42px;"></mat-spinner>
+        <iframe [hidden]="previewLoading" #previewIframe id="preview" title="Blog Preview"
+            sandbox="allow-same-origin"></iframe>
 
         <!-- 
 <mat-spinner *ngIf="!previewHtml" diameter="60" style="margin: auto; margin-top: 42px;"></mat-spinner>

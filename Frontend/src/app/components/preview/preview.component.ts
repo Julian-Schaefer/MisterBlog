@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, NgZone } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorDialogComponent } from '../error-dialog/error-dialog.component';
@@ -38,36 +38,20 @@ export class PreviewComponent {
   isOptional = false;
 
   blogUrl: string;
-  previewHtml: string;
 
   @ViewChild('previewIframe') previewIframe: ElementRef<HTMLIFrameElement>;
-  @ViewChild('previewDiv') previewDiv: ElementRef<HTMLElement>;
   @ViewChild('stepper') stepper: MatStepper;
 
   step = Step.SELECT_FIRST_BLOG_POST_HEADER;
   selectedElement: any;
   selectedElements: any[] = [];
+  previewLoading = true;
   nextButtonEnabled = false;
 
-  constructor(private dialog: MatDialog, private htmlService: HTMLService, public activatedRoute: ActivatedRoute, private router: Router) {
+  constructor(private dialog: MatDialog, private htmlService: HTMLService, public activatedRoute: ActivatedRoute, private router: Router, private zone: NgZone) {
     this.blogUrl = this.activatedRoute.snapshot.queryParamMap.get('url');
     this.htmlService.getBlogPosts(this.blogUrl).subscribe((data) => {
-      const blob = new Blob([data], { type: "text/html" });
-      this.previewIframe.nativeElement.src = URL.createObjectURL(blob);
-
-      this.previewIframe.nativeElement.onload = (_) => {
-        this.previewIframe.nativeElement.contentWindow.document.body.onmouseover = (e) => {
-          this.onMouseOver(e);
-        }
-
-        this.previewIframe.nativeElement.contentWindow.document.body.onmouseout = (e) => {
-          this.onMouseOut(e);
-        }
-
-        this.previewIframe.nativeElement.contentWindow.document.body.onmousedown = (e) => {
-          this.onElementSelected(e);
-        }
-      }
+      this.setupPreviewIframe(data);
     });
   }
 
@@ -80,10 +64,10 @@ export class PreviewComponent {
     this.unselectElement();
 
     if (this.step === Step.SELECT_BLOG_POST_HEADER) {
-      this.previewHtml = undefined;
+      this.previewLoading = true;
       this.htmlService.getBlogPosts(this.blogUrl).subscribe((data) => {
         this.previousStep();
-        this.previewHtml = data;
+        this.setupPreviewIframe(data);
         this.selectElement(this.selectedElements[this.step]);
       });
     } else {
@@ -114,12 +98,12 @@ export class PreviewComponent {
         }
         break;
       case Step.SELECT_OLD_BLOG_POSTS_LINK:
-        this.previewHtml = undefined;
+        this.previewLoading = true;
         let headerElement = this.selectedElements[Step.SELECT_FIRST_BLOG_POST_HEADER];
         let headerSelectionArray = this.getSelectorArray(headerElement);
         let headerSelector = this.htmlService.buildSelectorString(headerSelectionArray);
         this.htmlService.getSpecificBlogPost(this.blogUrl, headerSelector).subscribe((data) => {
-          this.previewHtml = data;
+          this.setupPreviewIframe(data);
           this.nextStep();
         });
         break;
@@ -129,6 +113,29 @@ export class PreviewComponent {
     }
 
     this.selectElement(this.selectedElements[this.step]);
+  }
+
+  setupPreviewIframe(data: string) {
+    const blob = new Blob([data], { type: "text/html" });
+    this.previewIframe.nativeElement.src = URL.createObjectURL(blob);
+
+    this.previewIframe.nativeElement.onload = (_) => {
+      this.previewIframe.nativeElement.contentWindow.document.body.onmouseover = (e) => {
+        this.onMouseOver(e);
+      }
+
+      this.previewIframe.nativeElement.contentWindow.document.body.onmouseout = (e) => {
+        this.onMouseOut(e);
+      }
+
+      this.previewIframe.nativeElement.contentWindow.document.body.onmousedown = (e) => {
+        this.onElementSelected(e);
+      }
+
+      this.zone.run(() => {
+        this.previewLoading = false;
+      });
+    }
   }
 
   onFinishClick(): void {
@@ -161,10 +168,10 @@ export class PreviewComponent {
     this.unselectElement();
 
     if (this.step > Step.SELECT_OLD_BLOG_POSTS_LINK && event.selectedIndex <= Step.SELECT_OLD_BLOG_POSTS_LINK) {
-      this.previewHtml = undefined;
+      this.previewLoading = true;
       this.htmlService.getBlogPosts(this.blogUrl).subscribe((data) => {
         this.step = event.selectedIndex;
-        this.previewHtml = data;
+        this.setupPreviewIframe(data);
         this.selectElement(this.selectedElements[this.step]);
       });
     } else {
@@ -186,12 +193,12 @@ export class PreviewComponent {
   }
 
   getSelectorArray(element: HTMLElement): { tagName: string, siblingIndex: number }[] {
-    return this.htmlService.getSelectorArray(element, this.previewDiv.nativeElement)
+    return this.htmlService.getSelectorArray(element, this.previewIframe.nativeElement.contentWindow.document.body);
   }
 
   getDOMElement(element: HTMLElement): HTMLElement {
     let domElement;
-    this.previewDiv.nativeElement.querySelectorAll("*").forEach(currentElement => {
+    this.previewIframe.nativeElement.contentWindow.document.body.querySelectorAll("*").forEach(currentElement => {
       if (!domElement && currentElement.isEqualNode(element)) {
         domElement = currentElement;
       }
@@ -201,20 +208,24 @@ export class PreviewComponent {
   }
 
   unselectElement() {
-    if (this.selectedElement) {
-      this.nextButtonEnabled = false;
-      this.selectedElement.style.border = "none";
-    }
+    this.zone.run(() => {
+      if (this.selectedElement) {
+        this.nextButtonEnabled = false;
+        this.selectedElement.style.border = "none";
+      }
+    });
   }
 
   selectElement(element: any): void {
-    //element = this.getDOMElement(element);
+    this.zone.run(() => {
+      element = this.getDOMElement(element);
 
-    if (element) {
-      this.selectedElement = element;
-      element.style.border = "red 2px solid";
-      this.nextButtonEnabled = true;
-    }
+      if (element) {
+        this.selectedElement = element;
+        element.style.border = "red 2px solid";
+        this.nextButtonEnabled = true;
+      }
+    });
   }
 
   onMouseOver(e: any) {
