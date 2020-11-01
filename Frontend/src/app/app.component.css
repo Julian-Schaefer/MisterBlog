@@ -28,9 +28,6 @@ div#sign-out-container {
 }
 
 div#router-container {
-    position: fixed;
+    position: relative;
     top: 70px;
-    left: 0;
-    right: 0;
-    bottom: 0;
 }
