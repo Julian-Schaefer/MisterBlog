@@ -2,6 +2,8 @@ package org.sheeper.blogify.model;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class BlogPost {
 
     private String title;
@@ -23,6 +25,7 @@ public class BlogPost {
         this.title = title;
     }
 
+    @JsonFormat(pattern = "dd.MM.yyyy")
     public Date getDate() {
         return date;
     }
