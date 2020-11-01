@@ -56,4 +56,9 @@ export class PostListComponent {
         this.loadMoreBlogPosts();
       }
   }
+
+  getHostname(url: string): string {
+    let hostname = (new URL(url)).hostname;
+    return hostname;
+  }
 }

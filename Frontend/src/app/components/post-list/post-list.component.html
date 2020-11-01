@@ -11,7 +11,7 @@
                     [queryParams]="{ url: blogPost.url }">
                     <h2 id=" blog-post-title">{{blogPost.title}}</h2>
                 </a>
-                <p>From {{blogPost.url}}</p>
+                <p>From {{getHostname(blogPost.url)}}</p>
                 <p>{{blogPost.author}} on {{blogPost.date}}</p>
                 <p>{{blogPost.introduction}}</p>
             </mat-card>

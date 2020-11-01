@@ -43,6 +43,11 @@ export class SelectedBlogsComponent {
       }
     })
   }
+
+  getHostname(url: string): string {
+    let hostname = (new URL(url)).hostname;
+    return hostname;
+  }
 }
 
 @Component({
