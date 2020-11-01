@@ -21,7 +21,7 @@ public class BlogSelectionService {
         try {
             var blogPostListDocument = Jsoup.connect(blogSelection.getBlogUrl()).get();
 
-            if (page > 0) {
+            if (page > 1) {
                 var olderPostsElement = blogPostListDocument.select(blogSelection.getOldPostsSelector());
                 var linkolderPostsLinkElement = olderPostsElement.select("a[href]");
                 var olderPostsUrl = linkolderPostsLinkElement.first().attr("href");

@@ -135,7 +135,7 @@ public class BlogSelectionController {
             return blogPosts;
         }
 
-        int page = 0;
+        int page = 1;
         while ((blogPosts.size() - offset) < limit) {
             for (var blogSelection : blogSelections) {
                 var additionalBlogPosts = blogSelectionService.getBlogPostFromBlogSelection(blogSelection, page);
