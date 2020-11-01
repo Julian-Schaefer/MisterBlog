@@ -8,6 +8,8 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class SignUpComponent implements OnInit {
 
+  hidePassword = true;
+
   constructor(public authService: AuthService) { }
 
   ngOnInit(): void {

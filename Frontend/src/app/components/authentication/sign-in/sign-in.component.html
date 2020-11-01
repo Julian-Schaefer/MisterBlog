@@ -1,46 +1,49 @@
-<div class="displayTable">
-    <div class="displayTableCell">
+<mat-card id="sign-in">
+    <h2>Sign In</h2>
 
-        <div class="authBlock">
-            <h3>Sign In</h3>
+    <mat-form-field>
+        <mat-label>E-Mail</mat-label>
+        <input matInput type="email" #userEmail required>
+    </mat-form-field>
 
-            <mat-form-field>
-                <mat-label>E-Mail</mat-label>
-                <input matInput type="email" class="formControl" #userEmail required>
-            </mat-form-field>
+    <br>
 
-            <mat-form-field>
-                <mat-label>Password</mat-label>
-                <input matInput type="password" class="formControl" #userPassword required>
-            </mat-form-field>
+    <mat-form-field class="input-form-field">
+        <mat-label>Enter your password</mat-label>
+        <input matInput [type]="hidePassword ? 'password' : 'text'" #userPassword required>
+        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hidePassword">
+            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+    </mat-form-field>
 
-            <button mat-raised-button color="primary"
-                (click)="authService.signInWithEmail(userEmail.value, userPassword.value)">
-                Sign in
-            </button>
+    <br>
 
-            <div class="formGroup">
-                <span class="or"><span class="orInner">Or</span></span>
-            </div>
+    <button mat-raised-button color="primary"
+        (click)="authService.signInWithEmail(userEmail.value, userPassword.value)">
+        Sign in
+    </button>
 
-            <button mat-raised-button color="primary" (click)="authService.signInWithGoogle()">
-                <i class="fab fa-google-plus-g"></i>
-                Sign in with Google
-            </button>
-
-            <button mat-raised-button color="primary" (click)="authService.signInWithFacebook()">
-                <i class="fab fa-facebook"></i>
-                Sign in with Facebook
-            </button>
-
-            <div class="forgotPassword">
-                <span routerLink="/forgot-password">Forgot Password?</span>
-            </div>
-        </div>
-
-        <div class="redirectToLogin">
-            <span>Don't have an account?<span class="redirect" routerLink="/sign-up"> Sign Up</span></span>
-        </div>
-
+    <div>
+        <span>Or</span>
     </div>
-</div>
+
+    <button mat-raised-button color="primary" (click)="authService.signInWithGoogle()">
+        <i class="fab fa-google-plus-g"></i>
+        Sign in with Google
+    </button>
+
+    <button mat-raised-button color="primary" (click)="authService.signInWithFacebook()" style="margin-left: 20px;">
+        <i class="fab fa-facebook"></i>
+        Sign in with Facebook
+    </button>
+
+    <br>
+
+    <a routerLink="/forgot-password">Forgot Password?</a>
+
+    <br>
+
+    <span>Don't have an account?<a routerLink="/sign-up"> Sign Up</a></span>
+
+</mat-card>

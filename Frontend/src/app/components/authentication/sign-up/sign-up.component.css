@@ -1,0 +1,9 @@
+mat-card#sign-in {
+    margin: auto;
+    width: 500px;
+    margin-top: 20px;
+}
+
+.input-form-field {
+    width: 100%;
+}
