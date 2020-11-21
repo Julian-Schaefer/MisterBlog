@@ -16,6 +16,7 @@ div#container {
 
 div#steps {
     width: 450px;
+    background-color: white;
 }
 
 div#steps-container {

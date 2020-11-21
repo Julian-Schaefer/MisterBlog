@@ -1,5 +1,5 @@
 <div style="width: 1000px; margin-left: auto; margin-right: auto; margin-top: 20px; margin-bottom: 20;">
-    <div style="width: 600px;">
+    <div style="width: 620px;">
         <div style="margin-bottom: 20px;">
             <mat-spinner *ngIf="loading" diameter="42" style="margin: auto;"></mat-spinner>
             <button *ngIf="!loading" mat-raised-button color="primary" (click)="loadBlogPosts()">Refresh</button>
@@ -11,16 +11,23 @@
                     [queryParams]="{ url: blogPost.url }">
                     <h2 id=" blog-post-title">{{blogPost.title}}</h2>
                 </a>
-                <p>From {{getHostname(blogPost.url)}}</p>
-                <p>{{blogPost.author}} on {{blogPost.date}}</p>
-                <p>{{blogPost.introduction}}</p>
+                <p id="from">From {{getHostname(blogPost.url)}}</p>
+                <p id="author">{{blogPost.author}} on {{blogPost.date}}</p>
+                <p id="introduction">{{blogPost.introduction}}</p>
+
+
+                <mat-divider></mat-divider>
+                <button id="continue-reading-button" mat-raised-button color="primary">
+                    <a id="continue-reading-link" routerLink="/post" [state]="{ data: blogPost }"
+                        [queryParams]="{ url: blogPost.url }">Continue reading</a></button>
+
             </mat-card>
         </div>
 
         <mat-spinner *ngIf="loadingMore" diameter="42" style="margin: auto;"></mat-spinner>
     </div>
 
-    <div style="width: 348px; position: fixed; left: 50%; top: 70px; margin-left: 132px; margin-top: 20px;">
+    <div style="width: 328px; position: fixed; left: 50%; top: 70px; margin-left: 152px; margin-top: 20px;">
         <selected-blogs (selectedBlogsUpdated)="loadBlogPosts()"></selected-blogs>
     </div>
 </div>

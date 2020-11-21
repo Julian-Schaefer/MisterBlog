@@ -10,3 +10,24 @@ a#blog-post-link {
 h2#blog-post-title {
     font-size: 18pt;
 }
+
+p#from {
+    float: left;
+}
+
+p#author {
+    float: right;
+}
+
+p#introduction {
+    clear: both;
+}
+
+button#continue-reading-button {
+    margin-top: 20px;
+}
+
+a#continue-reading-link {
+    color: white;
+    text-decoration: none;
+}
