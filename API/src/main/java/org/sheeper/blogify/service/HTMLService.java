@@ -7,6 +7,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +17,10 @@ public class HTMLService {
     private static String SANDBOX_CONTAINER_ID = "sandbox-container";
 
     public String getHTML(String url, String headerSelector) throws IOException {
-        url = url.replaceAll("/$", "");
-        var doc = Jsoup.connect(url).get();
-        var docBody = doc.body();
+        var doc = getDocument(url);
 
-        var headerElement = docBody.select(headerSelector).first();
+        var headerElements = doc.select(headerSelector);
+        var headerElement = headerElements.first();
         var linkElement = headerElement.select("a[href]");
         var blogPostUrl = linkElement.attr("href");
 
@@ -28,14 +28,10 @@ public class HTMLService {
     }
 
     public String getHTML(String url) throws IOException {
-        var doc = Jsoup.connect(url).get();
+        var doc = getDocument(url);
 
         doc.select("a").forEach((link) -> {
             link.removeAttr("href");
-        });
-
-        doc.select("script").forEach((script) -> {
-            script.remove();
         });
 
         return doc.html();
@@ -87,6 +83,17 @@ public class HTMLService {
         // sandboxElement.prepend("<style>" + completeCss + "</style>");
 
         // return bodyElement.html();
+    }
+
+    public Document getDocument(String url) throws IOException {
+        url = url.replaceAll("/$", "");
+        var doc = Jsoup.connect(url).get();
+
+        doc.select("script").forEach((script) -> {
+            script.remove();
+        });
+
+        return doc;
     }
 
     public String parseCSS(String css) {

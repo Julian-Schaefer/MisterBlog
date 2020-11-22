@@ -7,19 +7,22 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
-import org.jsoup.Jsoup;
 import org.sheeper.blogify.model.BlogPost;
 import org.sheeper.blogify.model.BlogSelection;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class BlogSelectionService {
 
+    @Autowired
+    private HTMLService htmlService;
+
     public List<BlogPost> getBlogPostFromBlogSelection(BlogSelection blogSelection, int page) {
         var blogPosts = new LinkedList<BlogPost>();
 
         try {
-            var blogPostListDocument = Jsoup.connect(blogSelection.getBlogUrl()).get();
+            var blogPostListDocument = htmlService.getDocument(blogSelection.getBlogUrl());
 
             if (page > 1) {
                 var olderPostsElement = blogPostListDocument.select(blogSelection.getOldPostsSelector());
@@ -36,7 +39,7 @@ public class BlogSelectionService {
                 }
 
                 if (blogPageUrl != null) {
-                    blogPostListDocument = Jsoup.connect(blogPageUrl).get();
+                    blogPostListDocument = htmlService.getDocument(blogPageUrl);
                 }
             }
 
@@ -51,7 +54,7 @@ public class BlogSelectionService {
                 var linkElements = postHeaderElement.select("a[href]");
                 var blogPostUrl = linkElements.first().attr("href");
 
-                var blogPostDocument = Jsoup.connect(blogPostUrl).get();
+                var blogPostDocument = htmlService.getDocument(blogPostUrl);
                 var blogPostDocumentBody = blogPostDocument.body();
                 var headerElement = blogPostDocumentBody.select(blogSelection.getHeaderSelector()).first();
                 var authorElement = blogPostDocumentBody.select(blogSelection.getAuthorSelector()).first();
@@ -86,6 +89,10 @@ public class BlogSelectionService {
         dateFormats.add("MM/dd/yyyy");
         dateFormats.add("dd-M-yyyy hh:mm:ss");
         dateFormats.add("MMMM dd, yyyy");
+        dateFormats.add("MMMM d'th', yyyy");
+        dateFormats.add("MMMM d'st', yyyy");
+        dateFormats.add("MMMM d'nd', yyyy");
+        dateFormats.add("MMMM d'rd', yyyy");
         dateFormats.add("dd MMMM yyyy");
         dateFormats.add("dd MMMM yyyy zzzz");
         dateFormats.add("E, dd MMM yyyy HH:mm:ss z");

@@ -1,16 +1,9 @@
 package org.sheeper.blogify.controller;
 
 import java.security.Principal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-
-import org.jsoup.Jsoup;
 import org.modelmapper.ModelMapper;
 import org.sheeper.blogify.dto.SelectedBlogDTO;
 import org.sheeper.blogify.model.BlogPost;
@@ -18,6 +11,7 @@ import org.sheeper.blogify.model.BlogSelection;
 import org.sheeper.blogify.model.BlogSelectionId;
 import org.sheeper.blogify.repository.BlogSelectionRepository;
 import org.sheeper.blogify.service.BlogSelectionService;
+import org.sheeper.blogify.service.HTMLService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,16 +35,18 @@ public class BlogSelectionController {
     @Autowired
     private BlogSelectionService blogSelectionService;
 
+    @Autowired
+    private HTMLService htmlService;
+
     @PostMapping
     public ResponseEntity<String> registerBlogSelection(@RequestBody BlogSelection blogSelection, Principal principal) {
         var userId = principal.getName();
 
         try {
-            var blogPostListDocument = Jsoup.connect(blogSelection.getBlogUrl()).get();
-            var blogPostListDocumentBody = blogPostListDocument.body();
+            var blogPostListDocument = htmlService.getDocument(blogSelection.getBlogUrl());
 
-            var postHeaderElements = blogPostListDocumentBody.select(blogSelection.getPostHeaderSelector());
-            var postIntroductionElements = blogPostListDocumentBody.select(blogSelection.getPostHeaderSelector());
+            var postHeaderElements = blogPostListDocument.select(blogSelection.getPostHeaderSelector());
+            var postIntroductionElements = blogPostListDocument.select(blogSelection.getPostHeaderSelector());
 
             String blogPostUrl = null;
             if (postHeaderElements.size() == 0 || postHeaderElements.size() != postIntroductionElements.size()) {
@@ -65,7 +61,7 @@ public class BlogSelectionController {
                 }
             }
 
-            var oldPostsElement = blogPostListDocumentBody.select(blogSelection.getOldPostsSelector());
+            var oldPostsElement = blogPostListDocument.select(blogSelection.getOldPostsSelector());
             if (oldPostsElement.size() != 1) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body("mehrere old posts elemente gefunden: " + oldPostsElement.size());
@@ -78,22 +74,21 @@ public class BlogSelectionController {
                 }
             }
 
-            var blogPostDocument = Jsoup.connect(blogPostUrl).get();
-            var blogPostDocumentBody = blogPostDocument.body();
+            var blogPostDocument = htmlService.getDocument(blogPostUrl);
 
-            var headerElement = blogPostDocumentBody.select(blogSelection.getHeaderSelector());
+            var headerElement = blogPostDocument.select(blogSelection.getHeaderSelector());
             if (headerElement.size() != 1) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body("mehrere header elemente gefunden: " + headerElement.size());
             }
 
-            var contentElement = blogPostDocumentBody.select(blogSelection.getContentSelector());
+            var contentElement = blogPostDocument.select(blogSelection.getContentSelector());
             if (contentElement.size() != 1) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body("mehrere content elemente gefunden: " + contentElement.size());
             }
 
-            var authorElement = blogPostDocumentBody.select(blogSelection.getAuthorSelector());
+            var authorElement = blogPostDocument.select(blogSelection.getAuthorSelector());
             if (authorElement.size() != 1) {
                 for (var author : authorElement) {
                     System.out.println(author.html());
@@ -103,12 +98,12 @@ public class BlogSelectionController {
                         .body("mehrere autor elemente gefunden: " + authorElement.size());
             }
 
-            var dateElement = blogPostDocumentBody.select(blogSelection.getDateSelector());
+            var dateElement = blogPostDocument.select(blogSelection.getDateSelector());
             if (dateElement.size() != 1) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body("mehrere datums elemente gefunden: " + dateElement.size());
             } else {
-                if (parseDate(dateElement.text()) == null) {
+                if (blogSelectionService.parseDate(dateElement.text()) == null) {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Date Format gibbet nicht");
                 }
             }
@@ -178,33 +173,5 @@ public class BlogSelectionController {
             blogSelection.setSelected(selectedBlogDTO.isSelected());
             blogSelectionRepository.save(blogSelection);
         }
-    }
-
-    public static Date parseDate(String dateString) {
-        List<String> dateFormats = new LinkedList<String>();
-        dateFormats.add("MM/dd/yyyy");
-        dateFormats.add("dd.MM.yyyy");
-        dateFormats.add("dd-MM-yyyy");
-        dateFormats.add("MM/dd/yyyy");
-        dateFormats.add("dd-M-yyyy hh:mm:ss");
-        dateFormats.add("MMMM dd, yyyy");
-        dateFormats.add("dd MMMM yyyy");
-        dateFormats.add("dd MMMM yyyy zzzz");
-        dateFormats.add("E, dd MMM yyyy HH:mm:ss z");
-
-        var locales = new Locale[] { Locale.US, Locale.CHINA, Locale.GERMAN, Locale.FRANCE, Locale.ITALIAN };
-
-        Date parsedDate = null;
-        for (String dateFormat : dateFormats) {
-            for (Locale locale : locales) {
-                SimpleDateFormat dateFormatter = new SimpleDateFormat(dateFormat, locale);
-                try {
-                    parsedDate = dateFormatter.parse(dateString);
-                } catch (ParseException e) {
-                }
-            }
-        }
-
-        return parsedDate;
     }
 }
