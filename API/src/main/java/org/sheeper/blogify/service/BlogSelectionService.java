@@ -54,24 +54,8 @@ public class BlogSelectionService {
                 var linkElements = postHeaderElement.select("a[href]");
                 var blogPostUrl = linkElements.first().attr("href");
 
-                var blogPostDocument = htmlService.getDocument(blogPostUrl);
-                var blogPostDocumentBody = blogPostDocument.body();
-                var headerElement = blogPostDocumentBody.select(blogSelection.getHeaderSelector()).first();
-                var authorElement = blogPostDocumentBody.select(blogSelection.getAuthorSelector()).first();
-                var dateElement = blogPostDocumentBody.select(blogSelection.getDateSelector()).first();
-                var contentElement = blogPostDocumentBody.select(blogSelection.getContentSelector()).first();
-                contentElement.select("*").forEach((element) -> {
-                    element.attr("style", "overflow: auto;");
-                });
-
-                BlogPost blogPost = new BlogPost();
-                blogPost.setUrl(blogPostUrl);
-                blogPost.setTitle(headerElement.text());
+                var blogPost = getBlogPostFromUrl(blogSelection, blogPostUrl);
                 blogPost.setIntroduction(postIntroductionElement.text());
-                blogPost.setAuthor(authorElement.text());
-                var date = parseDate(dateElement.text());
-                blogPost.setDate(date);
-                blogPost.setContent(contentElement.html());
                 blogPosts.add(blogPost);
             }
         } catch (Exception e) {
@@ -79,6 +63,34 @@ public class BlogSelectionService {
         }
 
         return blogPosts;
+    }
+
+    public BlogPost getBlogPostFromUrl(BlogSelection blogSelection, String url) {
+        try {
+            var blogPostDocument = htmlService.getDocument(url);
+            var headerElement = blogPostDocument.select(blogSelection.getHeaderSelector()).first();
+            var authorElement = blogPostDocument.select(blogSelection.getAuthorSelector()).first();
+            var dateElement = blogPostDocument.select(blogSelection.getDateSelector()).first();
+            var contentElement = blogPostDocument.select(blogSelection.getContentSelector()).first();
+            contentElement.select("*").forEach((element) -> {
+                element.attr("style", "overflow: auto;");
+            });
+
+            BlogPost blogPost = new BlogPost();
+            blogPost.setUrl(url);
+            blogPost.setTitle(headerElement.text());
+            blogPost.setAuthor(authorElement.text());
+            var date = parseDate(dateElement.text());
+            blogPost.setDate(date);
+            blogPost.setContent(contentElement.html());
+
+            return blogPost;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public Date parseDate(String dateString) {

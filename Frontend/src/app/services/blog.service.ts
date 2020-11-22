@@ -43,6 +43,10 @@ export class BlogService {
     });
   }
 
+  getBlogPostFromUrl(url: string): Observable<BlogPost> {
+    return this.http.get<BlogPost>(this.baseUrl + "/blog-selection/post?url=" + url);
+  }
+
   getSelectedBlogs(): Observable<SelectedBlog[]> {
     return this.http.get<SelectedBlog[]>(this.baseUrl + "/blog-selection/selected");
   }

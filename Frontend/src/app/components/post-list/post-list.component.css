@@ -26,8 +26,3 @@ p#introduction {
 button#continue-reading-button {
     margin-top: 20px;
 }
-
-a#continue-reading-link {
-    color: white;
-    text-decoration: none;
-}

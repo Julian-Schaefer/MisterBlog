@@ -149,6 +149,20 @@ public class BlogSelectionController {
         return blogPosts.subList(offset, blogPosts.size());
     }
 
+    @GetMapping("/post")
+    public BlogPost getBlogPostFromUrl(@RequestParam("url") String url, Principal principal) {
+        var userId = principal.getName();
+
+        var blogSelections = blogSelectionRepository.findAllByUserId(userId);
+        for (var blogSelection : blogSelections) {
+            if (url.startsWith(blogSelection.getBlogUrl())) {
+                return blogSelectionService.getBlogPostFromUrl(blogSelection, url);
+            }
+        }
+
+        return null;
+    }
+
     @GetMapping("/selected")
     public List<SelectedBlogDTO> getSelectedBlogs(Principal principal) {
         var userId = principal.getName();

@@ -17,10 +17,8 @@
 
 
                 <mat-divider></mat-divider>
-                <button id="continue-reading-button" mat-raised-button color="primary">
-                    <a id="continue-reading-link" routerLink="/post" [state]="{ data: blogPost }"
-                        [queryParams]="{ url: blogPost.url }">Continue reading</a></button>
-
+                <button id="continue-reading-button" mat-raised-button color="primary" routerLink="/post"
+                    [state]="{ data: blogPost }" [queryParams]="{ url: blogPost.url }">Continue reading</button>
             </mat-card>
         </div>
 
