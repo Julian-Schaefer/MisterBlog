@@ -3,6 +3,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BlogService } from 'src/app/services/blog.service';
+import { UtilService } from 'src/app/services/util.service';
 import { SelectedBlog } from 'src/app/services/SelectedBlog';
 
 @Component({
@@ -16,7 +17,7 @@ export class SelectedBlogsComponent {
   loading: boolean;
   selectedBlogs: SelectedBlog[];
 
-  constructor(private dialog: MatDialog, private router: Router, private blogService: BlogService) {
+  constructor(private dialog: MatDialog, private router: Router, private blogService: BlogService, public utilService: UtilService) {
     this.loadSelectedBlogs();
   }
 
@@ -42,11 +43,6 @@ export class SelectedBlogsComponent {
         this.router.navigate(["preview"], { queryParams: { url: result } });
       }
     })
-  }
-
-  getHostname(url: string): string {
-    let hostname = (new URL(url)).hostname;
-    return hostname;
   }
 }
 

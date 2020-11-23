@@ -4,5 +4,6 @@ export interface BlogPost {
     author: string;
     introduction: string;
     content: string;
-    url: string;
+    blogUrl: string;
+    postUrl: string;
 }

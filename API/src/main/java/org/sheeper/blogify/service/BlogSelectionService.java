@@ -77,7 +77,8 @@ public class BlogSelectionService {
             });
 
             BlogPost blogPost = new BlogPost();
-            blogPost.setUrl(url);
+            blogPost.setBlogUrl(blogSelection.getBlogUrl());
+            blogPost.setPostUrl(url);
             blogPost.setTitle(headerElement.text());
             blogPost.setAuthor(authorElement.text());
             var date = parseDate(dateElement.text());

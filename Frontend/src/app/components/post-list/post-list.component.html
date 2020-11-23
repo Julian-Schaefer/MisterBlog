@@ -8,17 +8,17 @@
         <div *ngIf="blogPosts && blogPosts.length > 0">
             <mat-card id="blog-post-card" *ngFor="let blogPost of blogPosts">
                 <a id="blog-post-link" routerLink="/post" [state]="{ data: blogPost }"
-                    [queryParams]="{ url: blogPost.url }">
+                    [queryParams]="{ url: blogPost.postUrl }">
                     <h2 id=" blog-post-title">{{blogPost.title}}</h2>
                 </a>
-                <p id="from">From {{getHostname(blogPost.url)}}</p>
+                <p id="from">From {{utilService.getHostname(blogPost.blogUrl)}}</p>
                 <p id="author">{{blogPost.author}} on {{blogPost.date}}</p>
                 <p id="introduction">{{blogPost.introduction}}</p>
 
 
                 <mat-divider></mat-divider>
                 <button id="continue-reading-button" mat-raised-button color="primary" routerLink="/post"
-                    [state]="{ data: blogPost }" [queryParams]="{ url: blogPost.url }">Continue reading</button>
+                    [state]="{ data: blogPost }" [queryParams]="{ url: blogPost.postUrl }">Continue reading</button>
             </mat-card>
         </div>
 

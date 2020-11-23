@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { BlogService } from 'src/app/services/blog.service';
 import { BlogPost } from 'src/app/services/BlogPost';
 import { ServiceResultStatus } from 'src/app/services/ServiceResult';
+import { UtilService } from 'src/app/services/util.service';
 
 @Component({
   selector: 'app-post-list',
@@ -15,7 +16,7 @@ export class PostListComponent {
   loadingMore: boolean;
   blogPosts: BlogPost[];
 
-  constructor(private blogService: BlogService) {
+  constructor(private blogService: BlogService, public utilService: UtilService) {
     this.loadBlogPosts();
   }
 
@@ -55,10 +56,5 @@ export class PostListComponent {
       if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
         this.loadMoreBlogPosts();
       }
-  }
-
-  getHostname(url: string): string {
-    let hostname = (new URL(url)).hostname;
-    return hostname;
   }
 }

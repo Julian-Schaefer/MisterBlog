@@ -11,7 +11,8 @@ public class BlogPost {
     private String author;
     private String introduction;
     private String content;
-    private String url;
+    private String postUrl;
+    private String blogUrl;
 
     public BlogPost() {
 
@@ -58,11 +59,19 @@ public class BlogPost {
         this.content = content;
     }
 
-    public String getUrl() {
-        return url;
+    public String getBlogUrl() {
+        return blogUrl;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setBlogUrl(String blogUrl) {
+        this.blogUrl = blogUrl;
+    }
+
+    public String getPostUrl() {
+        return postUrl;
+    }
+
+    public void setPostUrl(String postUrl) {
+        this.postUrl = postUrl;
     }
 }
