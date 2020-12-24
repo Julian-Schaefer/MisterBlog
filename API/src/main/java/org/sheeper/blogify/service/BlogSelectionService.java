@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
+import org.jsoup.nodes.Element;
 import org.sheeper.blogify.model.BlogPost;
 import org.sheeper.blogify.model.BlogSelection;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,7 @@ public class BlogSelectionService {
                 var blogPostUrl = linkElements.first().attr("href");
 
                 var blogPost = getBlogPostFromUrl(blogSelection, blogPostUrl);
-                blogPost.setIntroduction(postIntroductionElement.text());
+                blogPost.setIntroduction(getIntroduction(postIntroductionElement));
                 blogPosts.add(blogPost);
             }
         } catch (Exception e) {
@@ -63,6 +64,19 @@ public class BlogSelectionService {
         }
 
         return blogPosts;
+    }
+
+    public String getIntroduction(Element introductionElement) {
+        var introductionElementClone = introductionElement.clone();
+        for (var introductionChild : introductionElementClone.children()) {
+            introductionChild.remove();
+        }
+
+        if (introductionElementClone.text().length() > 0) {
+            return introductionElementClone.text();
+        } else {
+            return introductionElement.text();
+        }
     }
 
     public BlogPost getBlogPostFromUrl(BlogSelection blogSelection, String url) {
@@ -83,6 +97,15 @@ public class BlogSelectionService {
             blogPost.setAuthor(authorElement.text());
             var date = parseDate(dateElement.text());
             blogPost.setDate(date);
+
+            if (contentElement.text().startsWith(headerElement.text())) {
+                for (var child : contentElement.children()) {
+                    if (child.text().equals(headerElement.text())) {
+                        child.remove();
+                    }
+                }
+            }
+
             blogPost.setContent(contentElement.html());
 
             return blogPost;
