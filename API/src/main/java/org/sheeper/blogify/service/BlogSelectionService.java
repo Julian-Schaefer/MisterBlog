@@ -50,13 +50,19 @@ public class BlogSelectionService {
             var postIntroductionElements = blogPostListDocumentBody.select(blogSelection.getPostIntroductionSelector());
             for (int i = 0; i < postHeaderElements.size(); i++) {
                 var postHeaderElement = postHeaderElements.get(i);
-                var postIntroductionElement = postIntroductionElements.get(i);
 
                 var linkElements = postHeaderElement.select("a[href]");
                 var blogPostUrl = linkElements.first().attr("href");
 
                 var blogPost = getBlogPostFromUrl(blogSelection, blogPostUrl);
-                blogPost.setIntroduction(getIntroduction(postIntroductionElement));
+
+                try {
+                    var postIntroductionElement = postIntroductionElements.get(i);
+                    blogPost.setIntroduction(getIntroduction(postIntroductionElement));
+                } catch (Exception e) {
+                    System.err.println("Could not get Introduction Element for Header: " + postHeaderElement.text());
+                }
+                
                 blogPosts.add(blogPost);
             }
         } catch (Exception e) {
