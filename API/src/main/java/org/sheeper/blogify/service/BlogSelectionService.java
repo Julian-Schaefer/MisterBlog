@@ -48,6 +48,20 @@ public class BlogSelectionService {
 
             var postHeaderElements = blogPostListDocumentBody.select(blogSelection.getPostHeaderSelector());
             var postIntroductionElements = blogPostListDocumentBody.select(blogSelection.getPostIntroductionSelector());
+
+            while (postHeaderElements.size() > postIntroductionElements.size()) {
+                var postIntroductionSelector = blogSelection.getPostIntroductionSelector();
+                if (postIntroductionSelector.lastIndexOf(">") != -1) {
+                    postIntroductionSelector = postIntroductionSelector.substring(0,
+                            postIntroductionSelector.lastIndexOf(">"));
+                    blogSelection.setPostIntroductionSelector(postIntroductionSelector);
+                    postIntroductionElements = blogPostListDocumentBody
+                            .select(blogSelection.getPostIntroductionSelector());
+                } else {
+                    break;
+                }
+            }
+
             for (int i = 0; i < postHeaderElements.size(); i++) {
                 var postHeaderElement = postHeaderElements.get(i);
 
