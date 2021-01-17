@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Logger;
 
 import org.jsoup.nodes.Element;
 import org.sheeper.blogify.model.BlogPost;
@@ -16,10 +17,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class BlogSelectionService {
 
+    private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+
     @Autowired
     private HTMLService htmlService;
 
     public List<BlogPost> getBlogPostFromBlogSelection(BlogSelection blogSelection, int page) {
+        LOGGER.info("Getting Blog Posts from " + blogSelection.getBlogUrl() + " on Page " + page);
         var blogPosts = new LinkedList<BlogPost>();
 
         try {
