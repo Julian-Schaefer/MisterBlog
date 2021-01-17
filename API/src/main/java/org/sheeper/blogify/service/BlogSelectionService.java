@@ -78,10 +78,11 @@ public class BlogSelectionService {
                     var postIntroductionElement = postIntroductionElements.get(i);
                     blogPost.setIntroduction(getIntroduction(postIntroductionElement));
                 } catch (Exception e) {
-                    System.err.println("Could not get Introduction Element from " + blogPostUrl + "for Header: "
+                    LOGGER.severe("Could not get Introduction Element from " + blogPostUrl + "for Header: "
                             + postHeaderElement.text());
                 }
 
+                blogPost.setPage(page);
                 blogPosts.add(blogPost);
             }
         } catch (Exception e) {

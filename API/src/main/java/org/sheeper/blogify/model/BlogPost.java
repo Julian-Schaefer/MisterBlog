@@ -13,6 +13,7 @@ public class BlogPost {
     private String content;
     private String postUrl;
     private String blogUrl;
+    private int page;
 
     public BlogPost() {
 
@@ -73,5 +74,13 @@ public class BlogPost {
 
     public void setPostUrl(String postUrl) {
         this.postUrl = postUrl;
+    }
+
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
     }
 }
