@@ -1,7 +1,6 @@
 package org.sheeper.blogify.controller;
 
 import java.security.Principal;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import org.modelmapper.ModelMapper;
@@ -10,6 +9,7 @@ import org.sheeper.blogify.model.BlogPost;
 import org.sheeper.blogify.model.BlogSelection;
 import org.sheeper.blogify.model.BlogSelectionId;
 import org.sheeper.blogify.repository.BlogSelectionRepository;
+import org.sheeper.blogify.service.BlogPostCollector;
 import org.sheeper.blogify.service.BlogSelectionService;
 import org.sheeper.blogify.service.HTMLService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +34,9 @@ public class BlogSelectionController {
 
     @Autowired
     private BlogSelectionService blogSelectionService;
+
+    @Autowired
+    private BlogPostCollector blogPostCollector;
 
     @Autowired
     private HTMLService htmlService;
@@ -122,7 +125,7 @@ public class BlogSelectionController {
     public List<BlogPost> getBlogPosts(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
             @RequestParam(value = "limit", required = false, defaultValue = "20") int limit, Principal principal) {
         var userId = principal.getName();
-        var blogPosts = new LinkedList<BlogPost>();
+        List<BlogPost> blogPosts = new LinkedList<BlogPost>();
 
         var blogSelections = blogSelectionRepository.findAllByUserIdAndIsSelectedTrue(userId);
 
@@ -130,21 +133,7 @@ public class BlogSelectionController {
             return blogPosts;
         }
 
-        int page = 1;
-        while ((blogPosts.size() - offset) < limit) {
-            for (var blogSelection : blogSelections) {
-                var additionalBlogPosts = blogSelectionService.getBlogPostFromBlogSelection(blogSelection, page);
-                blogPosts.addAll(additionalBlogPosts);
-            }
-
-            page++;
-        }
-
-        blogPosts.sort(new Comparator<BlogPost>() {
-            public int compare(BlogPost a, BlogPost b) {
-                return a.getDate().compareTo(b.getDate()) * -1;
-            }
-        });
+        blogPosts = blogPostCollector.getBlogPostsFromBlogSelections(blogSelections, offset);
 
         return blogPosts.subList(offset, blogPosts.size());
     }

@@ -6,6 +6,9 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import org.jsoup.nodes.Element;
@@ -66,25 +69,46 @@ public class BlogSelectionService {
                 }
             }
 
+            ExecutorService executorService = Executors.newFixedThreadPool(postHeaderElements.size());
+
             for (int i = 0; i < postHeaderElements.size(); i++) {
                 var postHeaderElement = postHeaderElements.get(i);
 
                 var linkElements = postHeaderElement.select("a[href]");
                 var blogPostUrl = linkElements.first().attr("href");
 
-                var blogPost = getBlogPostFromUrl(blogSelection, blogPostUrl);
+                var postIntroductionElement = postIntroductionElements.get(i);
 
-                try {
-                    var postIntroductionElement = postIntroductionElements.get(i);
-                    blogPost.setIntroduction(getIntroduction(postIntroductionElement));
-                } catch (Exception e) {
-                    LOGGER.severe("Could not get Introduction Element from " + blogPostUrl + "for Header: "
-                            + postHeaderElement.text());
-                }
+                executorService.submit(() -> {
+                    var blogPost = getBlogPostFromUrl(blogSelection, blogPostUrl);
+                    blogPost.setPage(page);
 
-                blogPost.setPage(page);
-                blogPosts.add(blogPost);
+                    try {
+                        blogPost.setIntroduction(getIntroduction(postIntroductionElement));
+                    } catch (Exception e) {
+                        LOGGER.severe("Could not get Introduction Element from " + blogPostUrl + "for Header: "
+                                + postHeaderElement.text());
+                    }
+
+                    synchronized (blogPosts) {
+                        blogPosts.add(blogPost);
+                    }
+                });
             }
+
+            executorService.shutdown();
+
+            try {
+                boolean finished = executorService.awaitTermination(1, TimeUnit.MINUTES);
+                if (finished) {
+                    System.out.println("Collection finished successfully.");
+                } else {
+                    System.out.println("Timeout while collecting Blog Posts.");
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
