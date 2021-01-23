@@ -160,8 +160,12 @@ public class BlogSelectionService {
 
             try {
                 var requestURL = new URL(requestUrl);
-                var imageURL = requestURL.getProtocol() + "://" + requestURL.getHost() + ":" + requestURL.getPort()
-                        + "/image?url=";
+                var hostURL = requestURL.getProtocol() + "://" + requestURL.getHost();
+                if (requestURL.getPort() != -1) {
+                    hostURL += ":" + requestURL.getPort();
+                }
+
+                final var imageURL = hostURL + "/image?url=";
 
                 // TODO: adjust properties, instead of removing
                 contentElement.select("img").forEach((image) -> {
