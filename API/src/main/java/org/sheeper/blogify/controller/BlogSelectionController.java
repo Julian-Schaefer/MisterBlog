@@ -3,6 +3,9 @@ package org.sheeper.blogify.controller;
 import java.security.Principal;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.modelmapper.ModelMapper;
 import org.sheeper.blogify.dto.SelectedBlogDTO;
 import org.sheeper.blogify.model.BlogPost;
@@ -122,7 +125,8 @@ public class BlogSelectionController {
     }
 
     @GetMapping
-    public List<BlogPost> getBlogPosts(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
+    public List<BlogPost> getBlogPosts(HttpServletRequest request,
+            @RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
             @RequestParam(value = "limit", required = false, defaultValue = "20") int limit, Principal principal) {
         var userId = principal.getName();
         List<BlogPost> blogPosts = new LinkedList<BlogPost>();
@@ -133,19 +137,21 @@ public class BlogSelectionController {
             return blogPosts;
         }
 
-        blogPosts = blogPostCollector.getBlogPostsFromBlogSelections(blogSelections, offset);
+        blogPosts = blogPostCollector.getBlogPostsFromBlogSelections(request.getRequestURL().toString(), blogSelections,
+                offset);
 
         return blogPosts.subList(offset, blogPosts.size());
     }
 
     @GetMapping("/post")
-    public BlogPost getBlogPostFromUrl(@RequestParam("url") String url, Principal principal) {
+    public BlogPost getBlogPostFromUrl(HttpServletRequest request, @RequestParam("url") String url,
+            Principal principal) {
         var userId = principal.getName();
 
         var blogSelections = blogSelectionRepository.findAllByUserId(userId);
         for (var blogSelection : blogSelections) {
             if (url.startsWith(blogSelection.getBlogUrl())) {
-                return blogSelectionService.getBlogPostFromUrl(blogSelection, url);
+                return blogSelectionService.getBlogPostFromUrl(request.getRequestURL().toString(), blogSelection, url);
             }
         }
 

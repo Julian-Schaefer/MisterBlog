@@ -1,5 +1,7 @@
 package org.sheeper.blogify.service;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,7 +27,7 @@ public class BlogSelectionService {
     @Autowired
     private HTMLService htmlService;
 
-    public List<BlogPost> getBlogPostFromBlogSelection(BlogSelection blogSelection, int page) {
+    public List<BlogPost> getBlogPostFromBlogSelection(String requestUrl, BlogSelection blogSelection, int page) {
         LOGGER.info("Getting Blog Posts from " + blogSelection.getBlogUrl() + " on Page " + page);
         var blogPosts = new LinkedList<BlogPost>();
 
@@ -80,7 +82,7 @@ public class BlogSelectionService {
                 var postIntroductionElement = postIntroductionElements.get(i);
 
                 executorService.submit(() -> {
-                    var blogPost = getBlogPostFromUrl(blogSelection, blogPostUrl);
+                    var blogPost = getBlogPostFromUrl(requestUrl, blogSelection, blogPostUrl);
                     blogPost.setPage(page);
 
                     try {
@@ -129,7 +131,7 @@ public class BlogSelectionService {
         }
     }
 
-    public BlogPost getBlogPostFromUrl(BlogSelection blogSelection, String url) {
+    public BlogPost getBlogPostFromUrl(String requestUrl, BlogSelection blogSelection, String url) {
         try {
             var blogPostDocument = htmlService.getDocument(url);
             var headerElement = blogPostDocument.select(blogSelection.getHeaderSelector()).first();
@@ -156,16 +158,23 @@ public class BlogSelectionService {
                 }
             }
 
-            // TODO: adjust properties, instead of removing
-            contentElement.select("img").forEach((image) -> {
-                var imageSrc = "http://localhost:8080/image?url=" + image.attr("src");
-                image.attributes().forEach((attribute) -> {
-                    image.attributes().remove(attribute.getKey());
+            try {
+                var requestURL = new URL(requestUrl);
+                var imageURL = requestURL.getProtocol() + "://" + requestURL.getHost() + ":" + requestURL.getPort()
+                        + "/image?url=";
+
+                // TODO: adjust properties, instead of removing
+                contentElement.select("img").forEach((image) -> {
+                    var imageSrc = imageURL + image.attr("src");
+                    image.attributes().forEach((attribute) -> {
+                        image.attributes().remove(attribute.getKey());
+                    });
+
+                    image.attr("src", imageSrc);
                 });
-
-                image.attr("src", imageSrc);
-            });
-
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
             blogPost.setContent(contentElement.html());
 
             return blogPost;

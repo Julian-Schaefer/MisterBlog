@@ -18,7 +18,8 @@ public class BlogPostCollector {
     @Autowired
     private BlogSelectionService blogSelectionService;
 
-    public List<BlogPost> getBlogPostsFromBlogSelections(List<BlogSelection> blogSelections, int offset) {
+    public List<BlogPost> getBlogPostsFromBlogSelections(String requestUrl, List<BlogSelection> blogSelections,
+            int offset) {
         var blogPosts = new LinkedList<BlogPost>();
 
         int limit = 20;
@@ -28,7 +29,7 @@ public class BlogPostCollector {
             ExecutorService executorService = Executors.newFixedThreadPool(blogSelections.size());
 
             for (var blogSelection : blogSelections) {
-                executorService.execute(new BlogSelectionCollectorTask(blogPosts, blogSelection, page));
+                executorService.execute(new BlogSelectionCollectorTask(requestUrl, blogPosts, blogSelection, page));
             }
 
             executorService.shutdown();
@@ -57,11 +58,14 @@ public class BlogPostCollector {
     }
 
     public class BlogSelectionCollectorTask implements Runnable {
+        private String requestUrl;
         private List<BlogPost> blogPosts;
         private BlogSelection blogSelection;
         private int page;
 
-        public BlogSelectionCollectorTask(List<BlogPost> blogPosts, BlogSelection blogSelection, int page) {
+        public BlogSelectionCollectorTask(String requestUrl, List<BlogPost> blogPosts, BlogSelection blogSelection,
+                int page) {
+            this.requestUrl = requestUrl;
             this.blogPosts = blogPosts;
             this.blogSelection = blogSelection;
             this.page = page;
@@ -69,7 +73,8 @@ public class BlogPostCollector {
 
         @Override
         public void run() {
-            var additionalBlogPosts = blogSelectionService.getBlogPostFromBlogSelection(blogSelection, page);
+            var additionalBlogPosts = blogSelectionService.getBlogPostFromBlogSelection(requestUrl, blogSelection,
+                    page);
             synchronized (blogPosts) {
                 blogPosts.addAll(additionalBlogPosts);
             }
