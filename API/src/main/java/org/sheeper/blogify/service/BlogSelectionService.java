@@ -156,6 +156,16 @@ public class BlogSelectionService {
                 }
             }
 
+            // TODO: adjust properties, instead of removing
+            contentElement.select("img").forEach((image) -> {
+                var imageSrc = "http://localhost:8080/image?url=" + image.attr("src");
+                image.attributes().forEach((attribute) -> {
+                    image.attributes().remove(attribute.getKey());
+                });
+
+                image.attr("src", imageSrc);
+            });
+
             blogPost.setContent(contentElement.html());
 
             return blogPost;
