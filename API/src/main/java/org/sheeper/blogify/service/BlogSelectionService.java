@@ -170,9 +170,16 @@ public class BlogSelectionService {
                 // TODO: adjust properties, instead of removing
                 contentElement.select("img").forEach((image) -> {
                     var imageSrc = imageURL + image.attr("src");
-                    image.attributes().forEach((attribute) -> {
-                        image.attributes().remove(attribute.getKey());
-                    });
+
+                    List<String> attributesToRemove = new LinkedList<>();
+                    var attributes = image.attributes();
+                    for (var attribute : attributes) {
+                        attributesToRemove.add(attribute.getKey());
+                    }
+
+                    for (String attribute : attributesToRemove) {
+                        image.removeAttr(attribute);
+                    }
 
                     image.attr("src", imageSrc);
                 });
