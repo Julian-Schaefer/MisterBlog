@@ -14,7 +14,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()).and().headers()
                 .frameOptions().disable().and().csrf().disable().formLogin().disable().httpBasic().disable()
-                .authorizeRequests().anyRequest().authenticated().and()
+                .authorizeRequests().antMatchers("/image").permitAll().anyRequest().authenticated().and()
                 .addFilterBefore(new FirebaseAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
