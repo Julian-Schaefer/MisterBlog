@@ -1,9 +1,7 @@
 package org.sheeper.blogify.controller;
 
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
@@ -33,6 +31,10 @@ public class ImageController {
                 headers.setContentType(MediaType.IMAGE_JPEG);
             } else if (imageUrl.contains(".png")) {
                 headers.setContentType(MediaType.IMAGE_PNG);
+            } else if (imageUrl.contains(".gif")) {
+                headers.setContentType(MediaType.IMAGE_GIF);
+            } else if (imageUrl.contains(".svg")) {
+                headers.setContentType(MediaType.valueOf("image/svg+xml"));
             }
 
             ResponseEntity<byte[]> responseEntity = new ResponseEntity<>(imageData, headers, HttpStatus.OK);
@@ -53,6 +55,10 @@ public class ImageController {
             ImageIO.write(bufferedImage, "jpg", bos);
         } else if (imageUrl.contains(".png")) {
             ImageIO.write(bufferedImage, "png", bos);
+        } else if (imageUrl.contains(".gif")) {
+            ImageIO.write(bufferedImage, "gif", bos);
+        } else if (imageUrl.contains(".svg")) {
+            ImageIO.write(bufferedImage, "svg", bos);
         }
 
         byte[] data = bos.toByteArray();
