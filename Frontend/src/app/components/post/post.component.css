@@ -8,7 +8,7 @@ a#original-post-link {
 }
 
 mat-card#blog-post {
-    width: 1000px;
+    width: 680px;
     margin-left: auto; 
     margin-right: auto; 
     margin-top: 20px; 
@@ -18,8 +18,18 @@ mat-card#blog-post {
     text-align: justify;
 }
 
-mat-card p {
-    font-size: 12pt;
+mat-card div p {
+    font-size: 21px;
+    font-family: charter, Georgia, Cambria, "Times New Roman", Times, serif;
+    line-height: 32px;
+    letter-spacing: -0.003em;
+}
+
+mat-card div code {
+    background: rgb(242, 242, 242);
+    padding: 20px;
+    display: block;
+    font-family: monospace;
 }
 
 mat-card img {
