@@ -210,7 +210,9 @@ public class BlogSelectionService {
         dateFormats.add("MMMM d'nd', yyyy");
         dateFormats.add("MMMM d'rd', yyyy");
         dateFormats.add("dd MMMM yyyy");
+        dateFormats.add("dd. MMMM yyyy");
         dateFormats.add("dd MMMM yyyy zzzz");
+        dateFormats.add("dd. MMMM yyyy zzzz");
         dateFormats.add("E, dd MMM yyyy HH:mm:ss z");
 
         var locales = new Locale[] { Locale.US, Locale.CHINA, Locale.GERMAN, Locale.FRANCE, Locale.ITALIAN };

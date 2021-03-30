@@ -51,7 +51,7 @@ public class ImageController {
         var bufferedImage = ImageIO.read(url);
         var bos = new ByteArrayOutputStream();
 
-        if (imageUrl.contains(".jpg")) {
+        if (imageUrl.contains(".jpg") || imageUrl.contains(".jpeg")) {
             ImageIO.write(bufferedImage, "jpg", bos);
         } else if (imageUrl.contains(".png")) {
             ImageIO.write(bufferedImage, "png", bos);
