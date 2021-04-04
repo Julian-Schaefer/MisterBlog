@@ -160,7 +160,7 @@ export class PreviewComponent {
     this.htmlService.createBlogSelection(articleSelection).subscribe(_ => {
       this.router.navigate([""]);
     }, error => {
-      this.dialog.open(ErrorDialogComponent, { data: error });
+      this.dialog.open(ErrorDialogComponent, { data: error.error });
     });
   }
 
