@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>797738042746-d214689aro8krfftftqfp1l5ieu1e5s7.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.797738042746-d214689aro8krfftftqfp1l5ieu1e5s7</string>
+	<key>API_KEY</key>
+	<string></string>
+	<key>GCM_SENDER_ID</key>
+	<string>797738042746</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>org.sheeper.blogify</string>
+	<key>PROJECT_ID</key>
+	<string>blogify-cdb97</string>
+	<key>STORAGE_BUCKET</key>
+	<string>blogify-cdb97.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:797738042746:ios:9980489d23dc6f6f2802c3</string>
+	<key>DATABASE_URL</key>
+	<string>https://blogify-cdb97.firebaseio.com</string>
+</dict>
+</plist>
