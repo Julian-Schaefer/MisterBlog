@@ -9,40 +9,30 @@ void main() {
 }
 
 class App extends StatelessWidget {
-  // Create the initialization Future outside of `build`:
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      // Initialize FlutterFire:
-      future: _initialization,
-      builder: (context, snapshot) {
-        // Check for errors
-        if (snapshot.hasError) {
-          return MaterialApp(
-              home: Scaffold(
-            // use Scaffold also in order to provide material app widgets
-            body: Center(child: Text("Error")),
-          ));
-        }
+    return MaterialApp(
+        home: Scaffold(
+            appBar: AppBar(title: Text("Blogify")),
+            body: FutureBuilder(
+              // Initialize FlutterFire:
+              future: _initialization,
+              builder: (context, snapshot) {
+                // Check for errors
+                if (snapshot.hasError) {
+                  return Center(child: Text("Error"));
+                }
 
-        // Once complete, show your application
-        if (snapshot.connectionState == ConnectionState.done) {
-          return MaterialApp(
-              home: Scaffold(
-            // use Scaffold also in order to provide material app widgets
-            body: Center(child: Text("Connected")),
-          ));
-        }
+                // Once complete, show your application
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return Center(child: Text("Connected"));
+                }
 
-        // Otherwise, show something whilst waiting for initialization to complete
-        return MaterialApp(
-            home: Scaffold(
-          // use Scaffold also in order to provide material app widgets
-          body: Center(child: Text("Loading..")),
-        ));
-      },
-    );
+                // Otherwise, show something whilst waiting for initialization to complete
+                return Center(child: Text("Loading.."));
+              },
+            )));
   }
 }
