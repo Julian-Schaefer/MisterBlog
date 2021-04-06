@@ -1,3 +1,4 @@
+import 'package:blogify/BlogPostList.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -27,6 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
               await signOut();
             },
             child: Text("Sign Out")),
+        Expanded(child: BlogPostList())
       ],
     ));
   }
