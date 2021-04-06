@@ -1,9 +1,12 @@
+import 'package:blogify/HomeScreen.dart';
 import 'package:blogify/SignInScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 // Import the firebase_core plugin
 import 'package:firebase_core/firebase_core.dart';
+
+import 'SignInScreen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,12 +32,38 @@ class App extends StatelessWidget {
 
                 // Once complete, show your application
                 if (snapshot.connectionState == ConnectionState.done) {
-                  return SignInScreen();
+                  return AuthenticationScreen();
                 }
 
                 // Otherwise, show something whilst waiting for initialization to complete
                 return Center(child: Text("Loading.."));
               },
             )));
+  }
+}
+
+class AuthenticationScreen extends StatefulWidget {
+  @override
+  _AuthenticationScreenState createState() => _AuthenticationScreenState();
+}
+
+class _AuthenticationScreenState extends State<AuthenticationScreen> {
+  _AuthenticationScreenState() {
+    FirebaseAuth.instance.authStateChanges().listen((User? _) {
+      this.refreshAuthenticationState();
+    });
+  }
+
+  void refreshAuthenticationState() {
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return (FirebaseAuth.instance.currentUser != null)
+        ? HomeScreen(
+            refreshAuthenticationState: this.refreshAuthenticationState)
+        : SignInScreen(
+            refreshAuthenticationState: this.refreshAuthenticationState);
   }
 }

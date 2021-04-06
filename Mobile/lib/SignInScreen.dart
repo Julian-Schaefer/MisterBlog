@@ -5,6 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class SignInScreen extends StatefulWidget {
+  final void Function() refreshAuthenticationState;
+
+  const SignInScreen({Key? key, required this.refreshAuthenticationState})
+      : super(key: key);
+
   @override
   _SignInScreenState createState() => _SignInScreenState();
 }
@@ -24,12 +29,7 @@ class _SignInScreenState extends State<SignInScreen> {
             child: Text("Sign In with Google")),
         Text((firebaseAuth.currentUser != null)
             ? firebaseAuth.currentUser!.displayName!
-            : "Not logged in"),
-        MaterialButton(
-            onPressed: () async {
-              await signOut();
-            },
-            child: Text("Sign Out")),
+            : "Not logged in")
       ],
     ));
   }
@@ -53,11 +53,6 @@ class _SignInScreenState extends State<SignInScreen> {
 
     // Once signed in, return the UserCredential
     await firebaseAuth.signInWithCredential(credential);
-    setState(() {});
-  }
-
-  Future<void> signOut() async {
-    await firebaseAuth.signOut();
-    setState(() {});
+    widget.refreshAuthenticationState();
   }
 }
