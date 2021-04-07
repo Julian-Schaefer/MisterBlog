@@ -1,11 +1,15 @@
-import 'dart:io';
-
 import 'package:blogify/BlogPost.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:http/http.dart' as http;
+import 'package:blogify/HttpInterceptor.dart';
+import 'package:http/http.dart';
 import 'dart:convert';
 
+import 'package:http_interceptor/http_client_with_interceptor.dart';
+
 class BlogService {
+  Client client = HttpClientWithInterceptor.build(interceptors: [
+    HttpInterceptor(),
+  ]);
+
   final String baseUrl = "https://blogify-api.herokuapp.com";
 
   Future<List<BlogPost>> fetchBlogPosts(int offset) async {
@@ -14,10 +18,7 @@ class BlogService {
       relativeUrl += "?offset=" + offset.toString();
     }
 
-    var token = await FirebaseAuth.instance.currentUser!.getIdToken();
-
-    final response = await http.get(Uri.parse(baseUrl + relativeUrl),
-        headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
+    final response = await client.get(Uri.parse(baseUrl + relativeUrl));
 
     if (response.statusCode == 200) {
       final parsedJson = jsonDecode(response.body).cast<Map<String, dynamic>>();
