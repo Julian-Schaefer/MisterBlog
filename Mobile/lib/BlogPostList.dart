@@ -1,3 +1,5 @@
+import 'package:blogify/BlogPost.dart';
+import 'package:blogify/BlogService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -10,29 +12,33 @@ class _BlogPostListState extends State<BlogPostList> {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   @override
+  void initState() {
+    super.initState();
+    BlogService().fetchBlogPosts(0);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(8.0),
-      itemExtent: 106.0,
-      children: <BlogPostListItem>[
-        BlogPostListItem(
-          user: 'Flutter',
-          viewCount: 999000,
-          thumbnail: Container(
-            decoration: const BoxDecoration(color: Colors.blue),
-          ),
-          title: 'The Flutter YouTube Channel',
-        ),
-        BlogPostListItem(
-          user: 'Dash',
-          viewCount: 884000,
-          thumbnail: Container(
-            decoration: const BoxDecoration(color: Colors.yellow),
-          ),
-          title: 'Announcing Flutter 1.0',
-        ),
-      ],
-    );
+    return FutureBuilder<List<BlogPost>>(
+        future: BlogService().fetchBlogPosts(0),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) print(snapshot.error);
+
+          return snapshot.hasData
+              ? ListView.builder(
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    return BlogPostListItem(
+                      user: snapshot.data![index].author,
+                      viewCount: 999000,
+                      thumbnail: Container(
+                        decoration: const BoxDecoration(color: Colors.blue),
+                      ),
+                      title: snapshot.data![index].title,
+                    );
+                  })
+              : Center(child: CircularProgressIndicator());
+        });
   }
 }
 
