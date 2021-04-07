@@ -14,7 +14,6 @@ export class BlogService {
   private BLOG_POST_KEY = "blog-post-key";
 
   private baseUrl = environment.apiUrl;
-  private blogPosts: Observable<BlogPost[]>;
 
   constructor(private http: HttpClient) { }
 
