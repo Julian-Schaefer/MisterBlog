@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http_interceptor/http_interceptor.dart';
@@ -19,14 +20,16 @@ class HttpInterceptor implements InterceptorContract {
 
   @override
   Future<ResponseData> interceptResponse({required ResponseData data}) async {
-    // if (data.headers != null &&
-    //     data.headers!["Content-Type"] != null &&
-    //     data.headers!["Content-Type"]!.startsWith("application/json")) {
-    //   data.headers!["Content-Type"] = "application/json; charset=utf-8";
-    // }
+    if (data.headers != null &&
+        data.headers![HttpHeaders.contentTypeHeader] != null &&
+        data.headers![HttpHeaders.contentTypeHeader]!
+            .startsWith("application/json")) {
+      if (data.body != null) {
+        data.body = utf8.decode(data.toHttpResponse().bodyBytes);
+      }
 
-    if (data.body != null) {
-      data.body = utf8.decode(data.body!.runes.toList());
+      data.headers![HttpHeaders.contentTypeHeader] =
+          'application/json; charset=utf-8';
     }
 
     return data;
