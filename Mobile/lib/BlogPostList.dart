@@ -1,4 +1,5 @@
 import 'package:blogify/BlogPost.dart';
+import 'package:blogify/BlogPostScreen.dart';
 import 'package:blogify/BlogService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -28,14 +29,7 @@ class _BlogPostListState extends State<BlogPostList> {
               ? ListView.builder(
                   itemCount: snapshot.data!.length,
                   itemBuilder: (context, index) {
-                    return BlogPostListItem(
-                      user: snapshot.data![index].author,
-                      viewCount: 999000,
-                      thumbnail: Container(
-                        decoration: const BoxDecoration(color: Colors.blue),
-                      ),
-                      title: snapshot.data![index].title,
-                    );
+                    return BlogPostListItem(blogPost: snapshot.data![index]);
                   })
               : Center(child: CircularProgressIndicator());
         });
@@ -43,86 +37,29 @@ class _BlogPostListState extends State<BlogPostList> {
 }
 
 class BlogPostListItem extends StatelessWidget {
-  const BlogPostListItem({
-    Key? key,
-    required this.thumbnail,
-    required this.title,
-    required this.user,
-    required this.viewCount,
-  }) : super(key: key);
+  final BlogPost blogPost;
 
-  final Widget thumbnail;
-  final String title;
-  final String user;
-  final int viewCount;
+  const BlogPostListItem({Key? key, required this.blogPost}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Expanded(
-            flex: 2,
-            child: thumbnail,
-          ),
-          Expanded(
-            flex: 3,
-            child: _BlogPostDescription(
-              title: title,
-              user: user,
-              viewCount: viewCount,
-            ),
-          ),
-          const Icon(
-            Icons.more_vert,
-            size: 16.0,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _BlogPostDescription extends StatelessWidget {
-  const _BlogPostDescription({
-    Key? key,
-    required this.title,
-    required this.user,
-    required this.viewCount,
-  }) : super(key: key);
-
-  final String title;
-  final String user;
-  final int viewCount;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            title,
-            style: const TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 14.0,
-            ),
-          ),
-          const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
-          Text(
-            user,
-            style: const TextStyle(fontSize: 10.0),
-          ),
-          const Padding(padding: EdgeInsets.symmetric(vertical: 1.0)),
-          Text(
-            '$viewCount views',
-            style: const TextStyle(fontSize: 10.0),
-          ),
-        ],
-      ),
-    );
+        padding: const EdgeInsets.symmetric(vertical: 5.0),
+        child: Card(
+            child: InkWell(
+          child: Column(children: [
+            Text(blogPost.title),
+            Text(blogPost.author),
+            Text(blogPost.introduction)
+          ]),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BlogPostScreen(blogPost: blogPost),
+              ),
+            );
+          },
+        )));
   }
 }
