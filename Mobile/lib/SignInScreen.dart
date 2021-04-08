@@ -19,19 +19,21 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: Column(
-      children: [
-        MaterialButton(
-            onPressed: () async {
-              await signInWithGoogle();
-            },
-            child: Text("Sign In with Google")),
-        Text((firebaseAuth.currentUser != null)
-            ? firebaseAuth.currentUser!.displayName!
-            : "Not logged in")
-      ],
-    ));
+    return Scaffold(
+        appBar: AppBar(title: Text("Blogify")),
+        body: Center(
+            child: Column(
+          children: [
+            MaterialButton(
+                onPressed: () async {
+                  await signInWithGoogle();
+                },
+                child: Text("Sign In with Google")),
+            Text((firebaseAuth.currentUser != null)
+                ? firebaseAuth.currentUser!.displayName!
+                : "Not logged in")
+          ],
+        )));
   }
 
   Future<void> signInWithGoogle() async {

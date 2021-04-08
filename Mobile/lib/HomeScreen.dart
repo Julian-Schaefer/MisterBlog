@@ -42,9 +42,17 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
-              child: Text((firebaseAuth.currentUser != null)
-                  ? firebaseAuth.currentUser!.displayName!
-                  : "Not logged in"),
+              child: Column(children: [
+                Expanded(
+                    child: Text((firebaseAuth.currentUser != null)
+                        ? firebaseAuth.currentUser!.displayName!
+                        : "Not logged in")),
+                ElevatedButton(
+                    onPressed: () async {
+                      await signOut();
+                    },
+                    child: Text("Sign Out")),
+              ]),
               decoration: BoxDecoration(
                 color: Colors.red,
               ),
@@ -95,20 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           })
                       : Center(child: CircularProgressIndicator());
                 })),
-        body: Center(
-            child: Column(
-          children: [
-            Text((firebaseAuth.currentUser != null)
-                ? firebaseAuth.currentUser!.displayName!
-                : "Not logged in"),
-            MaterialButton(
-                onPressed: () async {
-                  await signOut();
-                },
-                child: Text("Sign Out")),
-            Expanded(child: BlogPostList())
-          ],
-        )));
+        body: Center(child: BlogPostList()));
   }
 
   Future<void> signOut() async {
