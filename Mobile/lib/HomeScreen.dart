@@ -1,6 +1,9 @@
 import 'package:blogify/BlogPostList.dart';
+import 'package:blogify/SelectedBlog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import 'BlogService.dart';
 
 class HomeScreen extends StatefulWidget {
   final void Function() refreshAuthenticationState;
@@ -71,28 +74,27 @@ class _HomeScreenState extends State<HomeScreen> {
             // Add a ListView to the drawer. This ensures the user can scroll
             // through the options in the drawer if there isn't enough vertical
             // space to fit everything.
-            child: ListView(
-          children: <Widget>[
-            ListTile(
-              title: Text('Item 1'),
-              onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text('Item 2'),
-              onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        )),
+            child: FutureBuilder<List<SelectedBlog>>(
+                future: BlogService.getSelectedBlogs(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) print(snapshot.error);
+
+                  return snapshot.hasData
+                      ? ListView.builder(
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(snapshot.data![index].blogUrl),
+                              onTap: () {
+                                // Update the state of the app
+                                // ...
+                                // Then close the drawer
+                                Navigator.pop(context);
+                              },
+                            );
+                          })
+                      : Center(child: CircularProgressIndicator());
+                })),
         body: Center(
             child: Column(
           children: [

@@ -14,13 +14,13 @@ class _BlogPostListState extends State<BlogPostList> {
   @override
   void initState() {
     super.initState();
-    BlogService.fetchBlogPosts(0);
+    BlogService.getBlogPosts(0);
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<BlogPost>>(
-        future: BlogService.fetchBlogPosts(0),
+        future: BlogService.getBlogPosts(0),
         builder: (context, snapshot) {
           if (snapshot.hasError) print(snapshot.error);
 
