@@ -1,5 +1,5 @@
 import 'package:blogify/BlogPostList.dart';
-import 'package:blogify/SelectedBlog.dart';
+import 'package:blogify/SelectedBlogsDrawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -77,32 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         )),
-        endDrawer: Drawer(
-
-            // Add a ListView to the drawer. This ensures the user can scroll
-            // through the options in the drawer if there isn't enough vertical
-            // space to fit everything.
-            child: FutureBuilder<List<SelectedBlog>>(
-                future: BlogService.getSelectedBlogs(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) print(snapshot.error);
-
-                  return snapshot.hasData
-                      ? ListView.builder(
-                          itemCount: snapshot.data!.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              title: Text(snapshot.data![index].blogUrl),
-                              onTap: () {
-                                // Update the state of the app
-                                // ...
-                                // Then close the drawer
-                                Navigator.pop(context);
-                              },
-                            );
-                          })
-                      : Center(child: CircularProgressIndicator());
-                })),
+        endDrawer: SelectedBlogsDrawer(),
         body: Center(child: BlogPostList()));
   }
 

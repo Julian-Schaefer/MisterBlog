@@ -10,4 +10,11 @@ class SelectedBlog {
       selected: json['selected'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'blogUrl': blogUrl,
+      'selected': selected,
+    };
+  }
 }
