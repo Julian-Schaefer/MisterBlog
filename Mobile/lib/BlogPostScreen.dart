@@ -1,5 +1,6 @@
 import 'package:blogify/BlogPost.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 class BlogPostScreen extends StatelessWidget {
   final BlogPost blogPost;
@@ -14,7 +15,10 @@ class BlogPostScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
-        child: Text(blogPost.content),
+        child: SingleChildScrollView(
+            child: Html(
+          data: blogPost.content,
+        )),
       ),
     );
   }
