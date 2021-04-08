@@ -13,12 +13,12 @@ class BlogPostScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(blogPost.title),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: Padding(
+            padding: EdgeInsets.all(16.0),
             child: Html(
-          data: blogPost.content,
-        )),
+              data: blogPost.content,
+            )),
       ),
     );
   }
