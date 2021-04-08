@@ -19,26 +19,28 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home: Scaffold(
+        home: FutureBuilder(
+      // Initialize FlutterFire:
+      future: _initialization,
+      builder: (context, snapshot) {
+        // Check for errors
+        if (snapshot.hasError) {
+          return Scaffold(
+              appBar: AppBar(title: Text("Blogify")),
+              body: Center(child: Text("Error")));
+        }
+
+        // Once complete, show your application
+        if (snapshot.connectionState == ConnectionState.done) {
+          return AuthenticationScreen();
+        }
+
+        // Otherwise, show something whilst waiting for initialization to complete
+        return Scaffold(
             appBar: AppBar(title: Text("Blogify")),
-            body: FutureBuilder(
-              // Initialize FlutterFire:
-              future: _initialization,
-              builder: (context, snapshot) {
-                // Check for errors
-                if (snapshot.hasError) {
-                  return Center(child: Text("Error"));
-                }
-
-                // Once complete, show your application
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return AuthenticationScreen();
-                }
-
-                // Otherwise, show something whilst waiting for initialization to complete
-                return Center(child: Text("Loading.."));
-              },
-            )));
+            body: Center(child: Text("Loading..")));
+      },
+    ));
   }
 }
 
