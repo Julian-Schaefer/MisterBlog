@@ -15,10 +15,39 @@ class _BlogPostListState extends State<BlogPostList> {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   late Future<List<BlogPost>> _blogPosts;
 
+  var _scrollController = ScrollController();
+  var _loadMore = false;
+
   @override
   void initState() {
     super.initState();
     _blogPosts = BlogService.getBlogPosts(0);
+
+    _scrollController.addListener(() async {
+      if (_scrollController.position.atEdge) {
+        if (_scrollController.position.pixels != 0) {
+          if (!_loadMore) {
+            setState(() {
+              _loadMore = true;
+            });
+            List<BlogPost> blogPostsValue = await _blogPosts;
+            List<BlogPost> newBlogPostsValue =
+                await BlogService.getBlogPosts(blogPostsValue.length);
+            blogPostsValue.addAll(newBlogPostsValue);
+            _blogPosts = Future.value(blogPostsValue);
+            setState(() {
+              _loadMore = false;
+            });
+          }
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -30,12 +59,26 @@ class _BlogPostListState extends State<BlogPostList> {
 
           return snapshot.hasData
               ? RefreshIndicator(
-                  child: ListView.builder(
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        return BlogPostListItem(
-                            blogPost: snapshot.data![index]);
-                      }),
+                  child: ListView(
+                      controller: _scrollController,
+                      children: <Widget>[
+                        ListView.builder(
+                            itemCount: snapshot.data!.length,
+                            shrinkWrap: true,
+                            physics: ScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return BlogPostListItem(
+                                  blogPost: snapshot.data![index]);
+                            }),
+                        if (_loadMore)
+                          ListView.builder(
+                              itemCount: 3,
+                              shrinkWrap: true,
+                              physics: ScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return BlogPostPlaceholder();
+                              })
+                      ]),
                   onRefresh: () async {
                     List<BlogPost> blogPostsValue =
                         await BlogService.getBlogPosts(0);
@@ -94,78 +137,81 @@ class BlogPostListItem extends StatelessWidget {
 class BlogPostPlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 170,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      child: Column(mainAxisSize: MainAxisSize.max, children: <Widget>[
-        Expanded(
-            child: Shimmer.fromColors(
-          baseColor: Colors.grey[300]!,
-          highlightColor: Colors.grey[100]!,
-          enabled: true,
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  width: 80,
-                  height: 80,
-                  color: Colors.white,
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8),
-                ),
+    return Card(
+        child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Container(
+              width: double.infinity,
+              height: 170,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              child: Column(mainAxisSize: MainAxisSize.max, children: <Widget>[
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        width: MediaQuery.of(context).size.width - 210,
-                        height: 24,
-                        color: Colors.white,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 8),
-                      ),
-                      Container(
-                        width: double.infinity,
-                        height: 16,
-                        color: Colors.black,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 4),
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width - 170,
-                        height: 16,
-                        color: Colors.white,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 4),
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width - 150,
-                        height: 16,
-                        color: Colors.white,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 4),
-                      ),
-                      Container(
-                        width: 60,
-                        height: 16,
-                        color: Colors.white,
-                      ),
-                    ],
+                    child: Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  enabled: true,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          width: 80,
+                          height: 80,
+                          color: Colors.white,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8),
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Container(
+                                width: MediaQuery.of(context).size.width - 210,
+                                height: 24,
+                                color: Colors.white,
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 8),
+                              ),
+                              Container(
+                                width: double.infinity,
+                                height: 16,
+                                color: Colors.black,
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 4),
+                              ),
+                              Container(
+                                width: MediaQuery.of(context).size.width - 170,
+                                height: 16,
+                                color: Colors.white,
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 4),
+                              ),
+                              Container(
+                                width: MediaQuery.of(context).size.width - 150,
+                                height: 16,
+                                color: Colors.white,
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 4),
+                              ),
+                              Container(
+                                width: 60,
+                                height: 16,
+                                color: Colors.white,
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                )
-              ],
-            ),
-          ),
-        ))
-      ]),
-    );
+                ))
+              ]),
+            )));
   }
 }
