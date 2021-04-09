@@ -3,8 +3,6 @@ import 'package:blogify/SelectedBlogsDrawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'BlogService.dart';
-
 class HomeScreen extends StatefulWidget {
   final void Function() refreshAuthenticationState;
 

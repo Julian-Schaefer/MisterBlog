@@ -3,6 +3,7 @@ import 'package:blogify/BlogPostScreen.dart';
 import 'package:blogify/BlogService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/style.dart';
 
 class BlogPostList extends StatefulWidget {
   @override
@@ -44,14 +45,25 @@ class BlogPostListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 5.0),
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
         child: Card(
             child: InkWell(
-          child: Column(children: [
-            Text(blogPost.title),
-            Text(blogPost.author),
-            Text(blogPost.introduction)
-          ]),
+          child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(children: [
+                Text(
+                  blogPost.title,
+                  style: TextStyle(
+                      fontSize: FontSize.xLarge.size,
+                      fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  blogPost.author,
+                  textAlign: TextAlign.left,
+                  style: TextStyle(fontSize: FontSize.large.size),
+                ),
+                Text(blogPost.introduction)
+              ])),
           onTap: () {
             Navigator.push(
               context,
