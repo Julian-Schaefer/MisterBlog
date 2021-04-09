@@ -4,6 +4,7 @@ import 'package:blogify/BlogService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/style.dart';
+import 'package:shimmer/shimmer.dart';
 
 class BlogPostList extends StatefulWidget {
   @override
@@ -42,7 +43,11 @@ class _BlogPostListState extends State<BlogPostList> {
                       _blogPosts = Future.value(blogPostsValue);
                     });
                   })
-              : Center(child: CircularProgressIndicator());
+              : ListView.builder(
+                  itemCount: 6,
+                  itemBuilder: (context, index) {
+                    return BlogPostPlaceholder();
+                  });
         });
   }
 }
@@ -83,5 +88,84 @@ class BlogPostListItem extends StatelessWidget {
             );
           },
         )));
+  }
+}
+
+class BlogPostPlaceholder extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: 170,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      child: Column(mainAxisSize: MainAxisSize.max, children: <Widget>[
+        Expanded(
+            child: Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          enabled: true,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  width: 80,
+                  height: 80,
+                  color: Colors.white,
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8),
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        width: MediaQuery.of(context).size.width - 210,
+                        height: 24,
+                        color: Colors.white,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 8),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        height: 16,
+                        color: Colors.black,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 4),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width - 170,
+                        height: 16,
+                        color: Colors.white,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 4),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width - 150,
+                        height: 16,
+                        color: Colors.white,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 4),
+                      ),
+                      Container(
+                        width: 60,
+                        height: 16,
+                        color: Colors.white,
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        ))
+      ]),
+    );
   }
 }
