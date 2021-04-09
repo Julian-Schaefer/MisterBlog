@@ -12,25 +12,35 @@ class BlogPostList extends StatefulWidget {
 
 class _BlogPostListState extends State<BlogPostList> {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  late Future<List<BlogPost>> _blogPosts;
 
   @override
   void initState() {
     super.initState();
-    BlogService.getBlogPosts(0);
+    _blogPosts = BlogService.getBlogPosts(0);
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<BlogPost>>(
-        future: BlogService.getBlogPosts(0),
+        future: _blogPosts,
         builder: (context, snapshot) {
           if (snapshot.hasError) print(snapshot.error);
 
           return snapshot.hasData
-              ? ListView.builder(
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    return BlogPostListItem(blogPost: snapshot.data![index]);
+              ? RefreshIndicator(
+                  child: ListView.builder(
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        return BlogPostListItem(
+                            blogPost: snapshot.data![index]);
+                      }),
+                  onRefresh: () async {
+                    List<BlogPost> blogPostsValue =
+                        await BlogService.getBlogPosts(0);
+                    setState(() {
+                      _blogPosts = Future.value(blogPostsValue);
+                    });
                   })
               : Center(child: CircularProgressIndicator());
         });
