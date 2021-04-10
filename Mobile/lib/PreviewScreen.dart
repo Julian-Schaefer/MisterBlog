@@ -13,8 +13,7 @@ class PreviewScreen extends StatelessWidget {
           title: Text("Add Blog"),
         ),
         body: WebView(
-          initialUrl: blogUrl,
-          
+          initialUrl: blogUrl
         ));
   }
 }

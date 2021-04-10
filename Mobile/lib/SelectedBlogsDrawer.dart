@@ -9,6 +9,18 @@ class SelectedBlogsDrawer extends StatefulWidget {
 }
 
 class _SelectedBlogsDrawerState extends State<SelectedBlogsDrawer> {
+  static final List _colors = [
+    Colors.red,
+    Colors.green,
+    Colors.yellow,
+    Colors.blue,
+    Colors.brown,
+    Colors.deepOrange,
+    Colors.lime,
+    Colors.purpleAccent,
+    Colors.grey
+  ];
+
   late Future<List<SelectedBlog>> _selectedBlogs;
 
   @override
@@ -30,24 +42,37 @@ class _SelectedBlogsDrawerState extends State<SelectedBlogsDrawer> {
               if (snapshot.hasError) print(snapshot.error);
 
               return snapshot.hasData
-                  ? ListView.builder(
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        return Row(children: [
-                          Checkbox(
-                              value: snapshot.data![index].selected,
-                              onChanged: (bool? value) {
-                                snapshot.data![index] = SelectedBlog(
-                                    blogUrl: snapshot.data![index].blogUrl,
-                                    selected: value!);
-                                setState(() {
-                                  _selectedBlogs = Future.value(snapshot.data!);
-                                  BlogService.setSelectedBlogs(snapshot.data!);
-                                });
-                              }),
-                          Text(snapshot.data![index].blogUrl),
-                        ]);
-                      },
+                  ? Column(
+                      children: [
+                        Text("Selected Blogs"),
+                        Expanded(
+                          child: ListView.builder(
+                            padding: EdgeInsets.zero,
+                            itemCount: snapshot.data!.length,
+                            itemBuilder: (context, index) {
+                              return Row(children: [
+                                Checkbox(
+                                    value: snapshot.data![index].selected,
+                                    //checkColor: _colors[index],
+                                    activeColor: _colors[index],
+                                    onChanged: (bool? value) {
+                                      snapshot.data![index] = SelectedBlog(
+                                          blogUrl:
+                                              snapshot.data![index].blogUrl,
+                                          selected: value!);
+                                      setState(() {
+                                        _selectedBlogs =
+                                            Future.value(snapshot.data!);
+                                        BlogService.setSelectedBlogs(
+                                            snapshot.data!);
+                                      });
+                                    }),
+                                Text(snapshot.data![index].blogUrl),
+                              ]);
+                            },
+                          ),
+                        ),
+                      ],
                     )
                   : Center(child: CircularProgressIndicator());
             }));
