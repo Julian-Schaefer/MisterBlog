@@ -1,4 +1,5 @@
 import 'package:blogify/BlogPostList.dart';
+import 'package:blogify/PreviewScreen.dart';
 import 'package:blogify/SelectedBlogsDrawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -93,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _displayTextInputDialog() async {
-    String asdvalue = "";
+    String blogUrl = "";
     return showDialog(
         context: context,
         builder: (context) {
@@ -101,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
             title: Text('Add Blog'),
             content: TextField(
               onChanged: (value) {
-                asdvalue = value;
+                blogUrl = value;
               },
               autocorrect: false,
               decoration: InputDecoration(hintText: "Enter Blog URL"),
@@ -116,12 +117,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
               ElevatedButton(
-                child: Text('Next'),
+                child: Text('Add'),
                 onPressed: () {
                   setState(() {
-                    print("VALUE: " + asdvalue);
                     Navigator.pop(context);
                   });
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PreviewScreen(blogUrl: blogUrl),
+                    ),
+                  );
                 },
               ),
             ],
