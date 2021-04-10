@@ -24,21 +24,20 @@ class _BlogPostListState extends State<BlogPostList> {
     _blogPosts = BlogService.getBlogPosts(0);
 
     _scrollController.addListener(() async {
-      if (_scrollController.position.atEdge) {
-        if (_scrollController.position.pixels != 0) {
-          if (!_loadMore) {
-            setState(() {
-              _loadMore = true;
-            });
-            List<BlogPost> blogPostsValue = await _blogPosts;
-            List<BlogPost> newBlogPostsValue =
-                await BlogService.getBlogPosts(blogPostsValue.length);
-            blogPostsValue.addAll(newBlogPostsValue);
-            _blogPosts = Future.value(blogPostsValue);
-            setState(() {
-              _loadMore = false;
-            });
-          }
+      if (_scrollController.position.extentAfter <
+          (MediaQuery.of(context).size.height / 3)) {
+        if (!_loadMore) {
+          setState(() {
+            _loadMore = true;
+          });
+          List<BlogPost> blogPostsValue = await _blogPosts;
+          List<BlogPost> newBlogPostsValue =
+              await BlogService.getBlogPosts(blogPostsValue.length);
+          blogPostsValue.addAll(newBlogPostsValue);
+          _blogPosts = Future.value(blogPostsValue);
+          setState(() {
+            _loadMore = false;
+          });
         }
       }
     });
