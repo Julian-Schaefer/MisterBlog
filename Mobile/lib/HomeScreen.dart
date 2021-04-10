@@ -76,11 +76,56 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         )),
         endDrawer: SelectedBlogsDrawer(),
-        body: Center(child: BlogPostList()));
+        body: Center(child: BlogPostList()),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            _displayTextInputDialog();
+          },
+          label: Text('Add Blog'),
+          icon: Icon(Icons.add),
+          backgroundColor: Colors.pink,
+        ));
   }
 
   Future<void> signOut() async {
     await firebaseAuth.signOut();
     widget.refreshAuthenticationState();
+  }
+
+  Future<void> _displayTextInputDialog() async {
+    String asdvalue = "";
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Add Blog'),
+            content: TextField(
+              onChanged: (value) {
+                asdvalue = value;
+              },
+              autocorrect: false,
+              decoration: InputDecoration(hintText: "Enter Blog URL"),
+            ),
+            actions: <Widget>[
+              ElevatedButton(
+                child: Text('Cancel'),
+                onPressed: () {
+                  setState(() {
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+              ElevatedButton(
+                child: Text('Next'),
+                onPressed: () {
+                  setState(() {
+                    print("VALUE: " + asdvalue);
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+            ],
+          );
+        });
   }
 }
