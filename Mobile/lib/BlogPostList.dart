@@ -106,20 +106,28 @@ class BlogPostListItem extends StatelessWidget {
         child: Card(
             child: InkWell(
           child: Padding(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(16),
               child: Column(children: [
-                Text(
-                  blogPost.title,
-                  style: TextStyle(
-                      fontSize: FontSize.xLarge.size,
-                      fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  blogPost.author,
-                  textAlign: TextAlign.left,
-                  style: TextStyle(fontSize: FontSize.large.size),
-                ),
-                Text(blogPost.introduction)
+                SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      blogPost.title,
+                      style: TextStyle(
+                          fontSize: FontSize.xLarge.size,
+                          fontWeight: FontWeight.bold),
+                    )),
+                SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      blogPost.author,
+                      style: TextStyle(fontSize: FontSize.large.size),
+                    )),
+                SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      blogPost.introduction,
+                      textAlign: TextAlign.justify,
+                    ))
               ])),
           onTap: () {
             Navigator.push(
