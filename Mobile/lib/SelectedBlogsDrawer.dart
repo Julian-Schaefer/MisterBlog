@@ -2,6 +2,7 @@ import 'package:blogify/BlogService.dart';
 import 'package:blogify/SelectedBlog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/style.dart';
 
 class SelectedBlogsDrawer extends StatefulWidget {
   @override
@@ -44,7 +45,17 @@ class _SelectedBlogsDrawerState extends State<SelectedBlogsDrawer> {
               return snapshot.hasData
                   ? Column(
                       children: [
-                        Text("Selected Blogs"),
+                        SizedBox(
+                          height: 80.0,
+                          child: new DrawerHeader(
+                              child: new Text(
+                                'Selected Blogs',
+                                style:
+                                    TextStyle(fontSize: FontSize.xLarge.size),
+                              ),
+                              margin: EdgeInsets.zero,
+                              padding: EdgeInsets.zero),
+                        ),
                         Expanded(
                           child: ListView.builder(
                             padding: EdgeInsets.zero,
