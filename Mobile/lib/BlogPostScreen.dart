@@ -10,16 +10,24 @@ class BlogPostScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(blogPost.title),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Html(
-              data: blogPost.content,
-            )),
-      ),
+      body: CustomScrollView(slivers: <Widget>[
+        SliverAppBar(
+          pinned: false,
+          snap: false,
+          floating: true,
+          expandedHeight: 160.0,
+          flexibleSpace: FlexibleSpaceBar(
+            title: Text(blogPost.title),
+            background: FlutterLogo(),
+          ),
+        ),
+        SliverToBoxAdapter(
+            child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Html(
+                  data: blogPost.content,
+                )))
+      ]),
     );
   }
 }
