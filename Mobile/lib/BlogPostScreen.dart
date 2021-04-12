@@ -17,8 +17,7 @@ class BlogPostScreen extends StatelessWidget {
           pinned: true,
           snap: false,
           floating: true,
-          expandedHeight: 180.0,
-          //expandedHeight: 160.0,
+          expandedHeight: 190.0,
           flexibleSpace: _MyAppSpace(
             blogPost: blogPost,
           ),
@@ -101,11 +100,13 @@ class _MyAppSpace extends StatelessWidget {
                     child: Text(
                       blogPost.title,
                       textAlign: TextAlign.left,
+                      maxLines: 4,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 26.0,
                         fontWeight: FontWeight.w500,
                       ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   )
                 ],
