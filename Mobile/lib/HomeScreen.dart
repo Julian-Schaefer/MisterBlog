@@ -108,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
               decoration: InputDecoration(hintText: "Enter Blog URL"),
             ),
             actions: <Widget>[
-              ElevatedButton(
+              TextButton(
                 child: Text('Cancel'),
                 onPressed: () {
                   setState(() {
@@ -116,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   });
                 },
               ),
-              ElevatedButton(
+              TextButton(
                 child: Text('Add'),
                 onPressed: () {
                   setState(() {
