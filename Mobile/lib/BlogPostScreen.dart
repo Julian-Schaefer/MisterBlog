@@ -42,11 +42,15 @@ class BlogPostScreen extends StatelessWidget {
           ],
         ),
         SliverToBoxAdapter(
-            child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Html(
-                  data: blogPost.content,
-                )))
+            child: Hero(
+                tag: blogPost.postUrl,
+                child: Material(
+                    type: MaterialType.transparency,
+                    child: Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Html(
+                          data: blogPost.content,
+                        )))))
       ]),
     );
   }
