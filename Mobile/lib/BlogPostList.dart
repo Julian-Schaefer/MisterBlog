@@ -122,11 +122,16 @@ class BlogPostListItem extends StatelessWidget {
                       blogPost.author,
                       style: TextStyle(fontSize: FontSize.large.size),
                     )),
-                SizedBox(
-                    width: double.infinity,
-                    child: Text(
-                      blogPost.introduction,
-                      textAlign: TextAlign.justify,
+                Hero(
+                    tag: blogPost.postUrl,
+                    child: Material(
+                      type: MaterialType.transparency,
+                      child: SizedBox(
+                          width: double.infinity,
+                          child: Text(
+                            blogPost.introduction,
+                            textAlign: TextAlign.justify,
+                          )),
                     ))
               ])),
           onTap: () {
