@@ -43,7 +43,7 @@ class BlogPostScreen extends StatelessWidget {
         ),
         SliverToBoxAdapter(
             child: Hero(
-                tag: blogPost.postUrl,
+                tag: "content_" + blogPost.postUrl,
                 child: Material(
                     type: MaterialType.transparency,
                     child: Padding(
@@ -101,17 +101,21 @@ class _MyAppSpace extends StatelessWidget {
                   getImage(),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      blogPost.title,
-                      textAlign: TextAlign.left,
-                      maxLines: 4,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 26.0,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    child: Hero(
+                        tag: "title_" + blogPost.postUrl,
+                        child: Material(
+                            type: MaterialType.transparency,
+                            child: Text(
+                              blogPost.title,
+                              textAlign: TextAlign.left,
+                              maxLines: 4,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 26.0,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ))),
                   )
                 ],
               ),
