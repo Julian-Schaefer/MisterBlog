@@ -108,14 +108,18 @@ class BlogPostListItem extends StatelessWidget {
           child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(children: [
-                SizedBox(
-                    width: double.infinity,
-                    child: Text(
-                      blogPost.title,
-                      style: TextStyle(
-                          fontSize: FontSize.xLarge.size,
-                          fontWeight: FontWeight.bold),
-                    )),
+                Hero(
+                    tag: "title_" + blogPost.postUrl,
+                    child: Material(
+                        type: MaterialType.transparency,
+                        child: SizedBox(
+                            width: double.infinity,
+                            child: Text(
+                              blogPost.title,
+                              style: TextStyle(
+                                  fontSize: FontSize.xLarge.size,
+                                  fontWeight: FontWeight.bold),
+                            )))),
                 SizedBox(
                     width: double.infinity,
                     child: Text(
@@ -123,7 +127,7 @@ class BlogPostListItem extends StatelessWidget {
                       style: TextStyle(fontSize: FontSize.large.size),
                     )),
                 Hero(
-                    tag: blogPost.postUrl,
+                    tag: "content_" + blogPost.postUrl,
                     child: Material(
                       type: MaterialType.transparency,
                       child: SizedBox(
