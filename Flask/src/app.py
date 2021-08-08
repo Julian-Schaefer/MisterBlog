@@ -8,7 +8,6 @@ import firebase_admin
 from firebase_admin import credentials, auth
 from newspaper.article import ArticleException
 from io import StringIO
-from flask_migrate import Migrate
 from routes import routes
 from database import db
 
@@ -35,7 +34,6 @@ else:
     app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:blogifypassword@localhost:5432/postgres"
 app.register_blueprint(routes)
 db.init_app(app)
-migrate = Migrate(app, db)
 
 
 # @app.before_request
