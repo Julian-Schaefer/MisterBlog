@@ -1,3 +1,4 @@
+from flask_sqlalchemy import SQLAlchemy
 import json
 import os
 from flask import Flask, request, jsonify
@@ -7,8 +8,9 @@ import firebase_admin
 from firebase_admin import credentials, auth
 from newspaper.article import ArticleException
 from io import StringIO
-from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from routes import routes
+from database import db
 
 # Connect to Firebase
 serviceAccountJson = os.environ.get("SERVICE_ACCOUNT_JSON", None)
@@ -23,25 +25,10 @@ firebase_admin.initialize_app(cred)
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:blogifypassword@localhost:5432/postgres"
-db = SQLAlchemy(app)
+app.register_blueprint(routes)
+db.init_app(app)
 migrate = Migrate(app, db)
 
-
-class CarsModel(db.Model):
-    __tablename__ = 'blog_selection'
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String())
-    model = db.Column(db.String())
-    doors = db.Column(db.Integer())
-
-    def __init__(self, name, model, doors):
-        self.name = name
-        self.model = model
-        self.doors = doors
-
-    def __repr__(self):
-        return f"<Blog-Selection {self.name}>"
 
 # @app.before_request
 # def authenticateUser():
@@ -56,7 +43,7 @@ class CarsModel(db.Model):
 #         return {"message": "Invalid Token provided."}, 400
 
 
-@ app.route("/posts")
+@app.route("/posts")
 def getBlogPosts():
     blog = newspaper.build("https://www.kauffmann.nl/",
                            keep_article_html=True, fetch_images=False)
@@ -78,7 +65,7 @@ def getBlogPosts():
     } for article in blog.articles])
 
 
-@ app.route("/post")
+@app.route("/post")
 def getBlogPostFromUrl():
     url = request.args.get("url")
     article = Article(url, keep_article_html=True)
