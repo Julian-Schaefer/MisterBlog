@@ -26,7 +26,11 @@ firebase_admin.initialize_app(cred)
 app = Flask(__name__)
 DATABASE_URL = os.environ['DATABASE_URL']
 if DATABASE_URL:
-    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+    if DATABASE_URL.startswith("postgres://"):
+        SQLALCHEMY_DATABASE_URI = DATABASE_URL.replace("://", "ql://", 1)
+    else:
+        SQLALCHEMY_DATABASE_URI = DATABASE_URL
+    app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 else:
     app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:blogifypassword@localhost:5432/postgres"
 app.register_blueprint(routes)
