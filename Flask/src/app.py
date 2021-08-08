@@ -24,7 +24,11 @@ firebase_admin.initialize_app(cred)
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:blogifypassword@localhost:5432/postgres"
+DATABASE_URL = os.environ['DATABASE_URL']
+if DATABASE_URL:
+    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:blogifypassword@localhost:5432/postgres"
 app.register_blueprint(routes)
 db.init_app(app)
 migrate = Migrate(app, db)
