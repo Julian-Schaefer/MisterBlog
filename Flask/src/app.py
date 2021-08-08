@@ -10,6 +10,7 @@ from newspaper.article import ArticleException
 from io import StringIO
 from routes import routes
 from database import db
+from flask_migrate import Migrate
 
 # Connect to Firebase
 serviceAccountJson = os.environ.get("SERVICE_ACCOUNT_JSON", None)
@@ -34,6 +35,7 @@ else:
     app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:blogifypassword@localhost:5432/postgres"
 app.register_blueprint(routes)
 db.init_app(app)
+migrate = Migrate(app, db)
 
 
 # @app.before_request
