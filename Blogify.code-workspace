@@ -8,6 +8,9 @@
 		},
 		{
 			"path": "Mobile"
+		},
+		{
+			"path": "Flask"
 		}
 	],
 	"settings": {
