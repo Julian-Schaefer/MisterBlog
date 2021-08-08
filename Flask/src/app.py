@@ -1,12 +1,8 @@
-from flask_sqlalchemy import SQLAlchemy
 import json
 import os
-from flask import Flask, request, jsonify
-from newspaper import Article
-import newspaper
+from flask import Flask, request
 import firebase_admin
 from firebase_admin import credentials, auth
-from newspaper.article import ArticleException
 from io import StringIO
 from routes import routes
 from database import db
@@ -49,46 +45,3 @@ migrate = Migrate(app, db)
 #         request.user = user
 #     except:
 #         return {"message": "Invalid Token provided."}, 400
-
-
-@app.route("/posts")
-def getBlogPosts():
-    blog = newspaper.build("https://www.kauffmann.nl/",
-                           keep_article_html=True, fetch_images=False)
-
-    for article in blog.articles:
-        try:
-            article.download()
-            article.parse()
-            article.nlp()
-        except ArticleException as err:
-            print("Error downloading Article: {0}".format(err))
-
-    return jsonify([{
-        "title": article.title,
-        "authors": article.authors,
-        "summary": article.summary,
-        "content": article.article_html,
-        "date": article.publish_date
-    } for article in blog.articles])
-
-
-@app.route("/post")
-def getBlogPostFromUrl():
-    url = request.args.get("url")
-    article = Article(url, keep_article_html=True)
-    article.download()
-    article.parse()
-    article.nlp()
-
-    # https://newspaper.readthedocs.io/en/latest/user_guide/advanced.html
-    article.clean_doc
-    article.clean_top_node
-
-    return {
-        "title": article.title,
-        "authors": article.authors,
-        "summary": article.summary,
-        "content": article.article_html,
-        "date": article.publish_date
-    }
