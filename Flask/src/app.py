@@ -23,7 +23,7 @@ firebase_admin.initialize_app(cred)
 
 
 app = Flask(__name__)
-DATABASE_URL = os.environ['DATABASE_URL']
+DATABASE_URL = os.environ.get('DATABASE_URL', None)
 if DATABASE_URL:
     if DATABASE_URL.startswith("postgres://"):
         SQLALCHEMY_DATABASE_URI = DATABASE_URL.replace("://", "ql://", 1)
