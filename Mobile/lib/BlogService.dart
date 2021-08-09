@@ -13,7 +13,7 @@ class BlogService {
     JsonInterceptor(),
   ]);
 
-  static final String _baseUrl = "https://blogify-api.herokuapp.com";
+  static final String _baseUrl = "http://localhost:5000";
 
   static Future<List<BlogPost>> getBlogPosts(int offset) async {
     var relativeUrl = "/blog-selection";
@@ -84,6 +84,26 @@ class BlogService {
       } else {
         // If the server did not return a 200 OK response,
         // then throw an exception.
+        throw Exception('Failed to load Blog Posts.');
+      }
+    } on SocketException {
+      return Future.error('No Internet connection 😑');
+    } on FormatException {
+      return Future.error('Bad response format 👎');
+    } catch (e) {
+      return Future.error('Unexpected error 😢');
+    }
+  }
+
+  static Future<void> addSelectedBlog(SelectedBlog selectedBlog) async {
+    var relativeUrl = "/blog-selection";
+    try {
+      final response = await _client.post(Uri.parse(_baseUrl + relativeUrl),
+          body: jsonEncode(selectedBlog));
+
+      if (response.statusCode == 200) {
+        return;
+      } else {
         throw Exception('Failed to load Blog Posts.');
       }
     } on SocketException {

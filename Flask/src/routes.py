@@ -12,7 +12,7 @@ routes = Blueprint('Routes', __name__)
 
 @routes.route("/blog-selection", methods=["POST"])
 def addBlogSelection():
-    userId = request.user.uid
+    userId = request.user['user_id']
     if request.is_json:
         data = request.get_json()
         new_blog_selection = BlogSelection(
@@ -24,9 +24,9 @@ def addBlogSelection():
         return {"error": "The request payload is not in JSON format"}
 
 
-@routes.route('/selected', methods=['POST', 'GET'])
+@routes.route('/blog-selection/selected', methods=['POST', 'GET'])
 def handleSelectedBlogs():
-    userId = request.user.uid
+    userId = request.user['user_id']
     if request.method == 'POST':
         if request.is_json:
             data = request.get_json()

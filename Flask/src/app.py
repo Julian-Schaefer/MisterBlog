@@ -34,14 +34,14 @@ db.init_app(app)
 migrate = Migrate(app, db)
 
 
-# @app.before_request
-# def authenticateUser():
-#     authHeader = request.headers.get("Authorization")
-#     token = authHeader.split()[1]
-#     if not authHeader:
-#         return {"message": "No Token provided."}, 400
-#     try:
-#         user = auth.verify_id_token(token)
-#         request.user = user
-#     except:
-#         return {"message": "Invalid Token provided."}, 400
+@app.before_request
+def authenticateUser():
+    authHeader = request.headers.get("Authorization")
+    token = authHeader.split()[1]
+    if not authHeader:
+        return {"message": "No Token provided."}, 400
+    try:
+        user = auth.verify_id_token(token)
+        request.user = user
+    except:
+        return {"message": "Invalid Token provided."}, 400

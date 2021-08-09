@@ -63,14 +63,14 @@ class _SelectedBlogsDrawerState extends State<SelectedBlogsDrawer> {
                             itemBuilder: (context, index) {
                               return Row(children: [
                                 Checkbox(
-                                    value: snapshot.data![index].selected,
+                                    value: snapshot.data![index].isSelected,
                                     //checkColor: _colors[index],
                                     activeColor: _colors[index],
                                     onChanged: (bool? value) {
                                       snapshot.data![index] = SelectedBlog(
                                           blogUrl:
                                               snapshot.data![index].blogUrl,
-                                          selected: value!);
+                                          isSelected: value!);
                                       setState(() {
                                         _selectedBlogs =
                                             Future.value(snapshot.data!);
