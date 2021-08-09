@@ -1,20 +1,20 @@
 class SelectedBlog {
   final String blogUrl;
-  final bool selected;
+  final bool isSelected;
 
-  SelectedBlog({required this.blogUrl, required this.selected});
+  SelectedBlog({required this.blogUrl, required this.isSelected});
 
   factory SelectedBlog.fromJson(Map<String, dynamic> json) {
     return SelectedBlog(
       blogUrl: json['blogUrl'],
-      selected: json['selected'],
+      isSelected: json['isSelected'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'blogUrl': blogUrl,
-      'selected': selected,
+      'isSelected': isSelected,
     };
   }
 }
