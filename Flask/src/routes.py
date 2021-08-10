@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from newspaper.article import ArticleException
-from newspaper import Article
+from newspaper import Article, news_pool
 from flask import request, jsonify
 import newspaper
 
@@ -55,16 +55,30 @@ def handleSelectedBlogs():
 
 @routes.route("/posts")
 def getBlogPosts():
-    blog = newspaper.build("https://www.kauffmann.nl/",
-                           keep_article_html=True, fetch_images=False)
+    userId = request.user['user_id']
 
-    for article in blog.articles:
-        try:
-            article.download()
-            article.parse()
-            article.nlp()
-        except ArticleException as err:
-            print("Error downloading Article: {0}".format(err))
+    blog_selections = db.session.query(
+        BlogSelection).filter_by(userId=userId, isSelected=True)
+
+    sources = []
+    for blog_selection in blog_selections:
+        source = newspaper.build(blog_selection.blogUrl,
+                                 keep_article_html=True, fetch_images=False, memoize_articles=False)
+        sources.append(source)
+
+    news_pool.set(sources, threads_per_source=2)
+    news_pool.join()
+
+    articles = []
+
+    for source in sources:
+        for article in source.articles:
+            try:
+                article.parse()
+                article.nlp()
+                articles.append(article)
+            except ArticleException as err:
+                print("Error downloading Article: {0}".format(err))
 
     return jsonify([{
         "title": article.title,
@@ -72,7 +86,7 @@ def getBlogPosts():
         "summary": article.summary,
         "content": article.article_html,
         "date": article.publish_date
-    } for article in blog.articles])
+    } for article in articles])
 
 
 @routes.route("/post")
