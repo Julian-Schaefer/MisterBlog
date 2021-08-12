@@ -27,7 +27,8 @@ class App extends StatelessWidget {
         if (snapshot.hasError) {
           return Scaffold(
               appBar: AppBar(title: Text("Blogify")),
-              body: Center(child: Text("Error")));
+              body:
+                  Center(child: Text("Error: " + snapshot.error!.toString())));
         }
 
         // Once complete, show your application
