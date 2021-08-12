@@ -1,6 +1,7 @@
 import json
 import os
 from flask import Flask, request
+from flask_cors import CORS
 import firebase_admin
 from firebase_admin import credentials, auth
 from io import StringIO
@@ -20,6 +21,7 @@ firebase_admin.initialize_app(cred)
 
 
 app = Flask(__name__)
+CORS(app)
 DATABASE_URL = os.environ.get('DATABASE_URL', None)
 if DATABASE_URL:
     if DATABASE_URL.startswith("postgres://"):

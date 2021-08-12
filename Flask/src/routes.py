@@ -53,7 +53,7 @@ def handleSelectedBlogs():
         return jsonify(results)
 
 
-@routes.route("/posts")
+@routes.route("/blog-selection")
 def getBlogPosts():
     userId = request.user['user_id']
 
@@ -76,17 +76,19 @@ def getBlogPosts():
             try:
                 article.parse()
                 article.nlp()
-                articles.append(article)
+                articles.append((source.url, article))
             except ArticleException as err:
                 print("Error downloading Article: {0}".format(err))
 
     return jsonify([{
         "title": article.title,
+        "date": article.publish_date,
         "authors": article.authors,
         "summary": article.summary,
         "content": article.article_html,
-        "date": article.publish_date
-    } for article in articles])
+        "blogUrl": blogUrl,
+        "postUrl": article.url
+    } for (blogUrl, article) in articles])
 
 
 @routes.route("/post")

@@ -1,8 +1,8 @@
 class BlogPost {
   final String title;
   final String date;
-  final String author;
-  final String introduction;
+  final List<String> authors;
+  final String summary;
   final String content;
   final String blogUrl;
   final String postUrl;
@@ -10,8 +10,8 @@ class BlogPost {
   BlogPost(
       {required this.title,
       required this.date,
-      required this.author,
-      required this.introduction,
+      required this.authors,
+      required this.summary,
       required this.content,
       required this.blogUrl,
       required this.postUrl});
@@ -19,9 +19,9 @@ class BlogPost {
   factory BlogPost.fromJson(Map<String, dynamic> json) {
     return BlogPost(
       title: json['title'],
-      date: json['date'],
-      author: json['author'],
-      introduction: json['introduction'],
+      date: json['date'] != null ? json['date'] : 'N/A',
+      authors: List<String>.from(json['authors']),
+      summary: json['summary'],
       content: json['content'],
       blogUrl: json['blogUrl'],
       postUrl: json['postUrl'],
