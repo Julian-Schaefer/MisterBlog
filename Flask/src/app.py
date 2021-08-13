@@ -38,6 +38,9 @@ migrate = Migrate(app, db)
 
 @app.before_request
 def authenticateUser():
+    if request.method == "OPTIONS":
+        return {"message": "Check succeeded."}, 200
+
     authHeader = request.headers.get("Authorization")
     if not authHeader:
         return {"message": "No Token provided."}, 400

@@ -66,7 +66,7 @@ def getBlogPosts():
                                  keep_article_html=True, fetch_images=False, memoize_articles=False)
         sources.append(source)
 
-    news_pool.set(sources, threads_per_source=2)
+    news_pool.set(sources, threads_per_source=3)
     news_pool.join()
 
     articles = []
