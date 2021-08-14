@@ -22,10 +22,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
         appBar: AppBar(
           title: Text("Home"),
-          leading: IconButton(
-            icon: Icon(Icons.menu),
-            onPressed: () => Scaffold.of(context).openDrawer(),
-          ),
           actions: [
             Builder(
               builder: (context) => IconButton(
