@@ -122,10 +122,16 @@ class BlogPostListItem extends StatelessWidget {
                             )))),
                 SizedBox(
                     width: double.infinity,
-                    child: Text(
-                      blogPost.author,
-                      style: TextStyle(fontSize: FontSize.large.size),
-                    )),
+                    child: blogPost.authors.length == 0
+                        ? Text("No author",
+                            style: TextStyle(fontSize: FontSize.large.size))
+                        : Row(
+                            children: blogPost.authors
+                                .map((e) => Text(e,
+                                    style: TextStyle(
+                                        fontSize: FontSize.large.size)))
+                                .toList(),
+                          )),
                 Hero(
                     tag: "content_" + blogPost.postUrl,
                     child: Material(
@@ -133,7 +139,7 @@ class BlogPostListItem extends StatelessWidget {
                       child: SizedBox(
                           width: double.infinity,
                           child: Text(
-                            blogPost.introduction,
+                            blogPost.summary,
                             textAlign: TextAlign.justify,
                           )),
                     ))
