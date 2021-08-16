@@ -17,75 +17,96 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
+  var isLargeScreen = false;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("Home"),
-          actions: [
-            Builder(
-              builder: (context) => IconButton(
-                icon: Icon(Icons.filter_alt_sharp),
-                onPressed: () => Scaffold.of(context).openEndDrawer(),
-                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+    return OrientationBuilder(builder: (context, orientation) {
+      if (MediaQuery.of(context).size.width > 600) {
+        isLargeScreen = true;
+      } else {
+        isLargeScreen = false;
+      }
+
+      return Scaffold(
+          appBar: AppBar(
+            title: Text("Home"),
+            actions: isLargeScreen
+                ? []
+                : [
+                    Builder(
+                      builder: (context) => IconButton(
+                        icon: Icon(Icons.filter_alt_sharp),
+                        onPressed: () => Scaffold.of(context).openEndDrawer(),
+                        tooltip: MaterialLocalizations.of(context)
+                            .openAppDrawerTooltip,
+                      ),
+                    ),
+                  ],
+          ),
+          drawer: Drawer(
+              // Add a ListView to the drawer. This ensures the user can scroll
+              // through the options in the drawer if there isn't enough vertical
+              // space to fit everything.
+              child: ListView(
+            // Important: Remove any padding from the ListView.
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              DrawerHeader(
+                child: Column(children: [
+                  Expanded(
+                      child: Text((firebaseAuth.currentUser != null)
+                          ? firebaseAuth.currentUser!.displayName!
+                          : "Not logged in")),
+                  ElevatedButton(
+                      onPressed: () async {
+                        await signOut();
+                      },
+                      child: Text("Sign Out")),
+                ]),
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                ),
               ),
-            ),
-          ],
-        ),
-        drawer: Drawer(
-            // Add a ListView to the drawer. This ensures the user can scroll
-            // through the options in the drawer if there isn't enough vertical
-            // space to fit everything.
-            child: ListView(
-          // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              child: Column(children: [
-                Expanded(
-                    child: Text((firebaseAuth.currentUser != null)
-                        ? firebaseAuth.currentUser!.displayName!
-                        : "Not logged in")),
-                ElevatedButton(
-                    onPressed: () async {
-                      await signOut();
-                    },
-                    child: Text("Sign Out")),
-              ]),
-              decoration: BoxDecoration(
-                color: Colors.red,
+              ListTile(
+                title: Text('Item 1'),
+                onTap: () {
+                  // Update the state of the app
+                  // ...
+                  // Then close the drawer
+                  Navigator.pop(context);
+                },
               ),
-            ),
-            ListTile(
-              title: Text('Item 1'),
-              onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text('Item 2'),
-              onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        )),
-        endDrawer: SelectedBlogsDrawer(),
-        body: Center(child: BlogPostList()),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            _displayTextInputDialog();
-          },
-          label: Text('Add Blog'),
-          icon: Icon(Icons.add),
-          backgroundColor: Colors.pink,
-        ));
+              ListTile(
+                title: Text('Item 2'),
+                onTap: () {
+                  // Update the state of the app
+                  // ...
+                  // Then close the drawer
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          )),
+          endDrawer: isLargeScreen ? null : SelectedBlogsDrawer(),
+          body: Center(
+              child: Row(
+            children: [
+              Expanded(child: BlogPostList()),
+              isLargeScreen
+                  ? Expanded(child: SelectedBlogsDrawer())
+                  : Container()
+            ],
+          )),
+          floatingActionButton: FloatingActionButton.extended(
+            onPressed: () {
+              _displayTextInputDialog();
+            },
+            label: Text('Add Blog'),
+            icon: Icon(Icons.add),
+            backgroundColor: Colors.pink,
+          ));
+    });
   }
 
   Future<void> signOut() async {
