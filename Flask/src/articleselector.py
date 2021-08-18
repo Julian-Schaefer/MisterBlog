@@ -43,11 +43,39 @@ def get_css_path(node):
     return ' > '.join(path)
 
 
+link_paths = []
 for link in soup.select('a'):
-    path = get_css_path(link)
-    size = len(soup.select(path))
-    if size == 0:
-        print(path)
+    link_paths.append(get_css_path(link))
+
+article_paths = {}
+for path in link_paths:
+    found = False
+    currentSelector = ""
+    previousCount = 3
+
+    selector = path[0:path.rindex(":nth-child(")]
+    while True:
+        try:
+            selectedElements = soup.select(selector)
+            if len(selectedElements) > previousCount:
+                found = True
+                currentSelector = selector
+                previousCount = len(selectedElements)
+
+            selector = selector[0:selector.rindex(":nth-child(")]
+        except ValueError:
+            break
+
+    if found:
+        article_path = article_paths.get(currentSelector)
+        if article_path:
+            article_paths[currentSelector] = article_path+1
+        else:
+            article_paths[currentSelector] = 1
+
+for article_path, count in article_paths.items():
+    print(article_path, count)
+
 
 articles = soup.select(
     "body > div:nth-child(3) > div:nth-child(2) > div > div > article")
