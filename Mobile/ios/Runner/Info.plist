@@ -54,5 +54,12 @@
 			</dict>
 		</array>
 		<!-- End of the Google Sign-in Section -->
+		<!-- URL Launcher Section -->
+		<key>LSApplicationQueriesSchemes</key>
+		<array>
+			<string>https</string>
+			<string>http</string>
+		</array>
+		<!-- End of the URL Launcher Section -->
 	</dict>
 </plist>

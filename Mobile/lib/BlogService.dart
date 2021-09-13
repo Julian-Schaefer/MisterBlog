@@ -6,10 +6,10 @@ import 'package:blogify/SelectedBlog.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
 
-import 'package:http_interceptor/http_client_with_interceptor.dart';
+import 'package:http_interceptor/http_interceptor.dart';
 
 class BlogService {
-  static Client _client = HttpClientWithInterceptor.build(interceptors: [
+  static Client _client = InterceptedClient.build(interceptors: [
     JsonInterceptor(),
   ]);
 
