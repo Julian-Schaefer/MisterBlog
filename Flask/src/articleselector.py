@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import re
+from newspaper import Article
 
 
 def bs_preprocess(html):
@@ -18,16 +19,6 @@ def bs_preprocess(html):
     return html
 
 
-url = "https://freddysblog.com/"
-html_doc = requests.get(url).text
-cleaned_html_doc = bs_preprocess(html_doc)
-
-
-soup = BeautifulSoup(cleaned_html_doc, 'html.parser')
-
-body = soup.find_next("body")
-
-
 def get_element(node):
     length = len(list(node.previous_siblings)) + 1
     return '%s:nth-child(%s)' % (node.name, length)
@@ -43,41 +34,78 @@ def get_css_path(node):
     return ' > '.join(path)
 
 
-link_paths = []
-for link in soup.select('a'):
-    link_paths.append(get_css_path(link))
+def get_articles(blogSelection):
+    url = blogSelection.blogUrl
+    html_doc = requests.get(url).text
+    cleaned_html_doc = bs_preprocess(html_doc)
 
-article_paths = {}
-for path in link_paths:
-    found = False
-    currentSelector = ""
-    previousCount = 3
+    soup = BeautifulSoup(cleaned_html_doc, 'html.parser')
 
-    selector = path[0:path.rindex(":nth-child(")]
-    while True:
-        try:
-            selectedElements = soup.select(selector)
-            if len(selectedElements) > previousCount:
-                found = True
-                currentSelector = selector
-                previousCount = len(selectedElements)
+    link_paths = []
+    for link in soup.select('a'):
+        link_paths.append(get_css_path(link))
 
-            selector = selector[0:selector.rindex(":nth-child(")]
-        except ValueError:
-            break
+    article_paths = {}
+    previousElements = {}
+    for path in link_paths:
+        found = False
+        currentSelector = ""
+        previousCount = 3
 
-    if found:
-        article_path = article_paths.get(currentSelector)
-        if article_path:
-            article_paths[currentSelector] = article_path+1
-        else:
-            article_paths[currentSelector] = 1
+        selector = path[0:path.rindex(":nth-child(")]
+        while True:
+            try:
+                if previousElements.get(selector):
+                    selectedElements = previousElements.get(selector)
+                else:
+                    selectedElements = soup.select(selector)
+                    previousElements[selector] = selectedElements
 
-for article_path, count in article_paths.items():
-    print(article_path, count)
+                if len(selectedElements) > previousCount:
+                    found = True
+                    currentSelector = selector
+                    previousCount = len(selectedElements)
+
+                selector = selector[0:selector.rindex(":nth-child(")]
+            except ValueError:
+                break
+
+        if found:
+            article_path = article_paths.get(currentSelector)
+            if article_path:
+                article_paths[currentSelector] = article_path+1
+            else:
+                article_paths[currentSelector] = 1
+
+    article_selector_path = ""
+    for article_path, count in article_paths.items():
+        if count > 3:
+            article = soup.select(article_path)[0]
+            headerElements = article.select("header, h1, h2, h3, h4, h5, h6")
+
+            if headerElements:
+                for headerElement in headerElements:
+                    linkElement = headerElement.find_all('a', href=True)
+                    if linkElement:
+                        css_path = get_css_path(linkElement[0])
+                        article_selector_path = article_path + \
+                            css_path[len(article_path)+len("nth-child(x) "):]
+                        break
+
+    article_links = []
+    articles = soup.select(article_selector_path)
+    for article in articles:
+        link = article["href"]
+        if not (link.startswith("http://") or link.startswith("https://")):
+            link = url + link
+        article_links.append(link)
+
+    return (blogSelection, article_links)
 
 
-articles = soup.select(
-    "body > div:nth-child(3) > div:nth-child(2) > div > div > article")
-
-print(len(articles))
+def download_article(url):
+    article = Article(url, keep_article_html=True)
+    article.download()
+    article.parse()
+    article.nlp()
+    return article
