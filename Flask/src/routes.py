@@ -1,8 +1,8 @@
 from flask import Blueprint, request, jsonify
-from newspaper.article import ArticleException
-from newspaper import Article, news_pool
+from newspaper import Article
 from flask import request, jsonify
-import newspaper
+from articleselector import get_articles, download_article
+from multiprocessing.dummy import Pool as ThreadPool
 
 from blog_selection import BlogSelection
 from database import db
@@ -60,25 +60,21 @@ def getBlogPosts():
     blog_selections = db.session.query(
         BlogSelection).filter_by(userId=userId, isSelected=True)
 
-    sources = []
-    for blog_selection in blog_selections:
-        source = newspaper.build(blog_selection.blogUrl,
-                                 keep_article_html=True, fetch_images=False, memoize_articles=False)
-        sources.append(source)
-
-    news_pool.set(sources, threads_per_source=3)
-    news_pool.join()
-
     articles = []
 
-    for source in sources:
-        for article in source.articles:
-            try:
-                article.parse()
-                article.nlp()
-                articles.append((source.url, article))
-            except ArticleException as err:
-                print("Error downloading Article: {0}".format(err))
+    if blog_selections.count() > 0:
+        pool = ThreadPool(blog_selections.count())
+        article_urls = pool.map(get_articles, blog_selections)
+        pool.close()
+        pool.join()
+
+        for (blogSelection, urls) in article_urls:
+            pool = ThreadPool(len(article_urls))
+            blogArticles = pool.map(download_article, urls)
+            for article in blogArticles:
+                articles.append((blogSelection.blogUrl, article))
+            pool.close()
+            pool.join()
 
     return jsonify([{
         "title": article.title,
@@ -94,10 +90,7 @@ def getBlogPosts():
 @routes.route("/post")
 def getBlogPostFromUrl():
     url = request.args.get("url")
-    article = Article(url, keep_article_html=True)
-    article.download()
-    article.parse()
-    article.nlp()
+    article = download_article(url)
 
     # https://newspaper.readthedocs.io/en/latest/user_guide/advanced.html
     article.clean_doc
