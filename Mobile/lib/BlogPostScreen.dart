@@ -3,6 +3,8 @@ import 'package:blogify/BlogPost.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html/style.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:html/dom.dart' as dom;
 
 class BlogPostScreen extends StatelessWidget {
   final BlogPost blogPost;
@@ -49,8 +51,17 @@ class BlogPostScreen extends StatelessWidget {
                     child: Padding(
                         padding: EdgeInsets.all(16.0),
                         child: Html(
-                          data: blogPost.content,
-                        )))))
+                            data: blogPost.content,
+                            onLinkTap: (String? url,
+                                RenderContext context,
+                                Map<String, String> attributes,
+                                dom.Element? element) async {
+                              if (url != null) {
+                                await canLaunch(url)
+                                    ? await launch(url)
+                                    : throw 'Could not launch $url';
+                              }
+                            })))))
       ]),
     );
   }

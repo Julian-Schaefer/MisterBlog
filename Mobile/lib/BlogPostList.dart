@@ -132,6 +132,10 @@ class BlogPostListItem extends StatelessWidget {
                                         fontSize: FontSize.large.size)))
                                 .toList(),
                           )),
+                SizedBox(
+                    width: double.infinity,
+                    child: Text(blogPost.blogUrl,
+                        style: TextStyle(fontSize: FontSize.large.size))),
                 Hero(
                     tag: "content_" + blogPost.postUrl,
                     child: Material(
