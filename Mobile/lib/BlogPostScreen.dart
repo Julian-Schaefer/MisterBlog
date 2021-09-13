@@ -52,6 +52,14 @@ class BlogPostScreen extends StatelessWidget {
                         padding: EdgeInsets.all(16.0),
                         child: Html(
                             data: blogPost.content,
+                            style: {
+                              "pre": Style(
+                                  backgroundColor: Color(0xfff4f4f4),
+                                  fontSize: FontSize(13),
+                                  margin: EdgeInsets.only(bottom: 20),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 10))
+                            },
                             onLinkTap: (String? url,
                                 RenderContext context,
                                 Map<String, String> attributes,
