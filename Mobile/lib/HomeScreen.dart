@@ -17,6 +17,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
+  var _blogPostListController = BlogPostListController();
+
   var isLargeScreen = false;
 
   @override
@@ -88,16 +90,21 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           )),
-          endDrawer: isLargeScreen ? null : SelectedBlogsDrawer(),
+          endDrawer: isLargeScreen
+              ? null
+              : SelectedBlogsDrawer(onSelectedBlogsChanged: () {
+                  _blogPostListController.refreshBlogPosts();
+                }),
           body: Center(
-              child: Row(
-            children: [
-              Expanded(child: BlogPostList()),
-              isLargeScreen
-                  ? Expanded(child: SelectedBlogsDrawer())
-                  : Container()
-            ],
-          )),
+              child: Row(children: [
+            Expanded(child: BlogPostList(controller: _blogPostListController)),
+            isLargeScreen
+                ? Expanded(
+                    child: SelectedBlogsDrawer(onSelectedBlogsChanged: () {
+                    _blogPostListController.refreshBlogPosts();
+                  }))
+                : Container()
+          ])),
           floatingActionButton: FloatingActionButton.extended(
             onPressed: () {
               _displayTextInputDialog();

@@ -6,14 +6,49 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/style.dart';
 import 'package:shimmer/shimmer.dart';
 
+class BlogPostListController extends ChangeNotifier {
+  Future<List<BlogPost>?> blogPosts = BlogService.getBlogPosts(0);
+
+  Future<void> refreshBlogPosts() async {
+    blogPosts = Future<List<BlogPost>?>.value(null);
+    notifyListeners();
+    var blogPostsValue = await BlogService.getBlogPosts(0);
+    blogPosts = Future.value(blogPostsValue);
+    notifyListeners();
+  }
+
+  Future<void> loadMoreBlogPosts() async {
+    List<BlogPost>? blogPostsValue = await blogPosts;
+
+    List<BlogPost> newBlogPostsValue;
+    if (blogPostsValue != null) {
+      newBlogPostsValue = await BlogService.getBlogPosts(blogPostsValue.length);
+    } else {
+      newBlogPostsValue = await BlogService.getBlogPosts(0);
+    }
+    if (blogPostsValue != null) {
+      blogPostsValue.addAll(newBlogPostsValue);
+      blogPosts = Future.value(blogPostsValue);
+    } else {
+      blogPosts = Future.value(newBlogPostsValue);
+    }
+
+    notifyListeners();
+  }
+}
+
 class BlogPostList extends StatefulWidget {
   @override
   _BlogPostListState createState() => _BlogPostListState();
+
+  final BlogPostListController controller;
+
+  BlogPostList({required this.controller});
 }
 
 class _BlogPostListState extends State<BlogPostList> {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-  late Future<List<BlogPost>> _blogPosts;
+  late Future<List<BlogPost>?> _blogPosts;
 
   var _scrollController = ScrollController();
   var _loadMore = false;
@@ -21,7 +56,13 @@ class _BlogPostListState extends State<BlogPostList> {
   @override
   void initState() {
     super.initState();
-    _blogPosts = BlogService.getBlogPosts(0);
+
+    _blogPosts = widget.controller.blogPosts;
+    widget.controller.addListener(() {
+      setState(() {
+        _blogPosts = widget.controller.blogPosts;
+      });
+    });
 
     _scrollController.addListener(() async {
       if (_scrollController.position.extentAfter <
@@ -30,11 +71,7 @@ class _BlogPostListState extends State<BlogPostList> {
           setState(() {
             _loadMore = true;
           });
-          List<BlogPost> blogPostsValue = await _blogPosts;
-          List<BlogPost> newBlogPostsValue =
-              await BlogService.getBlogPosts(blogPostsValue.length);
-          blogPostsValue.addAll(newBlogPostsValue);
-          _blogPosts = Future.value(blogPostsValue);
+          await widget.controller.loadMoreBlogPosts();
           setState(() {
             _loadMore = false;
           });
@@ -46,12 +83,13 @@ class _BlogPostListState extends State<BlogPostList> {
   @override
   void dispose() {
     _scrollController.dispose();
+    widget.controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<BlogPost>>(
+    return FutureBuilder<List<BlogPost>?>(
         future: _blogPosts,
         builder: (context, snapshot) {
           if (snapshot.hasError) print(snapshot.error);
@@ -79,11 +117,7 @@ class _BlogPostListState extends State<BlogPostList> {
                               })
                       ]),
                   onRefresh: () async {
-                    List<BlogPost> blogPostsValue =
-                        await BlogService.getBlogPosts(0);
-                    setState(() {
-                      _blogPosts = Future.value(blogPostsValue);
-                    });
+                    await widget.controller.refreshBlogPosts();
                   })
               : ListView.builder(
                   itemCount: 6,

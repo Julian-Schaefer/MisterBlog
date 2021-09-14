@@ -7,6 +7,12 @@ import 'package:flutter_html/style.dart';
 class SelectedBlogsDrawer extends StatefulWidget {
   @override
   _SelectedBlogsDrawerState createState() => _SelectedBlogsDrawerState();
+
+  final VoidCallback onSelectedBlogsChanged;
+
+  SelectedBlogsDrawer({
+    required this.onSelectedBlogsChanged,
+  });
 }
 
 class _SelectedBlogsDrawerState extends State<SelectedBlogsDrawer> {
@@ -34,9 +40,6 @@ class _SelectedBlogsDrawerState extends State<SelectedBlogsDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-        // Add a ListView to the drawer. This ensures the user can scroll
-        // through the options in the drawer if there isn't enough vertical
-        // space to fit everything.
         child: FutureBuilder<List<SelectedBlog>>(
             future: _selectedBlogs,
             builder: (context, snapshot) {
@@ -64,19 +67,20 @@ class _SelectedBlogsDrawerState extends State<SelectedBlogsDrawer> {
                               return Row(children: [
                                 Checkbox(
                                     value: snapshot.data![index].isSelected,
-                                    //checkColor: _colors[index],
                                     activeColor: _colors[index],
-                                    onChanged: (bool? value) {
+                                    onChanged: (bool? value) async {
                                       snapshot.data![index] = SelectedBlog(
                                           blogUrl:
                                               snapshot.data![index].blogUrl,
                                           isSelected: value!);
+
+                                      await BlogService.setSelectedBlogs(
+                                          snapshot.data!);
                                       setState(() {
                                         _selectedBlogs =
                                             Future.value(snapshot.data!);
-                                        BlogService.setSelectedBlogs(
-                                            snapshot.data!);
                                       });
+                                      widget.onSelectedBlogsChanged();
                                     }),
                                 Text(snapshot.data![index].blogUrl),
                               ]);
