@@ -173,6 +173,10 @@ class BlogPostListItem extends StatelessWidget {
                     width: double.infinity,
                     child: Text(blogPost.blogUrl,
                         style: TextStyle(fontSize: FontSize.large.size))),
+                SizedBox(
+                    width: double.infinity,
+                    child: Text(blogPost.date,
+                        style: TextStyle(fontSize: FontSize.large.size))),
                 Hero(
                     tag: "content_" + blogPost.postUrl,
                     child: Material(
