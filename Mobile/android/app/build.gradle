@@ -35,7 +35,7 @@ android {
 
     defaultConfig {
         applicationId "org.sheeper.blogify"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 30
         multiDexEnabled true
         versionCode flutterVersionCode.toInteger()

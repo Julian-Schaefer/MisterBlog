@@ -9,9 +9,12 @@ import 'package:shimmer/shimmer.dart';
 class BlogPostListController extends ChangeNotifier {
   Future<List<BlogPost>?> blogPosts = BlogService.getBlogPosts(0);
 
-  Future<void> refreshBlogPosts() async {
-    blogPosts = Future<List<BlogPost>?>.value(null);
-    notifyListeners();
+  Future<void> refreshBlogPosts({bool complete = true}) async {
+    if (complete) {
+      blogPosts = Future<List<BlogPost>?>.value(null);
+      notifyListeners();
+    }
+
     var blogPostsValue = await BlogService.getBlogPosts(0);
     blogPosts = Future.value(blogPostsValue);
     notifyListeners();
@@ -117,7 +120,7 @@ class _BlogPostListState extends State<BlogPostList> {
                               })
                       ]),
                   onRefresh: () async {
-                    await widget.controller.refreshBlogPosts();
+                    await widget.controller.refreshBlogPosts(complete: false);
                   })
               : ListView.builder(
                   itemCount: 6,
