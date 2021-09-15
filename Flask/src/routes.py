@@ -76,6 +76,8 @@ def getBlogPosts():
             pool.close()
             pool.join()
 
+    articles.sort(key=lambda article: article[1].publish_date, reverse=True)
+
     return jsonify([{
         "title": article.title,
         "date": article.publish_date,
