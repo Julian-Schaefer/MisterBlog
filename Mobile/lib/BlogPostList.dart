@@ -7,7 +7,8 @@ import 'package:flutter_html/style.dart';
 import 'package:shimmer/shimmer.dart';
 
 class BlogPostListController extends ChangeNotifier {
-  Future<List<BlogPost>?> blogPosts = BlogService.getBlogPosts(0);
+  int _page = 1;
+  late Future<List<BlogPost>?> blogPosts = BlogService.getBlogPosts(_page);
 
   Future<void> refreshBlogPosts({bool complete = true}) async {
     if (complete) {
@@ -15,7 +16,8 @@ class BlogPostListController extends ChangeNotifier {
       notifyListeners();
     }
 
-    var blogPostsValue = await BlogService.getBlogPosts(0);
+    _page = 1;
+    var blogPostsValue = await BlogService.getBlogPosts(_page);
     blogPosts = Future.value(blogPostsValue);
     notifyListeners();
   }
@@ -25,9 +27,11 @@ class BlogPostListController extends ChangeNotifier {
 
     List<BlogPost> newBlogPostsValue;
     if (blogPostsValue != null) {
-      newBlogPostsValue = await BlogService.getBlogPosts(blogPostsValue.length);
+      _page++;
+      newBlogPostsValue = await BlogService.getBlogPosts(_page);
     } else {
-      newBlogPostsValue = await BlogService.getBlogPosts(0);
+      _page = 1;
+      newBlogPostsValue = await BlogService.getBlogPosts(_page);
     }
     if (blogPostsValue != null) {
       blogPostsValue.addAll(newBlogPostsValue);
