@@ -34,8 +34,29 @@ def get_css_path(node):
     return ' > '.join(path)
 
 
-def get_articles(blogSelection):
+def get_page_counter_url(url):
+    html_doc = requests.get(url).text
+    cleaned_html_doc = bs_preprocess(html_doc)
+
+    soup = BeautifulSoup(cleaned_html_doc, 'html.parser')
+
+    for link in soup.find_all('a', href=True):
+        href = link["href"]
+        matchers = ["?page", "/page", "/2/"]
+        for matcher in matchers:
+            if matcher in href:
+                pre = href[0:href.index(matcher)]
+                sub = href[href.index(matcher):]
+                sub = sub.replace("2", "{page-counter}", 1)
+                return pre + sub
+
+
+def get_articles(page, blogSelection):
     url = blogSelection.blogUrl
+    if page > 1:
+        page_counter_url = get_page_counter_url(url)
+        url = page_counter_url.replace("{page-counter}", str(page))
+
     html_doc = requests.get(url).text
     cleaned_html_doc = bs_preprocess(html_doc)
 

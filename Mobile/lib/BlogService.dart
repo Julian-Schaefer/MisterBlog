@@ -15,11 +15,9 @@ class BlogService {
 
   static final String _baseUrl = "http://localhost:5000";
 
-  static Future<List<BlogPost>> getBlogPosts(int offset) async {
+  static Future<List<BlogPost>> getBlogPosts(int page) async {
     var relativeUrl = "/blog-selection";
-    if (offset > 0) {
-      relativeUrl += "?offset=" + offset.toString();
-    }
+    relativeUrl += "?page=" + page.toString();
 
     try {
       final response = await _client.get(Uri.parse(_baseUrl + relativeUrl));
