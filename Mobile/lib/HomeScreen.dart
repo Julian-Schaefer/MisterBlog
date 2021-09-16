@@ -147,16 +147,15 @@ class _HomeScreenState extends State<HomeScreen> {
               TextButton(
                 child: Text('Add'),
                 onPressed: () {
-                  setState(() {
-                    Navigator.pop(context);
-                  });
-
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => PreviewScreen(blogUrl: blogUrl),
                     ),
-                  );
+                  ).then((_) {
+                    Navigator.pop(context);
+                    _blogPostListController.refreshBlogPosts();
+                  });
                 },
               ),
             ],

@@ -52,30 +52,39 @@ class BlogPostScreen extends StatelessWidget {
                       child: Container(
                           padding: EdgeInsets.all(16.0),
                           constraints: BoxConstraints(maxWidth: 860),
-                          child: Html(
-                              data: blogPost.content,
-                              style: {
-                                "pre": Style(
-                                    backgroundColor: Color(0xfff4f4f4),
-                                    fontSize: FontSize(13),
-                                    margin: EdgeInsets.only(bottom: 20),
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 20, vertical: 10))
-                              },
-                              onLinkTap: (String? url,
-                                  RenderContext context,
-                                  Map<String, String> attributes,
-                                  dom.Element? element) async {
-                                if (url != null) {
-                                  await canLaunch(url)
-                                      ? await launch(url)
-                                      : throw 'Could not launch $url';
-                                }
-                              },
-                              onImageError:
-                                  (Object exception, StackTrace? stackTrace) {
-                                print("Error loading image $exception");
-                              })),
+                          child: Column(
+                            children: [
+                              Html(
+                                  data: blogPost.content,
+                                  style: {
+                                    "pre": Style(
+                                        backgroundColor: Color(0xfff4f4f4),
+                                        fontSize: FontSize(13),
+                                        margin: EdgeInsets.only(bottom: 20),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 10))
+                                  },
+                                  onLinkTap: (String? url,
+                                      RenderContext context,
+                                      Map<String, String> attributes,
+                                      dom.Element? element) async {
+                                    if (url != null) {
+                                      await canLaunch(url)
+                                          ? await launch(url)
+                                          : throw 'Could not launch $url';
+                                    }
+                                  },
+                                  onImageError: (Object exception,
+                                      StackTrace? stackTrace) {
+                                    print("Error loading image $exception");
+                                  }),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text("Pop back"))
+                            ],
+                          )),
                     ))))
       ]),
     );
