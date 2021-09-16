@@ -5,6 +5,7 @@ import 'package:blogify/JsonInterceptor.dart';
 import 'package:blogify/SelectedBlog.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 
 import 'package:http_interceptor/http_interceptor.dart';
 
@@ -13,14 +14,21 @@ class BlogService {
     JsonInterceptor(),
   ]);
 
-  static final String _baseUrl = "http://localhost:5000";
+  static String _getBaseUrl() {
+    if (kReleaseMode) {
+      return "https://blogify-flask.herokuapp.com/";
+    } else {
+      return "http://localhost:5000";
+    }
+  }
 
   static Future<List<BlogPost>> getBlogPosts(int page) async {
     var relativeUrl = "/blog-selection";
     relativeUrl += "?page=" + page.toString();
 
     try {
-      final response = await _client.get(Uri.parse(_baseUrl + relativeUrl));
+      final response =
+          await _client.get(Uri.parse(_getBaseUrl() + relativeUrl));
 
       if (response.statusCode == 200) {
         final parsedJson =
@@ -47,7 +55,8 @@ class BlogService {
     var relativeUrl = "/blog-selection/selected";
 
     try {
-      final response = await _client.get(Uri.parse(_baseUrl + relativeUrl));
+      final response =
+          await _client.get(Uri.parse(_getBaseUrl() + relativeUrl));
 
       if (response.statusCode == 200) {
         final parsedJson =
@@ -74,7 +83,8 @@ class BlogService {
     var relativeUrl = "/blog-selection/selected";
 
     try {
-      final response = await _client.post(Uri.parse(_baseUrl + relativeUrl),
+      final response = await _client.post(
+          Uri.parse(_getBaseUrl() + relativeUrl),
           body: jsonEncode(selectedBlogs));
 
       if (response.statusCode == 200) {
@@ -96,7 +106,8 @@ class BlogService {
   static Future<void> addSelectedBlog(SelectedBlog selectedBlog) async {
     var relativeUrl = "/blog-selection";
     try {
-      final response = await _client.post(Uri.parse(_baseUrl + relativeUrl),
+      final response = await _client.post(
+          Uri.parse(_getBaseUrl() + relativeUrl),
           body: jsonEncode(selectedBlog));
 
       if (response.statusCode == 200) {

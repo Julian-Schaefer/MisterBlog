@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'dart:developer' as logger;
 
 // Import the firebase_core plugin
 import 'package:google_sign_in/google_sign_in.dart';
@@ -26,7 +27,23 @@ class _SignInScreenState extends State<SignInScreen> {
           children: [
             MaterialButton(
                 onPressed: () async {
-                  await signInWithGoogle();
+                  try {
+                    await signInWithGoogle();
+                  } catch (e) {
+                    showDialog<String>(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                              title: const Text('Error'),
+                              content: Text(e.toString()),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, 'Cancel'),
+                                  child: const Text('Cancel'),
+                                )
+                              ],
+                            ));
+                  }
                 },
                 child: Text("Sign In with Google")),
             Text((firebaseAuth.currentUser != null)
