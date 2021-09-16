@@ -67,7 +67,8 @@ class _SelectedBlogsDrawerState extends State<SelectedBlogsDrawer> {
                               return Row(children: [
                                 Checkbox(
                                     value: snapshot.data![index].isSelected,
-                                    activeColor: _colors[index],
+                                    activeColor:
+                                        _colors[index % _colors.length],
                                     onChanged: (bool? value) async {
                                       snapshot.data![index] = SelectedBlog(
                                           blogUrl:
@@ -82,7 +83,24 @@ class _SelectedBlogsDrawerState extends State<SelectedBlogsDrawer> {
                                       });
                                       widget.onSelectedBlogsChanged();
                                     }),
-                                Text(snapshot.data![index].blogUrl),
+                                Expanded(
+                                    child: Text(snapshot.data![index].blogUrl)),
+                                IconButton(
+                                  onPressed: () async {
+                                    await BlogService.deleteSelectedBlog(
+                                        snapshot.data![index]);
+
+                                    var selectedBlogs = snapshot.data!;
+                                    selectedBlogs.remove(snapshot.data![index]);
+
+                                    setState(() {
+                                      _selectedBlogs =
+                                          Future.value(selectedBlogs);
+                                    });
+                                    widget.onSelectedBlogsChanged();
+                                  },
+                                  icon: const Icon(Icons.delete),
+                                ),
                               ]);
                             },
                           ),
