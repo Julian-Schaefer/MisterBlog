@@ -10,6 +10,20 @@ from database import db
 routes = Blueprint('Routes', __name__)
 
 
+@routes.route("/blog-selection", methods=["DELETE"])
+def deleteBlogSelection():
+    userId = request.user['user_id']
+    if request.is_json:
+        data = request.get_json()
+
+        db.session.query(
+            BlogSelection).filter_by(userId=userId, blogUrl=data['blogUrl']).delete()
+        db.session.commit()
+        return {"message": f"Blog Selection {data['blogUrl']} for User {userId} has been deleted successfully."}
+    else:
+        return {"error": "The request payload is not in JSON format"}
+
+
 @routes.route("/blog-selection", methods=["POST"])
 def addBlogSelection():
     userId = request.user['user_id']

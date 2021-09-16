@@ -123,4 +123,25 @@ class BlogService {
       return Future.error('Unexpected error 😢');
     }
   }
+
+  static Future<void> deleteSelectedBlog(SelectedBlog selectedBlog) async {
+    var relativeUrl = "/blog-selection";
+    try {
+      final response = await _client.delete(
+          Uri.parse(_getBaseUrl() + relativeUrl),
+          body: jsonEncode(selectedBlog));
+
+      if (response.statusCode == 200) {
+        return;
+      } else {
+        throw Exception('Failed to load Blog Posts.');
+      }
+    } on SocketException {
+      return Future.error('No Internet connection 😑');
+    } on FormatException {
+      return Future.error('Bad response format 👎');
+    } catch (e) {
+      return Future.error('Unexpected error 😢');
+    }
+  }
 }
