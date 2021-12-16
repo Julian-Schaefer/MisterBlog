@@ -1,9 +1,9 @@
 import { Injectable, NgZone } from '@angular/core';
 import { User } from "./user";
-import { auth } from 'firebase/app';
-import { AngularFireAuth } from "@angular/fire/auth";
+import firebaseApp from 'firebase/compat/app';
+import { AngularFireAuth } from "@angular/fire/compat/auth";
 import { Router } from "@angular/router";
-import { Observable, observable } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable(
     { providedIn: "root" }
@@ -68,11 +68,11 @@ export class AuthService {
     }
 
     signInWithGoogle() {
-        return this.signInWithProvider(new auth.GoogleAuthProvider());
+        return this.signInWithProvider(new firebaseApp.auth.GoogleAuthProvider());
     }
 
     signInWithFacebook() {
-        return this.signInWithProvider(new auth.FacebookAuthProvider());
+        return this.signInWithProvider(new firebaseApp.auth.FacebookAuthProvider());
     }
 
     private signInWithProvider(provider) {
