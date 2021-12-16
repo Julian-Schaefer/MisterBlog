@@ -38,58 +38,57 @@ import { SafeURLPipe } from './util/SafeURLPipe';
 import { AuthenticationInterceptor } from './interceptors/authentication.interceptor';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    PreviewComponent,
-    AddBlogDialog,
-    ErrorDialogComponent,
-    SignInComponent,
-    SignUpComponent,
-    ForgotPasswordComponent,
-    VerifyEmailComponent,
-    PostListComponent,
-    PostComponent,
-    SafeHtmlPipe,
-    SafeURLPipe,
-    SelectedBlogsComponent
-  ],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    AppRoutingModule,
-    FormsModule,
-    ReactiveFormsModule,
-    BrowserAnimationsModule,
-    AngularFireModule.initializeApp({
-      apiKey: "AIzaSyDLY466XtHAJhe3aX89RbueINfryvSQS-c",
-      authDomain: "blogify-cdb97.firebaseapp.com",
-      databaseURL: "https://blogify-cdb97.firebaseio.com",
-      projectId: "blogify-cdb97",
-      storageBucket: "blogify-cdb97.appspot.com",
-      messagingSenderId: "797738042746",
-      appId: "1:797738042746:web:f79a733cfc9cbad72802c3",
-      measurementId: "G-V0GCNMMWW7"
-    }),
-    AngularFireAuthModule,
-    MatButtonModule,
-    MatDialogModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatBadgeModule,
-    MatGridListModule,
-    MatCardModule,
-    MatProgressSpinnerModule,
-    MatStepperModule,
-    MatCheckboxModule,
-    MatDividerModule,
-    MatIconModule
-  ],
-  entryComponents: [AddBlogDialog],
-  providers: [AuthService, {
-    provide: HTTP_INTERCEPTORS,
-    useClass: AuthenticationInterceptor,
-    multi: true
-  }],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        PreviewComponent,
+        AddBlogDialog,
+        ErrorDialogComponent,
+        SignInComponent,
+        SignUpComponent,
+        ForgotPasswordComponent,
+        VerifyEmailComponent,
+        PostListComponent,
+        PostComponent,
+        SafeHtmlPipe,
+        SafeURLPipe,
+        SelectedBlogsComponent
+    ],
+    imports: [
+        BrowserModule,
+        HttpClientModule,
+        AppRoutingModule,
+        FormsModule,
+        ReactiveFormsModule,
+        BrowserAnimationsModule,
+        AngularFireModule.initializeApp({
+            apiKey: "AIzaSyDLY466XtHAJhe3aX89RbueINfryvSQS-c",
+            authDomain: "blogify-cdb97.firebaseapp.com",
+            databaseURL: "https://blogify-cdb97.firebaseio.com",
+            projectId: "blogify-cdb97",
+            storageBucket: "blogify-cdb97.appspot.com",
+            messagingSenderId: "797738042746",
+            appId: "1:797738042746:web:f79a733cfc9cbad72802c3",
+            measurementId: "G-V0GCNMMWW7"
+        }),
+        AngularFireAuthModule,
+        MatButtonModule,
+        MatDialogModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatBadgeModule,
+        MatGridListModule,
+        MatCardModule,
+        MatProgressSpinnerModule,
+        MatStepperModule,
+        MatCheckboxModule,
+        MatDividerModule,
+        MatIconModule
+    ],
+    providers: [AuthService, {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthenticationInterceptor,
+            multi: true
+        }],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }
