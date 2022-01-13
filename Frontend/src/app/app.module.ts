@@ -27,7 +27,7 @@ import { SignInComponent } from './components/authentication/sign-in/sign-in.com
 import { SignUpComponent } from './components/authentication/sign-up/sign-up.component';
 import { ForgotPasswordComponent } from './components/authentication/forgot-password/forgot-password.component';
 import { VerifyEmailComponent } from './components/authentication/verify-email/verify-email.component';
-import { AuthService } from './services/auth.service';
+import { AuthService } from './services/auth/auth.service';
 import { PostListComponent } from './components/post-list/post-list.component';
 import { PostComponent } from './components/post/post.component';
 import { SelectedBlogsComponent } from './components/selected-blogs/selected-blogs.component';
@@ -36,6 +36,8 @@ import { SafeHtmlPipe } from './util/SafeHtmlPipe';
 import { SafeURLPipe } from './util/SafeURLPipe';
 
 import { AuthenticationInterceptor } from './interceptors/authentication.interceptor';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
     declarations: [
@@ -82,7 +84,9 @@ import { AuthenticationInterceptor } from './interceptors/authentication.interce
         MatStepperModule,
         MatCheckboxModule,
         MatDividerModule,
-        MatIconModule
+        MatIconModule,
+        StoreModule.forRoot({}, {}),
+        EffectsModule.forRoot([])
     ],
     providers: [AuthService, {
         provide: HTTP_INTERCEPTORS,
