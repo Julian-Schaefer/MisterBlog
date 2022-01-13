@@ -2,7 +2,7 @@
 
 <mat-card *ngIf="blogPost" id="blog-post">
     <h1><b>{{blogPost.title}}</b></h1>
-    <p>{{blogPost.date}} on {{blogPost.author}}</p>
+    <p>{{blogPost.date}} on {{blogPost.authors}}</p>
     <div [innerHTML]="blogPost.content | safeHtml"></div>
 
     <mat-divider></mat-divider>

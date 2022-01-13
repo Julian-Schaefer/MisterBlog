@@ -7,7 +7,7 @@
 
         <ul>
             <li *ngFor="let selectedBlog of selectedBlogs">
-                <mat-checkbox [checked]="selectedBlog.selected" [(ngModel)]="selectedBlog.selected"
+                <mat-checkbox [checked]="selectedBlog.isSelected" [(ngModel)]="selectedBlog.isSelected"
                     (change)="updateSelectedBlogs()">
                     {{utilService.getHostname(selectedBlog.blogUrl)}}</mat-checkbox>
             </li>

@@ -1,4 +1,4 @@
 export interface SelectedBlog {
     blogUrl: string;
-    selected: boolean;
+    isSelected: boolean;
 }

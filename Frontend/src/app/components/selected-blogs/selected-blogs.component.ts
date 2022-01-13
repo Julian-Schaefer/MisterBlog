@@ -16,7 +16,7 @@ export class SelectedBlogsComponent {
   loading: boolean;
   selectedBlogs: SelectedBlog[];
 
-  constructor(private dialog: MatDialog, private router: Router, private blogService: BlogService, public utilService: UtilService) {
+  constructor(private dialog: MatDialog, private blogService: BlogService, public utilService: UtilService) {
     this.loadSelectedBlogs();
   }
 
@@ -39,7 +39,9 @@ export class SelectedBlogsComponent {
     const dialogRef = this.dialog.open(AddBlogDialog, { data: { url: '' } });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.router.navigate(["preview"], { queryParams: { url: result } });
+        this.blogService.addSelectedBlog({ blogUrl: result, isSelected: true }).subscribe(() => {
+          this.loadSelectedBlogs();
+        })
       }
     })
   }

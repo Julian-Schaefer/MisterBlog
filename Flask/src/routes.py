@@ -70,7 +70,7 @@ def handleSelectedBlogs():
 @routes.route("/blog-selection")
 def getBlogPosts():
     userId = request.user['user_id']
-    page = request.args.get('page')
+    page = int(request.args.get('page'))
 
     blog_selections = db.session.query(
         BlogSelection).filter_by(userId=userId, isSelected=True)
@@ -80,7 +80,7 @@ def getBlogPosts():
     if blog_selections.count() > 0:
         blog_selection_arguments = []
         for blog_selection in blog_selections:
-            blog_selection_arguments.append((int(page), blog_selection))
+            blog_selection_arguments.append((page, blog_selection))
 
         pool = ThreadPool(len(blog_selection_arguments))
         article_urls = pool.starmap(get_articles, blog_selection_arguments)
