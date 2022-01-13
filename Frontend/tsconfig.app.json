@@ -6,6 +6,9 @@
     "types": [],
     "skipLibCheck": true,
   },
+  "angularCompilerOptions": {
+    "strictTemplates": true,
+  },
   "files": [
     "src/main.ts",
     "src/polyfills.ts"
