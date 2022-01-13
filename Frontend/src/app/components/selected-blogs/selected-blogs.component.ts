@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { BlogService } from 'src/app/services/blog.service';
+import { BlogService } from 'src/app/services/blog/blog.service';
 import { UtilService } from 'src/app/services/util.service';
 import { SelectedBlog } from 'src/app/services/SelectedBlog';
 

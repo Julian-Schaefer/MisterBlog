@@ -1,8 +1,8 @@
 import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
-import { BlogService } from 'src/app/services/blog.service';
+import { BlogService } from 'src/app/services/blog/blog.service';
 import { BlogPost } from 'src/app/services/BlogPost';
-import { ServiceResultStatus } from 'src/app/services/ServiceResult';
+import { ServiceResult, ServiceResultStatus } from 'src/app/services/ServiceResult';
 import { UtilService } from 'src/app/services/util.service';
 
 @Component({
@@ -15,6 +15,7 @@ export class PostListComponent {
   loading: boolean;
   loadingMore: boolean;
   blogPosts: BlogPost[];
+  private currentPage: number;
 
   constructor(private blogService: BlogService, public utilService: UtilService) {
     this.loadBlogPosts();
@@ -25,29 +26,28 @@ export class PostListComponent {
       return;
     }
 
+    this.currentPage = 0;
     this.loading = true;
-    this.blogService.getBlogPosts().subscribe(result => {
-      this.blogPosts = result.content;
-
-      if (result.status == ServiceResultStatus.FINISHED) {
-        this.loading = false;
-      }
-    });
+    this.blogService.getBlogPosts().subscribe(result => this.saveResult(result));
   }
 
   loadMoreBlogPosts(): void {
-    if (this.loadingMore) {
+    if (this.loadingMore || this.currentPage == 0) {
       return;
     }
 
     this.loadingMore = true;
-    this.blogService.getBlogPosts(this.blogPosts.length).subscribe(result => {
-      this.blogPosts = result.content;
+    this.blogService.getBlogPosts(this.currentPage).subscribe(result => this.saveResult(result));
+  }
 
-      if (result.status == ServiceResultStatus.FINISHED) {
-        this.loadingMore = false;
-      }
-    });
+  private saveResult(blogPostsResult: ServiceResult<BlogPost[]>) {
+    this.blogPosts = blogPostsResult.content;
+    this.currentPage++;
+
+    if (blogPostsResult.status == ServiceResultStatus.FINISHED) {
+      this.loading = false;
+      this.loadingMore = false;
+    }
   }
 
   @HostListener("window:scroll", [])

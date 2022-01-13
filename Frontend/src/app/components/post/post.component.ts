@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { BlogPost } from 'src/app/services/BlogPost';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BlogService } from 'src/app/services/blog.service';
+import { BlogService } from 'src/app/services/blog/blog.service';
 
 @Component({
   selector: 'app-post',
