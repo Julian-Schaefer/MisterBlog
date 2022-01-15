@@ -1,6 +1,6 @@
 export interface BlogPost {
     title: string;
-    date: string;
+    date: Date;
     authors: string[];
     summary: string;
     content: string;

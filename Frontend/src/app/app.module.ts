@@ -36,8 +36,15 @@ import { SafeHtmlPipe } from './util/SafeHtmlPipe';
 import { SafeURLPipe } from './util/SafeURLPipe';
 
 import { AuthenticationInterceptor } from './interceptors/authentication.interceptor';
+import { DateInterceptor } from './interceptors/date.interceptor';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
+
+export const interceptorProviders =
+    [
+        { provide: HTTP_INTERCEPTORS, useClass: AuthenticationInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: DateInterceptor, multi: true }
+    ];
 
 @NgModule({
     declarations: [
@@ -88,11 +95,7 @@ import { EffectsModule } from '@ngrx/effects';
         StoreModule.forRoot({}, {}),
         EffectsModule.forRoot([])
     ],
-    providers: [AuthService, {
-        provide: HTTP_INTERCEPTORS,
-        useClass: AuthenticationInterceptor,
-        multi: true
-    }],
+    providers: [interceptorProviders],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
