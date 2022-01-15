@@ -40,7 +40,7 @@ export class SelectedBlogsComponent {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.blogService.addSelectedBlog({ blogUrl: result, isSelected: true }).subscribe(() => {
-          this.loadSelectedBlogs();
+          this.updateSelectedBlogs();
         })
       }
     })

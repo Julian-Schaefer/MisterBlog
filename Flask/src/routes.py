@@ -99,7 +99,7 @@ def getBlogPosts():
 
     return jsonify([{
         "title": article.title,
-        "date": article.publish_date,
+        "date": article.publish_date.isoformat(),
         "authors": article.authors,
         "summary": article.summary,
         "content": article.article_html,
