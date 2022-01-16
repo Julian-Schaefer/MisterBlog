@@ -67,7 +67,7 @@ def handleSelectedBlogs():
         return jsonify(results)
 
 
-@routes.route("/blog-selection")
+@routes.route("/blog-selection", methods=["GET"])
 def getBlogPosts():
     userId = request.user['user_id']
     page = int(request.args.get('page'))
@@ -108,19 +108,22 @@ def getBlogPosts():
     } for (blogUrl, article) in articles])
 
 
-@routes.route("/post")
+@routes.route("/blog-selection/post", methods=["GET"])
 def getBlogPostFromUrl():
-    url = request.args.get("url")
+    url = request.args.get('url')
+
     article = download_article(url)
 
     # https://newspaper.readthedocs.io/en/latest/user_guide/advanced.html
     article.clean_doc
     article.clean_top_node
 
-    return {
+    return jsonify({
         "title": article.title,
+        "date": article.publish_date.isoformat(),
         "authors": article.authors,
         "summary": article.summary,
         "content": article.article_html,
-        "date": article.publish_date
-    }
+        "blogUrl": None,
+        "postUrl": article.url
+    })
