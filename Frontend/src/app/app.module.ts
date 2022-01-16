@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { MatButtonModule } from '@angular/material/button';
@@ -27,7 +27,6 @@ import { SignInComponent } from './components/authentication/sign-in/sign-in.com
 import { SignUpComponent } from './components/authentication/sign-up/sign-up.component';
 import { ForgotPasswordComponent } from './components/authentication/forgot-password/forgot-password.component';
 import { VerifyEmailComponent } from './components/authentication/verify-email/verify-email.component';
-import { AuthService } from './services/auth/auth.service';
 import { PostListComponent } from './components/post-list/post-list.component';
 import { PostComponent } from './components/post/post.component';
 import { SelectedBlogsComponent } from './components/selected-blogs/selected-blogs.component';
@@ -39,12 +38,19 @@ import { AuthenticationInterceptor } from './interceptors/authentication.interce
 import { DateInterceptor } from './interceptors/date.interceptor';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 export const interceptorProviders =
     [
         { provide: HTTP_INTERCEPTORS, useClass: AuthenticationInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: DateInterceptor, multi: true }
     ];
+
+// required for AOT compilation
+export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
+    return new TranslateHttpLoader(http);
+}
 
 @NgModule({
     declarations: [
@@ -93,7 +99,15 @@ export const interceptorProviders =
         MatDividerModule,
         MatIconModule,
         StoreModule.forRoot({}, {}),
-        EffectsModule.forRoot([])
+        EffectsModule.forRoot([]),
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: HttpLoaderFactory,
+                deps: [HttpClient]
+            },
+            defaultLanguage: 'de'
+        })
     ],
     providers: [interceptorProviders],
     bootstrap: [AppComponent]
