@@ -19,6 +19,8 @@ flask-cors = "*"
 
 [dev-packages]
 autopep8 = "*"
+pytest = "*"
+python-dotenv = "*"
 
 [requires]
 python_version = "3.9"
