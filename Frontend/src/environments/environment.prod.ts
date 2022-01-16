@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: "https://blogify-api.herokuapp.com"
+  apiUrl: "https://blogify-flask.herokuapp.com"
 };
