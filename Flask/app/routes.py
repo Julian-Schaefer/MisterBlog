@@ -1,16 +1,15 @@
 from flask import Blueprint, request, jsonify
-from newspaper import Article
 from flask import request, jsonify
-from articleselector import get_articles, download_article
 from multiprocessing.dummy import Pool as ThreadPool
 
-from blog_selection import BlogSelection
-from database import db
+from app.articleselector import get_articles, download_article
+from app.blog_selection import BlogSelection
+from app.database import db
 
-routes = Blueprint('Routes', __name__)
+bp = Blueprint('routes', __name__)
 
 
-@routes.route("/blog-selection", methods=["DELETE"])
+@bp.route("/blog-selection", methods=["DELETE"])
 def deleteBlogSelection():
     userId = request.user['user_id']
     if request.is_json:
@@ -24,7 +23,7 @@ def deleteBlogSelection():
         return {"error": "The request payload is not in JSON format"}
 
 
-@routes.route("/blog-selection", methods=["POST"])
+@bp.route("/blog-selection", methods=["POST"])
 def addBlogSelection():
     userId = request.user['user_id']
     if request.is_json:
@@ -38,7 +37,7 @@ def addBlogSelection():
         return {"error": "The request payload is not in JSON format"}
 
 
-@routes.route('/blog-selection/selected', methods=['POST', 'GET'])
+@bp.route('/blog-selection/selected', methods=['POST', 'GET'])
 def handleSelectedBlogs():
     userId = request.user['user_id']
     if request.method == 'POST':
@@ -67,7 +66,7 @@ def handleSelectedBlogs():
         return jsonify(results)
 
 
-@routes.route("/blog-selection", methods=["GET"])
+@bp.route("/blog-selection", methods=["GET"])
 def getBlogPosts():
     userId = request.user['user_id']
     page = int(request.args.get('page'))
@@ -108,7 +107,7 @@ def getBlogPosts():
     } for (blogUrl, article) in articles])
 
 
-@routes.route("/blog-selection/post", methods=["GET"])
+@bp.route("/blog-selection/post", methods=["GET"])
 def getBlogPostFromUrl():
     url = request.args.get('url')
 
