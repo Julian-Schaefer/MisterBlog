@@ -21,7 +21,6 @@ import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { PreviewComponent } from './components/preview/preview.component';
-import { AddBlogDialog } from './components/selected-blogs/selected-blogs.component';
 import { ErrorDialogComponent } from './components/error-dialog/error-dialog.component';
 import { SignInComponent } from './components/authentication/sign-in/sign-in.component';
 import { SignUpComponent } from './components/authentication/sign-up/sign-up.component';
@@ -40,6 +39,7 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { AddBlogDialogComponent } from './components/add-blog-dialog/add-blog-dialog.component';
 
 export const interceptorProviders =
     [
@@ -56,7 +56,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     declarations: [
         AppComponent,
         PreviewComponent,
-        AddBlogDialog,
         ErrorDialogComponent,
         SignInComponent,
         SignUpComponent,
@@ -66,7 +65,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         PostComponent,
         SafeHtmlPipe,
         SafeURLPipe,
-        SelectedBlogsComponent
+        SelectedBlogsComponent,
+        AddBlogDialogComponent
     ],
     imports: [
         BrowserModule,
