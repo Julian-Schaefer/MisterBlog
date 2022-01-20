@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask import request, jsonify
 from multiprocessing.dummy import Pool as ThreadPool
 
-from app.articleselector import get_articles, download_article
+from app.articleselector import get_articles, download_article, is_compatible
 from app.blog_selection import BlogSelection
 from app.database import db
 
@@ -28,13 +28,18 @@ def addBlogSelection():
     userId = request.user['user_id']
     if request.is_json:
         data = request.get_json()
-        new_blog_selection = BlogSelection(
-            blogUrl=data['blogUrl'], userId=userId, isSelected=True)
-        db.session.add(new_blog_selection)
-        db.session.commit()
-        return {"message": f"Blog Selection {new_blog_selection.blogUrl} for User {new_blog_selection.userId} has been created successfully."}
+        blogUrl = data['blogUrl']
+
+        if is_compatible(blogUrl):
+            new_blog_selection = BlogSelection(
+                blogUrl=blogUrl, userId=userId, isSelected=True)
+            db.session.add(new_blog_selection)
+            db.session.commit()
+            return {"message": f"Blog Selection {new_blog_selection.blogUrl} for User {new_blog_selection.userId} has been created successfully."}
+        else:
+            return 406, {"error": "The provided Blog URL is not supported."}
     else:
-        return {"error": "The request payload is not in JSON format"}
+        return 400, {"error": "The request payload is not in JSON format."}
 
 
 @bp.route('/blog-selection/selected', methods=['POST', 'GET'])

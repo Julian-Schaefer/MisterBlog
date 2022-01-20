@@ -52,12 +52,18 @@ def get_page_counter_url(url):
 
 
 def get_articles(page, blogSelection):
-    url = blogSelection.blogUrl
-    if page > 1:
-        page_counter_url = get_page_counter_url(url)
-        url = page_counter_url.replace("{page-counter}", str(page))
+    article_urls = get_article_urls(blogSelection.blogUrl, page)
+    return (blogSelection, article_urls)
 
-    html_doc = requests.get(url).text
+
+def get_article_urls(blogUrl, page):
+    if page > 1:
+        page_counter_url = get_page_counter_url(blogUrl)
+        blogUrl = page_counter_url.replace("{page-counter}", str(page))
+        if blogUrl.endswith('/'):
+            blogUrl = blogUrl[:-1]
+
+    html_doc = requests.get(blogUrl).text
     cleaned_html_doc = bs_preprocess(html_doc)
 
     soup = BeautifulSoup(cleaned_html_doc, 'html.parser')
@@ -113,15 +119,23 @@ def get_articles(page, blogSelection):
                             css_path[len(article_path)+len("nth-child(x) "):]
                         break
 
-    article_links = []
+    article_urls = []
     articles = soup.select(article_selector_path)
     for article in articles:
         link = article["href"]
         if not (link.startswith("http://") or link.startswith("https://")):
-            link = url + link
-        article_links.append(link)
+            link = blogUrl + link
+        article_urls.append(link)
 
-    return (blogSelection, article_links)
+    return article_urls
+
+
+def is_compatible(blogUrl):
+    article_urls = get_article_urls(blogUrl, 0)
+    if len(article_urls) > 3:
+        return True
+
+    return False
 
 
 def download_article(url):

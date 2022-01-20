@@ -1,9 +1,9 @@
-import { Component, EventEmitter, Inject, Output } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { BlogService } from 'src/app/services/blog/blog.service';
 import { UtilService } from 'src/app/services/util.service';
 import { SelectedBlog } from 'src/app/services/SelectedBlog';
+import { AddBlogDialogComponent } from '../add-blog-dialog/add-blog-dialog.component';
 
 @Component({
   selector: 'selected-blogs',
@@ -36,27 +36,11 @@ export class SelectedBlogsComponent {
   }
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(AddBlogDialog, { data: { url: '' } });
+    const dialogRef = this.dialog.open(AddBlogDialogComponent);
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.blogService.addSelectedBlog({ blogUrl: result, isSelected: true }).subscribe(() => {
-          this.updateSelectedBlogs();
-        })
+        this.updateSelectedBlogs();
       }
     })
-  }
-}
-
-@Component({
-  selector: 'add-blog-dialog',
-  templateUrl: './add-blog-dialog.html'
-})
-export class AddBlogDialog {
-
-  constructor(public dialogRef: MatDialogRef<AddBlogDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: { url: string }) { }
-
-  onCancelClick(): void {
-    this.dialogRef.close();
   }
 }
