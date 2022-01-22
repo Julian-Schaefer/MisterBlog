@@ -1,5 +1,8 @@
 {
     "postList": {
         "continueReading": "Weiterlesen"
+    },
+    "date": {
+        "dateFormatPattern": "MMM d, y, h:mm"
     }
 }

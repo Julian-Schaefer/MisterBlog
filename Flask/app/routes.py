@@ -29,6 +29,8 @@ def addBlogSelection():
     if request.is_json:
         data = request.get_json()
         blogUrl = data['blogUrl']
+        if not blogUrl.startswith('https://'):
+            blogUrl = "https://" + blogUrl
 
         if is_compatible(blogUrl):
             new_blog_selection = BlogSelection(
