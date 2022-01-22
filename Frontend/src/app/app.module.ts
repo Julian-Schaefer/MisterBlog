@@ -40,6 +40,9 @@ import { EffectsModule } from '@ngrx/effects';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AddBlogDialogComponent } from './components/add-blog-dialog/add-blog-dialog.component';
+import { DateProxyPipe } from './pipes/date-proxy.pipe';
+import { registerLocaleData } from '@angular/common';
+import localeDe from '@angular/common/locales/de';
 
 export const interceptorProviders =
     [
@@ -66,7 +69,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         SafeHtmlPipe,
         SafeURLPipe,
         SelectedBlogsComponent,
-        AddBlogDialogComponent
+        AddBlogDialogComponent,
+        DateProxyPipe
     ],
     imports: [
         BrowserModule,
@@ -105,11 +109,14 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
                 provide: TranslateLoader,
                 useFactory: HttpLoaderFactory,
                 deps: [HttpClient]
-            },
-            defaultLanguage: 'de'
+            }
         })
     ],
     providers: [interceptorProviders],
     bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+    constructor() {
+        registerLocaleData(localeDe);
+    }
+}

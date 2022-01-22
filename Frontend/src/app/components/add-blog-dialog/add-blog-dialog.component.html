@@ -3,12 +3,20 @@
     <p>Please specify the URL of the new Blog below.</p>
     <mat-form-field>
         <mat-label>URL</mat-label>
-        <input matInput [(ngModel)]="blogUrl" placeholder="www.example.com">
+        <input matInput [(ngModel)]="blogUrl" placeholder="www.example.com" [formControl]="addBlogFormControl">
+
+        <mat-error *ngIf="addBlogFormControl.hasError('pattern') && !addBlogFormControl.hasError('required')">
+            Please enter a valid URL
+        </mat-error>
+        <mat-error *ngIf="addBlogFormControl.hasError('required')">
+            URL is <strong>required</strong>
+        </mat-error>
     </mat-form-field>
 </div>
 <div mat-dialog-actions>
     <button mat-raised-button (click)="onCancelClick()">Cancel</button>
-    <button mat-raised-button color="primary" (click)="onAddClick()" cdkFocusInitial>
+    <button mat-raised-button color="primary" (click)="onAddClick()" [disabled]="!addBlogFormControl.valid"
+        cdkFocusInitial>
         <span *ngIf="!loading">Add</span>
         <mat-icon *ngIf="loading" class="loading-spinner">
             <mat-spinner diameter="22">
