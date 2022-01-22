@@ -9,6 +9,11 @@ div#header {
     z-index: 100;
 }
 
+div#header-margin {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
 h1#heading {
     line-height: 70px;
     margin-left: 40px;

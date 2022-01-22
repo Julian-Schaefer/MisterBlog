@@ -1,13 +1,15 @@
 <div id="header">
-    <div style="float: left;">
-        <h1 id="heading" routerLink="/">Blogify</h1>
-    </div>
+    <div id="header-margin">
+        <div style="float: left;">
+            <h1 id="heading" routerLink="/">Blogify</h1>
+        </div>
 
-    <div style="float: right;">
-        <p id="greeting" *ngIf="authService.user" style="float: left;">Hello, {{authService.user.displayName}}!</p>
-        <div *ngIf="authService.user" id="sign-out-container">
-            <button mat-raised-button color="primary" (click)="authService.signOut()" style="float: left;">Sign
-                out</button>
+        <div style="float: right;">
+            <p id="greeting" *ngIf="authService.user" style="float: left;">Hello, {{authService.user.displayName}}!</p>
+            <div *ngIf="authService.user" id="sign-out-container">
+                <button mat-raised-button color="primary" (click)="authService.signOut()" style="float: left;">Sign
+                    out</button>
+            </div>
         </div>
     </div>
 </div>
