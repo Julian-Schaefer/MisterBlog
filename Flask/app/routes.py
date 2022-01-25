@@ -39,9 +39,9 @@ def addBlogSelection():
             db.session.commit()
             return {"message": f"Blog Selection {new_blog_selection.blogUrl} for User {new_blog_selection.userId} has been created successfully."}
         else:
-            return 406, {"error": "The provided Blog URL is not supported."}
+            return {"error": "The provided Blog URL is not supported."}, 406
     else:
-        return 400, {"error": "The request payload is not in JSON format."}
+        return {"error": "The request payload is not in JSON format."}, 400
 
 
 @bp.route('/blog-selection/selected', methods=['POST', 'GET'])
