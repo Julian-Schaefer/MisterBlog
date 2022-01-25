@@ -16,6 +16,7 @@ export class AddBlogDialogComponent {
 
   blogUrl: string = '';
   loading = false;
+  error: string = null;
 
   constructor(public dialogRef: MatDialogRef<AddBlogDialogComponent>, private blogService: BlogService) { }
 
@@ -33,7 +34,11 @@ export class AddBlogDialogComponent {
       complete: () => {
         this.dialogRef.close(this.blogUrl);
       }, error: (err) => {
-        console.log(err);
+        if (err.status == 406) {
+          this.addBlogFormControl.setErrors({ "not_supported": err });
+        } else {
+          this.addBlogFormControl.setErrors({ "unknown": err });
+        }
       }
     });
   }

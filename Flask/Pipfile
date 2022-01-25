@@ -16,6 +16,7 @@ flask-sqlalchemy = "*"
 flask-migrate = "*"
 flask-script = "*"
 flask-cors = "*"
+dateparser = "*"
 
 [dev-packages]
 autopep8 = "*"

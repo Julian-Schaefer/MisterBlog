@@ -11,6 +11,12 @@
         <mat-error *ngIf="addBlogFormControl.hasError('required')">
             URL is <strong>required</strong>
         </mat-error>
+        <mat-error *ngIf="addBlogFormControl.hasError('not_supported')">
+            The specified Blog URL is not supported. Please contact our support for help
+        </mat-error>
+        <mat-error *ngIf="addBlogFormControl.hasError('unknown')">
+            An unknown error has occured
+        </mat-error>
     </mat-form-field>
 </div>
 <div mat-dialog-actions>
