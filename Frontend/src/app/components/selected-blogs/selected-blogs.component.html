@@ -1,18 +1,27 @@
 <mat-card>
-    <mat-spinner *ngIf="loading" diameter="42" style="margin: auto;"></mat-spinner>
+    <div *ngIf="(state$ | async)?.loading === false && (state$ | async) as state; else loading">
 
-
-    <div *ngIf="!loading">
         <h1>Selected Blogs:</h1>
+        <div *ngIf="!state.error">
 
-        <ul>
-            <li *ngFor="let selectedBlog of selectedBlogs">
-                <mat-checkbox [checked]="selectedBlog.isSelected" [(ngModel)]="selectedBlog.isSelected"
-                    (change)="updateSelectedBlogs()">
-                    {{utilService.getHostname(selectedBlog.blogUrl)}}</mat-checkbox>
-            </li>
-        </ul>
+            <ul>
+                <li *ngFor="let selectedBlog of state.selectedBlogs">
+                    <mat-checkbox [checked]="selectedBlog.isSelected" [(ngModel)]="selectedBlog.isSelected"
+                        (change)="updateSelectedBlogs()">
+                        {{utilService.getHostname(selectedBlog.blogUrl)}}</mat-checkbox>
+                </li>
+            </ul>
 
-        <button mat-raised-button color="primary" (click)="openDialog()">Add Blog</button>
+            <button mat-raised-button color="primary" (click)="openDialog()">Add Blog</button>
+        </div>
+
+
+        <div *ngIf="state.error">
+            <p>An error has occured: {{state.error.message}}</p>
+        </div>
     </div>
+
+    <ng-template #loading>
+        <mat-spinner diameter="42" style="margin: auto;"></mat-spinner>
+    </ng-template>
 </mat-card>

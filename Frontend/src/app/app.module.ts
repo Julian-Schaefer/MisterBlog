@@ -43,6 +43,10 @@ import { AddBlogDialogComponent } from './components/add-blog-dialog/add-blog-di
 import { DateProxyPipe } from './pipes/date-proxy.pipe';
 import { registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
+import * as blogSelectionReducer from 'src/app/components/selected-blogs/blog-selection.reducer';
+import { BlogSelectionEffects } from './components/selected-blogs/blog-selection.effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from 'src/environments/environment';
 
 export const interceptorProviders =
     [
@@ -90,6 +94,15 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
             measurementId: "G-V0GCNMMWW7"
         }),
         AngularFireAuthModule,
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: HttpLoaderFactory,
+                deps: [HttpClient]
+            }
+        }),
+        StoreModule.forRoot({ blogSelection: blogSelectionReducer.reducer }),
+        EffectsModule.forRoot([BlogSelectionEffects]),
         MatButtonModule,
         MatDialogModule,
         MatInputModule,
@@ -102,15 +115,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         MatCheckboxModule,
         MatDividerModule,
         MatIconModule,
-        StoreModule.forRoot({}, {}),
-        EffectsModule.forRoot([]),
-        TranslateModule.forRoot({
-            loader: {
-                provide: TranslateLoader,
-                useFactory: HttpLoaderFactory,
-                deps: [HttpClient]
-            }
-        })
+        StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
     ],
     providers: [interceptorProviders],
     bootstrap: [AppComponent]
