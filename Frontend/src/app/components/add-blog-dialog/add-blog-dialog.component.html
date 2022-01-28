@@ -14,6 +14,9 @@
         <mat-error *ngIf="addBlogFormControl.hasError('not_supported')">
             The specified Blog URL is not supported. Please contact our support for help
         </mat-error>
+        <mat-error *ngIf="addBlogFormControl.hasError('conflict')">
+            You have already added this Blog URL. Please check your selected Blogs
+        </mat-error>
         <mat-error *ngIf="addBlogFormControl.hasError('unknown')">
             An unknown error has occured
         </mat-error>

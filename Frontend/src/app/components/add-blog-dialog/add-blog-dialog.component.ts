@@ -37,6 +37,8 @@ export class AddBlogDialogComponent {
       }, error: (err) => {
         if (err.status == 406) {
           this.addBlogFormControl.setErrors({ "not_supported": err });
+        } else if (err.status == 409) {
+          this.addBlogFormControl.setErrors({ "conflict": err });
         } else {
           this.addBlogFormControl.setErrors({ "unknown": err });
         }
