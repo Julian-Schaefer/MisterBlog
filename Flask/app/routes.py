@@ -32,6 +32,12 @@ def addBlogSelection():
         if not blogUrl.startswith('https://'):
             blogUrl = "https://" + blogUrl
 
+        blog_selection_exists = db.session.query(
+            BlogSelection).filter_by(userId=userId, blogUrl=blogUrl).one_or_none()
+
+        if blog_selection_exists:
+            return {"error": "The specified Blog URL has already been added for this User."}, 409
+
         if is_compatible(blogUrl):
             new_blog_selection = BlogSelection(
                 blogUrl=blogUrl, userId=userId, isSelected=True)

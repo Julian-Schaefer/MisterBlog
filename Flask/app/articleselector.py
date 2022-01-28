@@ -57,14 +57,14 @@ def get_page_counter_url(url):
         try:
             href = link["href"]
             if href.startswith("/"):
-                href = getRootUrl(url) + href
+                href = get_root_url(url) + href
 
             soup = get_soup_from_url(href)
 
             for new_link in soup.find_all('a', href=True):
                 new_href = new_link["href"]
                 if new_href.startswith("/"):
-                    new_href = getRootUrl(url) + new_href
+                    new_href = get_root_url(url) + new_href
 
                 if new_href == href:
                     continue
@@ -112,8 +112,6 @@ def get_article_urls(blogUrl, page):
     if page > 1:
         blogUrl = page_counter_url.replace("{page-counter}", str(page))
 
-    raise "asd"
-
     if blogUrl.endswith('/'):
         blogUrl = blogUrl[:-1]
 
@@ -139,7 +137,7 @@ def get_article_urls(blogUrl, page):
         firstLink = soup.select(selector_path_to_string(article_path))[0]
         url = firstLink["href"]
         if not (url.startswith("http://") or url.startswith("https://")):
-            url = getRootUrl(blogUrl) + url
+            url = get_root_url(blogUrl) + url
         article = download_article(url)
         if article and article.publish_date:
             valid_article_paths += [article_path]
@@ -206,7 +204,80 @@ def get_article_urls(blogUrl, page):
     return article_urls
 
 
-def getRootUrl(url):
+def get_article_selectors(blog_url):
+    page_counter_url = get_page_counter_url(blog_url)
+    second_page_url = page_counter_url.replace("{page-counter}", str(2))
+    third_page_url = page_counter_url.replace("{page-counter}", str(3))
+
+    first_page_soup = get_soup_from_url(blog_url)
+    second_page_soup = get_soup_from_url(second_page_url)
+    third_page_soup = get_soup_from_url(third_page_url)
+
+    first_article_paths = get_valid_article_paths(
+        blog_url, first_page_soup)
+    second_article_paths = get_valid_article_paths(
+        second_page_url, second_page_soup)
+    third_article_paths = get_valid_article_paths(
+        third_page_url, third_page_soup)
+
+    identical_article_paths = []
+    for second_article_path in second_article_paths:
+        for third_article_path in third_article_paths:
+            if selector_path_to_string(third_article_path) != selector_path_to_string(second_article_path):
+                continue
+
+            link_on_third_page = third_page_soup.select(
+                selector_path_to_string(third_article_path), href=True)[0]
+            link_on_second_page = second_page_soup.select(
+                selector_path_to_string(third_article_path), href=True)[0]
+            if link_on_third_page['href'] == link_on_second_page['href']:
+                identical_article_paths += [second_article_path]
+
+    total_article_paths = []
+    total_article_paths.extend(first_article_paths)
+    total_article_paths.extend(second_article_paths)
+    total_article_paths.extend(third_article_paths)
+
+    final_article_paths = []
+    for article_path in total_article_paths:
+        if article_path not in identical_article_paths and article_path not in final_article_paths:
+            final_article_paths += [article_path]
+
+    # TODO: Clean up duplicate Paths
+
+    return final_article_paths
+
+
+def get_valid_article_paths(url, soup):
+    link_paths = [get_css_path(link) for link in soup.select('a')]
+    link_paths.sort()
+
+    last_link_path = link_paths[0]
+    article_paths = []
+    for link_path in link_paths[1:]:
+        selector = find_selector_path(last_link_path, link_path)
+        if selector:
+            elements = soup.select(selector_path_to_string(selector))
+            if len(elements) > 5:
+                if selector not in article_paths:
+                    article_paths += [selector]
+
+        last_link_path = link_path
+
+    valid_article_paths = []
+    for article_path in article_paths:
+        firstLink = soup.select(selector_path_to_string(article_path))[0]
+        href = firstLink["href"]
+        if not (href.startswith("http://") or href.startswith("https://")):
+            href = get_root_url(url) + href
+        article = download_article(href)
+        if article and article.publish_date:
+            valid_article_paths += [article_path]
+
+    return valid_article_paths
+
+
+def get_root_url(url):
     url_parts = urlsplit(url)
     root_url = url_parts.scheme + "://" + url_parts.netloc
     return root_url
@@ -242,8 +313,8 @@ def find_selector_path(firstPath, secondPath):
 
 
 def is_compatible(blogUrl):
-    article_urls = get_article_urls(blogUrl, 0)
-    if len(article_urls) > 3:
+    article_selectors = get_article_selectors(blogUrl)
+    if len(article_selectors) >= 1:
         return True
 
     return False
