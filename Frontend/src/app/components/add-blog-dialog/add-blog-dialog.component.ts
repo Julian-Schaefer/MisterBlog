@@ -32,7 +32,7 @@ export class AddBlogDialogComponent {
     this.loading = true;
     const blogSelection = { blogUrl: this.blogUrl, isSelected: true };
     this.blogService.addSelectedBlog(blogSelection).pipe(finalize(() => this.loading = false)).subscribe({
-      complete: () => {
+      next: () => {
         this.dialogRef.close(blogSelection);
       }, error: (err) => {
         if (err.status == 406) {
