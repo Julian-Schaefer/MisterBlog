@@ -17,6 +17,7 @@ flask-migrate = "*"
 flask-script = "*"
 flask-cors = "*"
 dateparser = "*"
+goose3 = "*"
 
 [dev-packages]
 autopep8 = "*"
