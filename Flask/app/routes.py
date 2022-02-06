@@ -110,15 +110,13 @@ def getBlogPosts():
             pool.close()
             pool.join()
 
-    a = []
-    for article in articles:
+    cleaned_articles = []
+    for article in cleaned_articles:
         if article[1].publish_date:
-            a += [article]
-        else:
-            print('asd')
+            cleaned_articles += [article]
 
-    articles = a
-    articles.sort(key=lambda article: article[1].publish_date, reverse=True)
+    cleaned_articles.sort(
+        key=lambda article: article[1].publish_date, reverse=True)
 
     return jsonify([{
         "title": article.title,
