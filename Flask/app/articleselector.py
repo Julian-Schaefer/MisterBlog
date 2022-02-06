@@ -1,3 +1,7 @@
+from asyncio.log import logger
+from datetime import date, datetime
+import difflib
+from os import link
 import requests
 from bs4 import BeautifulSoup
 import re
@@ -71,7 +75,7 @@ def get_page_counter_url(url):
 
                 if "3" in new_href:
                     common = longest_common_substring(href, new_href)
-                    if common[-1] in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
+                    if common == '' or common[-1] in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
                         continue
 
                     common_end2 = href[len(common+"3"):]
@@ -103,105 +107,43 @@ def longest_common_substring(firstString, secondString):
 
 
 def get_articles(page, blogSelection):
-    article_urls = get_article_urls(blogSelection.blogUrl, page)
+    article_selectors = blogSelection.article_selectors
+    page_counter_url = get_page_counter_url(blogSelection.blog_url)
+    blog_page_url = page_counter_url.replace("{page-counter}", str(page))
+
+    page_soup = get_soup_from_url(blog_page_url)
+
+    article_urls = []
+    for article_selector in article_selectors:
+        links_on_page = page_soup.select(
+            selector_path_to_string(article_selector), href=True)
+
+        root_url = get_root_url(blogSelection.blog_url)
+        for link_on_page in links_on_page:
+            href = link_on_page["href"]
+            if href.startswith("/"):
+                href = root_url + href
+            article_urls += [href]
+
     return (blogSelection, article_urls)
 
 
-def get_article_urls(blogUrl, page):
-    page_counter_url = get_page_counter_url(blogUrl)
-    if page > 1:
-        blogUrl = page_counter_url.replace("{page-counter}", str(page))
-
-    if blogUrl.endswith('/'):
-        blogUrl = blogUrl[:-1]
-
-    soup = get_soup_from_url(blogUrl)
-
-    link_paths = [get_css_path(link) for link in soup.select('a')]
-    link_paths.sort()
-
-    last_link_path = link_paths[0]
-    article_paths = []
-    for link_path in link_paths[1:]:
-        selector = find_selector_path(last_link_path, link_path)
-        if selector:
-            elements = soup.select(selector_path_to_string(selector))
-            if len(elements) > 5:
-                if selector not in article_paths:
-                    article_paths += [selector]
-
-        last_link_path = link_path
-
-    valid_article_paths = []
+def get_identical_article_paths(article_paths, page_soup, compare_links):
+    identical_article_paths = []
     for article_path in article_paths:
-        firstLink = soup.select(selector_path_to_string(article_path))[0]
-        url = firstLink["href"]
-        if not (url.startswith("http://") or url.startswith("https://")):
-            url = get_root_url(blogUrl) + url
-        article = download_article(url)
-        if article and article.publish_date:
-            valid_article_paths += [article_path]
+        links_on_page = page_soup.select(
+            selector_path_to_string(article_path), href=True)
 
-    article_links = [soup.select(selector_path_to_string(
-        article_path)) for article_path in valid_article_paths]
-    print(valid_article_paths)
+        identical_links = 0
+        for link in links_on_page:
+            for compare_link in compare_links:
+                if link["href"] == compare_link["href"]:
+                    identical_links += 1
 
-    # article_paths = {}
-    # previousElements = {}
-    # for path in link_paths:
-    #     found = False
-    #     currentSelector = ""
-    #     previousCount = 3
+        if identical_links > 1:
+            identical_article_paths += [article_path]
 
-    #     selector = path[0:path.rindex(":nth-child(")]
-    #     while True:
-    #         try:
-    #             if previousElements.get(selector):
-    #                 selectedElements = previousElements.get(selector)
-    #             else:
-    #                 selectedElements = soup.select(selector)
-    #                 previousElements[selector] = selectedElements
-
-    #             if len(selectedElements) > previousCount:
-    #                 found = True
-    #                 currentSelector = selector
-    #                 previousCount = len(selectedElements)
-
-    #             selector = selector[0:selector.rindex(":nth-child(")]
-    #         except ValueError:
-    #             break
-
-    #     if found:
-    #         article_path = article_paths.get(currentSelector)
-    #         if article_path:
-    #             article_paths[currentSelector] = article_path+1
-    #         else:
-    #             article_paths[currentSelector] = 1
-
-    # article_selector_path = ""
-    # for article_path, count in article_paths.items():
-    #     if count > 3:
-    #         article = soup.select(article_path)[0]
-    #         headerElements = article.select("header, h1, h2, h3, h4, h5, h6")
-
-    #         if headerElements:
-    #             for headerElement in headerElements:
-    #                 linkElement = headerElement.find_all('a', href=True)
-    #                 if linkElement:
-    #                     css_path = get_css_path(linkElement[0])
-    #                     article_selector_path = article_path + \
-    #                         css_path[len(article_path)+len("nth-child(x) "):]
-    #                     break
-
-    # article_urls = []
-    # articles = soup.select(article_selector_path)
-    # for article in articles:
-    #     link = article["href"]
-    #     if not (link.startswith("http://") or link.startswith("https://")):
-    #         link = blogUrl + link
-    #     article_urls.append(link)
-
-    return article_urls
+    return identical_article_paths
 
 
 def get_article_selectors(blog_url):
@@ -217,26 +159,47 @@ def get_article_selectors(blog_url):
         blog_url, first_page_soup)
     second_article_paths = get_valid_article_paths(
         second_page_url, second_page_soup)
-    third_article_paths = get_valid_article_paths(
-        third_page_url, third_page_soup)
+    # third_article_paths = get_valid_article_paths(
+    #     third_page_url, third_page_soup)
+
+    all_links_on_third_page = third_page_soup.find_all("a", href=True)
 
     identical_article_paths = []
-    for second_article_path in second_article_paths:
-        for third_article_path in third_article_paths:
-            if selector_path_to_string(third_article_path) != selector_path_to_string(second_article_path):
-                continue
+    identical_article_paths.extend(get_identical_article_paths(
+        first_article_paths, first_page_soup, all_links_on_third_page))
+    identical_article_paths.extend(get_identical_article_paths(
+        second_article_paths, second_page_soup, all_links_on_third_page))
 
-            link_on_third_page = third_page_soup.select(
-                selector_path_to_string(third_article_path), href=True)[0]
-            link_on_second_page = second_page_soup.select(
-                selector_path_to_string(third_article_path), href=True)[0]
-            if link_on_third_page['href'] == link_on_second_page['href']:
-                identical_article_paths += [second_article_path]
+    # identical_article_paths = []
+    # for second_article_path in second_article_paths:
+    #     for third_article_path in third_article_paths:
+    #         if selector_path_to_string(third_article_path) != selector_path_to_string(second_article_path):
+    #             continue
+
+    #         links_on_second_page = second_page_soup.select(
+    #             selector_path_to_string(second_article_path), href=True)
+    #         links_on_third_page = third_page_soup.select(
+    #             selector_path_to_string(third_article_path), href=True)
+
+    #         unidentical_links = 0
+
+    #         for link_on_second_page in links_on_second_page:
+    #             for link_on_third_page in links_on_third_page:
+    #                 if link_on_second_page['href'] != link_on_third_page['href']:
+    #                     unidentical_links += 1
+
+    #         if unidentical_links != len(link_on_second_page):
+    #             identical_article_paths += [second_article_path]
 
     total_article_paths = []
     total_article_paths.extend(first_article_paths)
     total_article_paths.extend(second_article_paths)
-    total_article_paths.extend(third_article_paths)
+    # total_article_paths.extend(third_article_paths)
+
+    #urls1 = get_article_urls(total_article_paths, blog_url, 1)
+    #urls2 = get_article_urls(total_article_paths, blog_url, 2)
+    #urls3 = get_article_urls(total_article_paths, blog_url, 3)
+    #identical = get_article_urls(identical_article_paths, blog_url, 1)
 
     final_article_paths = []
     for article_path in total_article_paths:
@@ -244,35 +207,121 @@ def get_article_selectors(blog_url):
             final_article_paths += [article_path]
 
     # TODO: Clean up duplicate Paths
+    urls1 = get_article_urls(final_article_paths, blog_url, 1)
+    urls2 = get_article_urls(final_article_paths, blog_url, 2)
+    urls3 = get_article_urls(final_article_paths, blog_url, 3)
 
     return final_article_paths
 
 
+def get_article_urls(article_paths, blog_url, page):
+    page_url = blog_url
+    if page > 1:
+        page_counter_url = get_page_counter_url(blog_url)
+        page_url = page_counter_url.replace("{page-counter}", str(page))
+
+    soup = get_soup_from_url(page_url)
+
+    urls = []
+    for article_path in article_paths:
+        links = soup.select(selector_path_to_string(article_path), href=True)
+        for link in links:
+            href = link["href"]
+            if href.startswith("/"):
+                href = get_root_url(blog_url) + href
+
+            if href not in urls:
+                urls += [href]
+
+    return urls
+
+
 def get_valid_article_paths(url, soup):
-    link_paths = [get_css_path(link) for link in soup.select('a')]
-    link_paths.sort()
+    link_paths = [get_css_path(
+        link) for link in soup.select('a', href=True)]
 
-    last_link_path = link_paths[0]
+    class Node(object):
+        def __init__(self, tag):
+            self.tag = tag
+            self.children = []
+
+        def add_child(self, obj):
+            self.children.append(obj)
+
+    def calc_tree(node, link_path, level):
+        def get_element_type(tag):
+            if ":nth-child(" not in tag:
+                return tag
+
+            return tag[:tag.rindex(":nth-child(")]
+
+        if level >= len(link_path):
+            return
+
+        tag = link_path[level]
+
+        existing_child = None
+        for child in node.children:
+            if child.tag == tag:
+                existing_child = child
+                break
+
+        if existing_child:
+            calc_tree(existing_child, link_path, level+1)
+        else:
+            existing_type_child = None
+            for child in node.children:
+                if get_element_type(child.tag) == get_element_type(tag):
+                    existing_type_child = child
+                    break
+
+            if existing_type_child:
+                existing_type_child.tag = get_element_type(tag)
+                calc_tree(existing_type_child, link_path, level+1)
+            else:
+                new_child = Node(tag)
+                node.add_child(new_child)
+                calc_tree(new_child, link_path, level+1)
+
+    root = Node('body')
+    for link_path in link_paths:
+        calc_tree(root, link_path, 1)
+
+    def get_paths_from_tree(node, all_paths, current_path=None):
+        if not current_path:
+            current_path = []
+
+        current_path += [node.tag]
+
+        if len(node.children) == 0:
+            all_paths.append(current_path)
+        else:
+            for child in node.children:
+                get_paths_from_tree(child, all_paths, current_path[:])
+
     article_paths = []
-    for link_path in link_paths[1:]:
-        selector = find_selector_path(last_link_path, link_path)
-        if selector:
-            elements = soup.select(selector_path_to_string(selector))
-            if len(elements) > 5:
-                if selector not in article_paths:
-                    article_paths += [selector]
+    get_paths_from_tree(root, article_paths)
 
-        last_link_path = link_path
+    article_only_paths = []
+    for article_path in article_paths:
+        if "article" in article_path:
+            article_only_paths += [article_path]
+
+    if len(article_only_paths) > 0:
+        article_paths = article_only_paths
 
     valid_article_paths = []
     for article_path in article_paths:
-        firstLink = soup.select(selector_path_to_string(article_path))[0]
-        href = firstLink["href"]
-        if not (href.startswith("http://") or href.startswith("https://")):
-            href = get_root_url(url) + href
-        article = download_article(href)
-        if article and article.publish_date:
-            valid_article_paths += [article_path]
+        links = soup.select(selector_path_to_string(article_path), href=True)
+        if links and len(links) > 0:
+            firstLink = links[0]
+            if firstLink.has_attr("href"):
+                href = firstLink["href"]
+                if not (href.startswith("http://") or href.startswith("https://")):
+                    href = get_root_url(url) + href
+                article = download_article(href)
+                if article and article.publish_date:
+                    valid_article_paths += [article_path]
 
     return valid_article_paths
 
@@ -287,44 +336,43 @@ def selector_path_to_string(path):
     return ' > '.join(path)
 
 
-def find_selector_path(firstPath, secondPath):
-    if len(firstPath) != len(secondPath):
+def find_selector_path(first_path, second_path):
+    if len(first_path) != len(second_path) or first_path == second_path:
         return None
 
-    selectorPath = []
-    for firstSelector, secondSelector in zip(firstPath, secondPath):
-        if firstSelector == "body" and secondSelector == "body":
-            selectorPath += ["body"]
+    selector_path = []
+    for first_selector, second_selector in zip(first_path, second_path):
+        if first_selector == "body" and second_selector == "body":
+            selector_path += ["body"]
             continue
 
-        if firstSelector == secondSelector:
-            selectorPath += [firstSelector]
+        if first_selector == second_selector:
+            selector_path += [first_selector]
         else:
-            firstSelector = firstSelector[:firstSelector.rindex(":nth-child(")]
-            secondSelector = secondSelector[:secondSelector.rindex(
+            first_selector = first_selector[:first_selector.rindex(
+                ":nth-child(")]
+            second_selector = second_selector[:second_selector.rindex(
                 ":nth-child(")]
 
-            if firstSelector == secondSelector:
-                selectorPath += [firstSelector]
+            if first_selector == second_selector:
+                selector_path += [first_selector]
             else:
                 return None
 
-    return selectorPath
+    return selector_path
 
 
-def is_compatible(blogUrl):
-    article_selectors = get_article_selectors(blogUrl)
-    if len(article_selectors) >= 1:
-        return True
+def validate_date(publish_date):
+    if not publish_date:
+        return None
 
-    return False
+    if isinstance(publish_date, datetime):
+        return publish_date
 
-
-def validate_date(date_text):
     try:
-        if len(date_text) < 6:
+        if len(publish_date) < 6:
             return None
-        return dateparser.parse(date_text)
+        return dateparser.parse(publish_date)
     except ValueError:
         return None
 
@@ -340,17 +388,13 @@ def download_article(url):
             g = Goose()
             goose_article = g.extract(url=url)
 
-            if len(article.authors) == 0 and len(goose_article.authors) > 0:
+            if not article.authors and goose_article.authors:
                 article.authors = goose_article.authors
 
             if not article.publish_date:
                 article.publish_date = goose_article.publish_date
 
-            validated_date = validate_date(article.publish_date)
-            if validate_date:
-                article.publish_date = validated_date
-            else:
-                article.publish_date = None
+            article.publish_date = validate_date(article.publish_date)
 
         return article
     except:
