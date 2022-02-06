@@ -1,14 +1,13 @@
-from asyncio.log import logger
-from datetime import date, datetime
-import difflib
-from os import link
+from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 import re
 from newspaper import Article
 from goose3 import Goose
-from urllib.parse import urlsplit, urlunsplit
+from urllib.parse import urlsplit
 import dateparser
+import pytz
+import tldextract
 
 
 def bs_preprocess(html):
@@ -108,7 +107,7 @@ def longest_common_substring(firstString, secondString):
 
 def get_articles(page, blogSelection):
     article_selectors = blogSelection.article_selectors
-    page_counter_url = get_page_counter_url(blogSelection.blog_url)
+    page_counter_url = blogSelection.page_counter_url
     blog_page_url = page_counter_url.replace("{page-counter}", str(page))
 
     page_soup = get_soup_from_url(blog_page_url)
@@ -129,22 +128,34 @@ def get_articles(page, blogSelection):
     return (blogSelection, article_urls)
 
 
-def get_identical_article_paths(article_paths, page_soup, compare_links):
-    identical_article_paths = []
+def get_invalid_article_paths(blog_url, article_paths, page_soup, compare_links):
+    invalid_article_paths = []
     for article_path in article_paths:
         links_on_page = page_soup.select(
             selector_path_to_string(article_path), href=True)
 
         identical_links = 0
+        external_links = 0
+        domain = get_domain(blog_url)
+        for link in links_on_page:
+            href = link["href"]
+            if not href.startswith("/"):
+                if domain not in href:
+                    external_links += 1
+
+            for compare_link in compare_links:
+                if href == compare_link["href"]:
+                    identical_links += 1
+
         for link in links_on_page:
             for compare_link in compare_links:
                 if link["href"] == compare_link["href"]:
                     identical_links += 1
 
-        if identical_links > 1:
-            identical_article_paths += [article_path]
+        if identical_links > 1 or external_links > 0:
+            invalid_article_paths += [article_path]
 
-    return identical_article_paths
+    return invalid_article_paths
 
 
 def get_article_selectors(blog_url):
@@ -163,11 +174,11 @@ def get_article_selectors(blog_url):
 
     all_links_on_third_page = third_page_soup.find_all("a", href=True)
 
-    identical_article_paths = []
-    identical_article_paths.extend(get_identical_article_paths(
-        first_article_paths, first_page_soup, all_links_on_third_page))
-    identical_article_paths.extend(get_identical_article_paths(
-        second_article_paths, second_page_soup, all_links_on_third_page))
+    invalid_article_paths = []
+    invalid_article_paths.extend(get_invalid_article_paths(blog_url,
+                                                           first_article_paths, first_page_soup, all_links_on_third_page))
+    invalid_article_paths.extend(get_invalid_article_paths(blog_url,
+                                                           second_article_paths, second_page_soup, all_links_on_third_page))
 
     total_article_paths = []
     total_article_paths.extend(first_article_paths)
@@ -175,10 +186,10 @@ def get_article_selectors(blog_url):
 
     final_article_paths = []
     for article_path in total_article_paths:
-        if article_path not in identical_article_paths and article_path not in final_article_paths:
+        if article_path not in invalid_article_paths and article_path not in final_article_paths:
             final_article_paths += [article_path]
 
-    return final_article_paths
+    return (final_article_paths, page_counter_url)
 
 
 def get_article_urls(article_paths, blog_url, page):
@@ -293,6 +304,12 @@ def get_valid_article_paths(url, soup):
     return valid_article_paths
 
 
+def get_domain(url):
+    _, td, tsu = tldextract.extract(url)
+    domain = td + '.' + tsu
+    return domain
+
+
 def get_root_url(url):
     url_parts = urlsplit(url)
     root_url = url_parts.scheme + "://" + url_parts.netloc
@@ -334,14 +351,16 @@ def validate_date(publish_date):
         return None
 
     if isinstance(publish_date, datetime):
-        return publish_date
-
-    try:
-        if len(publish_date) < 6:
+        publish_date_datetime = publish_date
+    else:
+        try:
+            if len(publish_date) < 6:
+                return None
+            publish_date_datetime = dateparser.parse(publish_date)
+        except ValueError:
             return None
-        return dateparser.parse(publish_date)
-    except ValueError:
-        return None
+
+    return publish_date_datetime.replace(tzinfo=pytz.utc)
 
 
 def download_article(url):

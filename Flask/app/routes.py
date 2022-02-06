@@ -40,9 +40,12 @@ def addBlogSelection():
             return {"error": "The specified Blog URL has already been added for this User."}, 409
 
         article_selectors = get_article_selectors(blog_url)
-        if len(article_selectors) > 0:
+        if len(article_selectors[0]) > 0:
             new_blog_selection = BlogSelection(
-                blog_url=blog_url, user_id=user_id, is_selected=True, article_selectors=json.dumps(article_selectors))
+                blog_url=blog_url, user_id=user_id,
+                is_selected=True,
+                article_selectors=json.dumps(article_selectors[0]),
+                page_counter_url=article_selectors[1])
             db.session.add(new_blog_selection)
             db.session.commit()
             return {"message": f"Blog Selection {new_blog_selection.blog_url} for User {new_blog_selection.user_id} has been created successfully."}
@@ -111,7 +114,7 @@ def getBlogPosts():
             pool.join()
 
     cleaned_articles = []
-    for article in cleaned_articles:
+    for article in articles:
         if article[1].publish_date:
             cleaned_articles += [article]
 
