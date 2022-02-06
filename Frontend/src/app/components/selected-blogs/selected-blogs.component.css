@@ -5,4 +5,15 @@ h2 {
 ul {
     list-style-type: none;
     margin-top: 12px;
+    padding-left: 8px;
+}
+
+li.selected-blog > mat-checkbox {
+    margin-top: 8px;
+    float: left;
+}
+
+li.selected-blog > button.delete {
+    float: right;
+    transform: scale(0.8)
 }
