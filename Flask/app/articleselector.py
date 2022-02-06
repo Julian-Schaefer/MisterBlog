@@ -123,7 +123,8 @@ def get_articles(page, blogSelection):
             href = link_on_page["href"]
             if href.startswith("/"):
                 href = root_url + href
-            article_urls += [href]
+            if href not in article_urls:
+                article_urls += [href]
 
     return (blogSelection, article_urls)
 
@@ -388,7 +389,7 @@ def download_article(url):
             g = Goose()
             goose_article = g.extract(url=url)
 
-            if not article.authors and goose_article.authors:
+            if len(article.authors) == 0 and len(goose_article.authors) > 0:
                 article.authors = goose_article.authors
 
             if not article.publish_date:
