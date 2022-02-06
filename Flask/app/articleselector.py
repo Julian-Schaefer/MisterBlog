@@ -8,6 +8,7 @@ from urllib.parse import urlsplit
 import dateparser
 import pytz
 import tldextract
+from urllib.parse import urldefrag
 
 
 def bs_preprocess(html):
@@ -122,6 +123,7 @@ def get_articles(page, blogSelection):
             href = link_on_page["href"]
             if href.startswith("/"):
                 href = root_url + href
+            href = urldefrag(href)[0]
             if href not in article_urls:
                 article_urls += [href]
 
@@ -152,7 +154,7 @@ def get_invalid_article_paths(blog_url, article_paths, page_soup, compare_links)
                 if link["href"] == compare_link["href"]:
                     identical_links += 1
 
-        if identical_links > 1 or external_links > 0:
+        if identical_links >= len(links_on_page) or external_links > 0:
             invalid_article_paths += [article_path]
 
     return invalid_article_paths
