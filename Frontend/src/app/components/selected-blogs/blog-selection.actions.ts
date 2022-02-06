@@ -7,15 +7,26 @@ export const addBlogSelection = createAction(
 );
 
 export const getBlogSelection = createAction(
-    '[Blog Selection] Get'
+    '[Blog Selection] Get',
+    props<{ showLoadingIndicator: boolean }>()
 );
 
 export const getBlogSelectionSuccess = createAction(
     '[Blog Selection] Get Success',
-    props<{ blogSelections: SelectedBlog[] }>()
+    props<{ blogSelections: SelectedBlog[], hasChanged: boolean }>()
 );
 
 export const getBlogSelectionFailed = createAction(
     '[Blog Selection] Get Failed',
     props<{ error: string }>()
+);
+
+export const toggleBlogSelection = createAction(
+    '[Blog Selection] Toggle',
+    props<{ blogSelection: SelectedBlog }>()
+);
+
+export const deleteBlogSelection = createAction(
+    '[Blog Selection] Delete',
+    props<{ blogSelection: SelectedBlog }>()
 );

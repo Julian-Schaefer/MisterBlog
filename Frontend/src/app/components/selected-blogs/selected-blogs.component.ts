@@ -13,20 +13,20 @@ import { selectBlogSelectionState } from './blog-selection.reducer';
   styleUrls: ['./selected-blogs.component.css']
 })
 export class SelectedBlogsComponent implements OnInit {
-  @Output() selectedBlogsUpdated = new EventEmitter<string>();
-
   state$ = this.store.select(selectBlogSelectionState);
 
-  constructor(private dialog: MatDialog, private blogService: BlogService, public utilService: UtilService, private store: Store) { }
+  constructor(private dialog: MatDialog, public utilService: UtilService, private store: Store) { }
 
   ngOnInit(): void {
-    this.store.dispatch(actions.getBlogSelection());
+    this.store.dispatch(actions.getBlogSelection({ showLoadingIndicator: true }));
   }
 
-  updateSelectedBlogs(): void {
-    // this.blogService.setSelectedBlogs(this.selectedBlogs).subscribe(_ => {
-    //   this.selectedBlogsUpdated.emit();
-    // });
+  toggleSelectedBlog(selectedBlog: SelectedBlog): void {
+    this.store.dispatch(actions.toggleBlogSelection({ blogSelection: selectedBlog }));
+  }
+
+  deleteSelectedBlog(selectedBlog: SelectedBlog): void {
+    this.store.dispatch(actions.deleteBlogSelection({ blogSelection: selectedBlog }))
   }
 
   openDialog(): void {

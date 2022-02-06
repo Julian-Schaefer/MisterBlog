@@ -68,20 +68,18 @@ def handleSelectedBlogs():
                     new_blog_selection.is_selected = blogSelection['isSelected']
                     db.session.add(new_blog_selection)
             db.session.commit()
-            return {"message": f"Updated selected Blogs successfully"}
         else:
             return {"error": "The request payload is not in JSON format"}
 
-    elif request.method == 'GET':
-        blog_selections = db.session.query(
-            BlogSelection).filter_by(user_id=user_id)
-        results = [
-            {
-                "blogUrl": blog_selection.blog_url,
-                "isSelected": blog_selection.is_selected
-            } for blog_selection in blog_selections]
+    blog_selections = db.session.query(
+        BlogSelection).filter_by(user_id=user_id)
+    results = [
+        {
+            "blogUrl": blog_selection.blog_url,
+            "isSelected": blog_selection.is_selected
+        } for blog_selection in blog_selections]
 
-        return jsonify(results)
+    return jsonify(results)
 
 
 @bp.route("/blog-selection", methods=["GET"])
