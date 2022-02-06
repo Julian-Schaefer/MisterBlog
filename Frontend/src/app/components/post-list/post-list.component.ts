@@ -35,10 +35,6 @@ export class PostListComponent implements OnInit {
   }
 
   loadBlogPosts(): void {
-    if (this.loading) {
-      return;
-    }
-
     this.currentPage = 0;
     this.loading = true;
     this.blogService.getBlogPosts().subscribe(result => this.saveResult(result));
