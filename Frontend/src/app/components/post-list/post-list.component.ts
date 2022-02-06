@@ -1,24 +1,37 @@
-import { Component, HostListener } from '@angular/core';
+import { ForwardRefHandling } from '@angular/compiler';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { BlogService } from 'src/app/services/blog/blog.service';
 import { BlogPost } from 'src/app/services/BlogPost';
 import { ServiceResult, ServiceResultStatus } from 'src/app/services/ServiceResult';
 import { UtilService } from 'src/app/services/util.service';
+import { selectBlogSelectionState } from '../selected-blogs/blog-selection.reducer';
 
 @Component({
   selector: 'app-post-list',
   templateUrl: './post-list.component.html',
   styleUrls: ['./post-list.component.css']
 })
-export class PostListComponent {
+export class PostListComponent implements OnInit {
 
   loading: boolean;
   loadingMore: boolean;
   blogPosts: BlogPost[];
   private currentPage: number;
 
-  constructor(private blogService: BlogService, public utilService: UtilService) {
+  blogSelectionState$ = this.store.select(selectBlogSelectionState);
+
+  constructor(private blogService: BlogService, public utilService: UtilService, private store: Store) { }
+
+  ngOnInit(): void {
     this.loadBlogPosts();
+
+    this.blogSelectionState$.subscribe((state) => {
+      if (state.hasChanged) {
+        this.loadBlogPosts();
+      }
+    })
   }
 
   loadBlogPosts(): void {

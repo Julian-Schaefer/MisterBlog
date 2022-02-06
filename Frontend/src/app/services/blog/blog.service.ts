@@ -48,11 +48,15 @@ export class BlogService {
     return this.http.get<SelectedBlog[]>(this.baseUrl + "/blog-selection/selected");
   }
 
-  setSelectedBlogs(selectedBlogs: SelectedBlog[]): Observable<void> {
-    return this.http.post<void>(this.baseUrl + "/blog-selection/selected", selectedBlogs);
+  setSelectedBlogs(selectedBlogs: SelectedBlog[]): Observable<SelectedBlog[]> {
+    return this.http.post<SelectedBlog[]>(this.baseUrl + "/blog-selection/selected", selectedBlogs);
   }
 
   addSelectedBlog(selectedBlog: SelectedBlog): Observable<void> {
     return this.http.post<void>(this.baseUrl + "/blog-selection", selectedBlog);
+  }
+
+  deleteSelectedBlog(selectedBlog: SelectedBlog): Observable<void> {
+    return this.http.delete<void>(this.baseUrl + "/blog-selection", { body: selectedBlog });
   }
 }
