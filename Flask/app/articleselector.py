@@ -109,7 +109,11 @@ def longest_common_substring(firstString, secondString):
 def get_articles(page, blogSelection):
     article_selectors = blogSelection.article_selectors
     page_counter_url = blogSelection.page_counter_url
-    blog_page_url = page_counter_url.replace("{page-counter}", str(page))
+
+    if page > 1:
+        blog_page_url = page_counter_url.replace("{page-counter}", str(page))
+    else:
+        blog_page_url = blogSelection.blog_url
 
     page_soup = get_soup_from_url(blog_page_url)
 
