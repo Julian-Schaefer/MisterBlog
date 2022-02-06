@@ -160,8 +160,6 @@ def get_article_selectors(blog_url):
         blog_url, first_page_soup)
     second_article_paths = get_valid_article_paths(
         second_page_url, second_page_soup)
-    # third_article_paths = get_valid_article_paths(
-    #     third_page_url, third_page_soup)
 
     all_links_on_third_page = third_page_soup.find_all("a", href=True)
 
@@ -171,46 +169,14 @@ def get_article_selectors(blog_url):
     identical_article_paths.extend(get_identical_article_paths(
         second_article_paths, second_page_soup, all_links_on_third_page))
 
-    # identical_article_paths = []
-    # for second_article_path in second_article_paths:
-    #     for third_article_path in third_article_paths:
-    #         if selector_path_to_string(third_article_path) != selector_path_to_string(second_article_path):
-    #             continue
-
-    #         links_on_second_page = second_page_soup.select(
-    #             selector_path_to_string(second_article_path), href=True)
-    #         links_on_third_page = third_page_soup.select(
-    #             selector_path_to_string(third_article_path), href=True)
-
-    #         unidentical_links = 0
-
-    #         for link_on_second_page in links_on_second_page:
-    #             for link_on_third_page in links_on_third_page:
-    #                 if link_on_second_page['href'] != link_on_third_page['href']:
-    #                     unidentical_links += 1
-
-    #         if unidentical_links != len(link_on_second_page):
-    #             identical_article_paths += [second_article_path]
-
     total_article_paths = []
     total_article_paths.extend(first_article_paths)
     total_article_paths.extend(second_article_paths)
-    # total_article_paths.extend(third_article_paths)
-
-    #urls1 = get_article_urls(total_article_paths, blog_url, 1)
-    #urls2 = get_article_urls(total_article_paths, blog_url, 2)
-    #urls3 = get_article_urls(total_article_paths, blog_url, 3)
-    #identical = get_article_urls(identical_article_paths, blog_url, 1)
 
     final_article_paths = []
     for article_path in total_article_paths:
         if article_path not in identical_article_paths and article_path not in final_article_paths:
             final_article_paths += [article_path]
-
-    # TODO: Clean up duplicate Paths
-    urls1 = get_article_urls(final_article_paths, blog_url, 1)
-    urls2 = get_article_urls(final_article_paths, blog_url, 2)
-    urls3 = get_article_urls(final_article_paths, blog_url, 3)
 
     return final_article_paths
 
