@@ -126,7 +126,7 @@ def getBlogPosts():
         "content": article.article_html,
         "blogUrl": blog_url,
         "postUrl": article.url
-    } for (blog_url, article) in articles])
+    } for (blog_url, article) in cleaned_articles])
 
 
 @bp.route("/blog-selection/post", methods=["GET"])
