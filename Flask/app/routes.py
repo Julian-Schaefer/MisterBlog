@@ -40,7 +40,7 @@ def addBlogSelection():
             return {"error": "The specified Blog URL has already been added for this User."}, 409
 
         article_selectors = get_article_selectors(blog_url)
-        if len(article_selectors[0]) > 0:
+        if article_selectors and len(article_selectors[0]) > 0:
             new_blog_selection = BlogSelection(
                 blog_url=blog_url, user_id=user_id,
                 is_selected=True,
@@ -113,11 +113,11 @@ def getBlogPosts():
 
     cleaned_articles = []
     for article in articles:
-        if article[1].publish_date:
+        if article[1] and article[1].publish_date:
             cleaned_articles += [article]
 
-    cleaned_articles.sort(
-        key=lambda article: article[1].publish_date, reverse=True)
+    # cleaned_articles.sort(
+    #    key=lambda article: article[1].publish_date, reverse=True)
 
     return jsonify([{
         "title": article.title,

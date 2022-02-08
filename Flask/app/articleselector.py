@@ -123,11 +123,8 @@ def get_articles(page, blogSelection):
         links_on_page = page_soup.select(
             selector_path_to_string(article_selector), href=True)
 
-        root_url = get_root_url(blogSelection.blog_url)
         for link_on_page in links_on_page:
-            href = link_on_page["href"]
-            if href.startswith("/"):
-                href = root_url + href
+            href = get_href_from_link(blogSelection.blog_url, link_on_page)
             href = urldefrag(href)[0]
             if href not in article_urls:
                 article_urls += [href]
@@ -135,24 +132,35 @@ def get_articles(page, blogSelection):
     return (blogSelection, article_urls)
 
 
-def get_invalid_article_paths(blog_url, article_paths, page_soup, compare_links):
+def get_href_from_link(blog_url, link):
+    root_url = get_root_url(blog_url)
+    href = link["href"]
+    if href.startswith("/"):
+        return root_url + href
+
+    return href
+
+
+def get_invalid_article_paths(blog_url, article_paths, page_soup, compare_soup):
+    compare_links = compare_soup.find_all("a", href=True)
+
     invalid_article_paths = []
     for article_path in article_paths:
         links_on_page = page_soup.select(
             selector_path_to_string(article_path), href=True)
+        links_on_compare_page = compare_soup.select(
+            selector_path_to_string(article_path), href=True)
+        hrefs_on_page = [get_href_from_link(
+            blog_url, link) for link in links_on_page]
+        hrefs_on_compare_page = [get_href_from_link(
+            blog_url, link) for link in links_on_compare_page]
 
         identical_links = 0
         external_links = 0
         domain = get_domain(blog_url)
-        for link in links_on_page:
-            href = link["href"]
-            if not href.startswith("/"):
-                if domain not in href:
-                    external_links += 1
-
-            for compare_link in compare_links:
-                if href == compare_link["href"]:
-                    identical_links += 1
+        for href in hrefs_on_page:
+            if domain not in href:
+                external_links += 1
 
         for link in links_on_page:
             for compare_link in compare_links:
@@ -160,6 +168,14 @@ def get_invalid_article_paths(blog_url, article_paths, page_soup, compare_links)
                     identical_links += 1
 
         if identical_links >= len(links_on_page) or external_links > 0:
+            invalid_article_paths += [article_path]
+            continue
+
+        first_article = download_article(hrefs_on_page[0])
+        first_compare_article = download_article(hrefs_on_compare_page[0])
+        if ((first_article.summary and len(first_article.summary) > 0 and
+             first_article.summary == first_compare_article.summary) or
+                first_article.article_html == first_compare_article.article_html):
             invalid_article_paths += [article_path]
 
     return invalid_article_paths
@@ -182,13 +198,11 @@ def get_article_selectors(blog_url):
     second_article_paths = get_valid_article_paths(
         second_page_url, second_page_soup)
 
-    all_links_on_third_page = third_page_soup.find_all("a", href=True)
-
     invalid_article_paths = []
     invalid_article_paths.extend(get_invalid_article_paths(blog_url,
-                                                           first_article_paths, first_page_soup, all_links_on_third_page))
+                                                           first_article_paths, first_page_soup, third_page_soup))
     invalid_article_paths.extend(get_invalid_article_paths(blog_url,
-                                                           second_article_paths, second_page_soup, all_links_on_third_page))
+                                                           second_article_paths, second_page_soup, third_page_soup))
 
     total_article_paths = []
     total_article_paths.extend(first_article_paths)
@@ -214,10 +228,7 @@ def get_article_urls(article_paths, blog_url, page):
     for article_path in article_paths:
         links = soup.select(selector_path_to_string(article_path), href=True)
         for link in links:
-            href = link["href"]
-            if href.startswith("/"):
-                href = get_root_url(blog_url) + href
-
+            href = get_href_from_link(blog_url, link)
             if href not in urls:
                 urls += [href]
 
@@ -304,9 +315,7 @@ def get_valid_article_paths(url, soup):
         if links and len(links) > 0:
             firstLink = links[0]
             if firstLink.has_attr("href"):
-                href = firstLink["href"]
-                if not (href.startswith("http://") or href.startswith("https://")):
-                    href = get_root_url(url) + href
+                href = get_href_from_link(url, firstLink)
                 article = download_article(href)
                 if article and article.publish_date:
                     valid_article_paths += [article_path]
