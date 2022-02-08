@@ -51,15 +51,16 @@ def get_css_path(node):
 def get_page_counter_url(url):
     soup = get_soup_from_url(url)
 
-    possible_links = []
+    possible_hrefs = []
     for link in soup.find_all('a', href=True):
         href = link["href"]
         if "2" in href:
-            possible_links += [link]
+            possible_hrefs += [href]
 
-    for link in possible_links:
+    possible_hrefs.sort(key=len)
+
+    for href in possible_hrefs:
         try:
-            href = link["href"]
             if href.startswith("/"):
                 href = get_root_url(url) + href
 
@@ -166,6 +167,9 @@ def get_invalid_article_paths(blog_url, article_paths, page_soup, compare_links)
 
 def get_article_selectors(blog_url):
     page_counter_url = get_page_counter_url(blog_url)
+    if not page_counter_url:
+        return None
+
     second_page_url = page_counter_url.replace("{page-counter}", str(2))
     third_page_url = page_counter_url.replace("{page-counter}", str(3))
 
