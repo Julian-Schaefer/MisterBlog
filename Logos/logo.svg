@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.2 (b8e25be8, 2022-02-05)"
+   sodipodi:docname="logo.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="1.3808221"
+     inkscape:cx="135.06447"
+     inkscape:cy="726.01676"
+     inkscape:window-width="1312"
+     inkscape:window-height="955"
+     inkscape:window-x="2240"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#000080;stroke-width:0.264583"
+       id="rect10183"
+       width="127.23096"
+       height="67.064514"
+       x="21.077419"
+       y="157.12257" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:Dosis;-inkscape-font-specification:'Dosis Medium';fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="54.41806"
+       y="193.1458"
+       id="text781"><tspan
+         sodipodi:role="line"
+         id="tspan779"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:Dosis;-inkscape-font-specification:'Dosis Medium';fill:#ffffff;stroke-width:0.264583"
+         x="54.41806"
+         y="193.1458">Mister</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:11.1345px;line-height:1.25;font-family:sans-serif;fill:#d4d600;fill-opacity:1;stroke:none;stroke-width:0.278364"
+       x="80.25769"
+       y="192.59369"
+       id="text5723"
+       transform="scale(0.99788407,1.0021204)"><tspan
+         sodipodi:role="line"
+         id="tspan5721"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Lobster;-inkscape-font-specification:Lobster;fill:#d4d600;stroke-width:0.278364;fill-opacity:1"
+         x="80.25769"
+         y="192.59369">Blog</tspan></text>
+  </g>
+</svg>
