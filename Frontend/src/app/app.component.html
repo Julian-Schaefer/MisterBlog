@@ -5,11 +5,24 @@
         </div>
 
         <div style="float: right;">
-            <p id="greeting" *ngIf="authService.user" style="float: left;">Hello, {{authService.user.displayName}}!</p>
-            <div *ngIf="authService.user" id="sign-out-container">
-                <button mat-raised-button color="primary" (click)="authService.signOut()" style="float: left;">Sign
-                    out</button>
+            <div *ngIf="authService.user; else loggedOut">
+                <p id="greeting" style="float: left;">Hello, {{authService.user.displayName}}!
+                </p>
+                <div id="authentication-container">
+                    <button mat-raised-button color="primary" (click)="authService.signOut()">Sign
+                        out</button>
+                </div>
             </div>
+
+            <ng-template #loggedOut>
+                <div id="authentication-container">
+                    <a [routerLink]="['/sign-in']"><button mat-raised-button color="primary">Sign
+                            in</button></a>
+                    <p style="margin: 12px;">or</p>
+                    <a [routerLink]="['/sign-up']"><button mat-raised-button color="primary">Sign
+                            up</button></a>
+                </div>
+            </ng-template>
         </div>
     </div>
 </div>

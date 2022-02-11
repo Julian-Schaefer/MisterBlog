@@ -8,6 +8,7 @@ import { VerifyEmailComponent } from './components/authentication/verify-email/v
 import { PostListComponent } from './components/post-list/post-list.component';
 import { PostComponent } from './components/post/post.component';
 import { AuthGuard } from './guards/auth.guard';
+import { AboutComponent } from './components/about/about.component';
 
 
 
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'preview', component: PreviewComponent, canActivate: [AuthGuard] },
   { path: 'post', component: PostComponent, canActivate: [AuthGuard] },
   // Unauthenticated
+  { path: 'about', component: AboutComponent },
   { path: 'sign-in', component: SignInComponent },
   { path: 'sign-up', component: SignUpComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
