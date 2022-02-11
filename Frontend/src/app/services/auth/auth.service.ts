@@ -100,7 +100,7 @@ export class AuthService {
         } else {
             this.user = null;
             localStorage.removeItem('user');
-            this.router.navigate(['sign-in']);
+            this.router.navigate(['about']);
         }
     }
 

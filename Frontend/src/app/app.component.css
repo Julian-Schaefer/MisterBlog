@@ -30,7 +30,7 @@ p#greeting {
     margin-right: 20px;
 }
 
-div#sign-out-container {
+div#authentication-container {
     display: flex;
     justify-content: center;
     align-items: center;

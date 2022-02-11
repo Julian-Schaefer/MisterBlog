@@ -47,6 +47,7 @@ import * as blogSelectionReducer from 'src/app/components/selected-blogs/blog-se
 import { BlogSelectionEffects } from './components/selected-blogs/blog-selection.effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from 'src/environments/environment';
+import { AboutComponent } from './components/about/about.component';
 
 export const interceptorProviders =
     [
@@ -74,7 +75,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         SafeURLPipe,
         SelectedBlogsComponent,
         AddBlogDialogComponent,
-        DateProxyPipe
+        DateProxyPipe,
+        AboutComponent
     ],
     imports: [
         BrowserModule,
