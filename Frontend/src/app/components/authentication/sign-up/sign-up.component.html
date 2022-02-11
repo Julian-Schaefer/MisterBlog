@@ -5,7 +5,7 @@
         <mat-label>E-Mail</mat-label>
         <input matInput type="email" #userEmail required>
     </mat-form-field>
-    
+
     <br>
 
     <mat-form-field class="input-form-field">
@@ -29,13 +29,13 @@
         <span>Or</span>
     </div>
 
-    <button mat-raised-button color="primary" (click)="authService.signInWithGoogle()">
-        <i class="fab fa-google-plus-g"></i>
+    <button mat-raised-button color="white" (click)="authService.signInWithGoogle()">
+        <mat-icon svgIcon="google_signin"></mat-icon>
         Continue with Google
     </button>
 
     <button mat-raised-button color="primary" (click)="authService.signInWithFacebook()" style="margin-left: 20px;">
-        <i class="fab fa-facebook"></i>
+        <mat-icon>facebook</mat-icon>
         Continue with Facebook
     </button>
 
