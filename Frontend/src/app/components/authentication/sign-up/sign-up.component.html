@@ -31,14 +31,14 @@
 
     <button mat-raised-button color="white" (click)="authService.signInWithGoogle()">
         <mat-icon svgIcon="google_signin"></mat-icon>
-        Continue with Google
+        Sign up with Google
     </button>
 
     <button mat-raised-button color="primary" (click)="authService.signInWithFacebook()" style="margin-left: 20px;">
-        <mat-icon>facebook</mat-icon>
-        Continue with Facebook
+        <mat-icon style="transform: scale(1.2);">facebook</mat-icon>
+        Sign up with Facebook
     </button>
 
     <br>
-    <span>Already have an account? <a routerLink="/sign-in">Sign In</a></span>
+    <span>Already have an account? <a routerLink="/sign-in">Sign in</a> instead.</span>
 </mat-card>

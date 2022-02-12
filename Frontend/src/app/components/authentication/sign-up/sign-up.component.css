@@ -1,9 +1,18 @@
 mat-card#sign-in {
     margin: auto;
-    width: 500px;
+    width: 480px;
     margin-top: 20px;
 }
 
 .input-form-field {
     width: 100%;
 }
+
+.mat-raised-button {
+    margin: 8px;
+}
+
+.mat-raised-button .mat-icon {
+    margin-top: -1px;
+    margin-right: 8px;
+ }

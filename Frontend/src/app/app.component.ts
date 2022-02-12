@@ -18,9 +18,10 @@ export class AppComponent {
     translateService.addLangs(['de', 'en']);
     const defaultLang = this.translateService.getBrowserLang();
 
-    this.matIconRegistry.addSvgIcon("google_signin",
-      this.domSanitizer.bypassSecurityTrustResourceUrl('./assets/svg/google_signin.svg'));
     this.translateService.setDefaultLang(defaultLang);
     this.translateService.use(defaultLang);
+
+    this.matIconRegistry.addSvgIcon("google_signin",
+      this.domSanitizer.bypassSecurityTrustResourceUrl('./assets/svg/google_signin.svg'));
   }
 }
