@@ -1,0 +1,22 @@
+div.social-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 16px;
+}
+
+.mat-twitter {
+   background-color: #1d9bf0;
+}
+
+.mat-black {
+   background-color: black;
+}
+
+.mat-facebook {
+  background-color: #2374E1;
+}
+
+.mat-fab {
+   color: white;
+}

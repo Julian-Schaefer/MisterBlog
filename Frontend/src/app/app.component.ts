@@ -23,5 +23,9 @@ export class AppComponent {
 
     this.matIconRegistry.addSvgIcon("google_signin",
       this.domSanitizer.bypassSecurityTrustResourceUrl('./assets/svg/google_signin.svg'));
+    this.matIconRegistry.addSvgIcon("twitter",
+      this.domSanitizer.bypassSecurityTrustResourceUrl('./assets/svg/twitter.svg'));
+    this.matIconRegistry.addSvgIcon("apple",
+      this.domSanitizer.bypassSecurityTrustResourceUrl('./assets/svg/apple.svg'));
   }
 }

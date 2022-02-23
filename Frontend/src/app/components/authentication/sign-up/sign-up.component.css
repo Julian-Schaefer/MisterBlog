@@ -7,12 +7,3 @@ mat-card#sign-in {
 .input-form-field {
     width: 100%;
 }
-
-.mat-raised-button {
-    margin: 8px;
-}
-
-.mat-raised-button .mat-icon {
-    margin-top: -1px;
-    margin-right: 8px;
- }

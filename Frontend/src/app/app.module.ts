@@ -24,6 +24,7 @@ import { PreviewComponent } from './components/preview/preview.component';
 import { ErrorDialogComponent } from './components/error-dialog/error-dialog.component';
 import { SignInComponent } from './components/authentication/sign-in/sign-in.component';
 import { SignUpComponent } from './components/authentication/sign-up/sign-up.component';
+import { SocialSignInComponent } from './components/authentication/social-sign-in/social-sign-in.component';
 import { ForgotPasswordComponent } from './components/authentication/forgot-password/forgot-password.component';
 import { VerifyEmailComponent } from './components/authentication/verify-email/verify-email.component';
 import { PostListComponent } from './components/post-list/post-list.component';
@@ -76,7 +77,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         SelectedBlogsComponent,
         AddBlogDialogComponent,
         DateProxyPipe,
-        AboutComponent
+        AboutComponent,
+        SocialSignInComponent
     ],
     imports: [
         BrowserModule,
