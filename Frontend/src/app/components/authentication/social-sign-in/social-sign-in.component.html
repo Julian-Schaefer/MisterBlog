@@ -1,0 +1,17 @@
+<div class="social-container">
+    <button mat-fab color="white" (click)="authService.signInWithGoogle()">
+        <mat-icon svgIcon="google_signin" style="transform: scale(1.3);"></mat-icon>
+    </button>
+
+    <button mat-fab color="facebook" (click)="authService.signInWithFacebook()" style="margin-left: 20px;">
+        <mat-icon style="transform: scale(1.6);">facebook</mat-icon>
+    </button>
+
+    <button mat-fab color="twitter" (click)="authService.signInWithFacebook()" style="margin-left: 20px;">
+        <mat-icon svgIcon="twitter" style="transform: scale(1.2);"></mat-icon>
+    </button>
+
+    <button mat-fab color="black" (click)="authService.signInWithFacebook()" style="margin-left: 20px;">
+        <mat-icon svgIcon="apple" style="transform: scale(1.3) translate(0, -1px);"></mat-icon>
+    </button>
+</div>
