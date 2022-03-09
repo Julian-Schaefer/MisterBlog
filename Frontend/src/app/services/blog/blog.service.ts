@@ -28,14 +28,17 @@ export class BlogService {
       let relativeUrl = "/blog-selection";
       relativeUrl += "?page=" + page;
 
-      this.http.get<BlogPost[]>(this.baseUrl + relativeUrl).subscribe(blogPosts => {
-        if (page > 0) {
-          let previousBlogPosts = JSON.parse(blogPostString) as BlogPost[];
-          blogPosts = previousBlogPosts.concat(blogPosts);
-        }
+      this.http.get<BlogPost[]>(this.baseUrl + relativeUrl).subscribe({
+        next: blogPosts => {
+          if (page > 0) {
+            let previousBlogPosts = JSON.parse(blogPostString) as BlogPost[];
+            blogPosts = previousBlogPosts.concat(blogPosts);
+          }
 
-        localStorage.setItem(this.BLOG_POST_KEY, JSON.stringify(blogPosts));
-        observer.next({ status: ServiceResultStatus.FINISHED, content: blogPosts });
+          localStorage.setItem(this.BLOG_POST_KEY, JSON.stringify(blogPosts));
+          observer.next({ status: ServiceResultStatus.FINISHED, content: blogPosts });
+        },
+        error: error => observer.error(error)
       });
     });
   }

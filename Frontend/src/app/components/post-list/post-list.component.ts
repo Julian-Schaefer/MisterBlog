@@ -1,6 +1,6 @@
 import { ForwardRefHandling } from '@angular/compiler';
 import { Component, HostListener, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { BlogService } from 'src/app/services/blog/blog.service';
 import { BlogPost } from 'src/app/services/BlogPost';
@@ -22,7 +22,13 @@ export class PostListComponent implements OnInit {
 
   blogSelectionState$ = this.store.select(selectBlogSelectionState);
 
-  constructor(private blogService: BlogService, public utilService: UtilService, private store: Store) { }
+  constructor(private blogService: BlogService, public utilService: UtilService, private store: Store, private router: Router) {
+    this.router.events.subscribe(evt => {
+      if (evt instanceof NavigationEnd) {
+        this.loadBlogPosts();
+      }
+    })
+  }
 
   ngOnInit(): void {
     this.loadBlogPosts();
@@ -37,7 +43,10 @@ export class PostListComponent implements OnInit {
   loadBlogPosts(): void {
     this.currentPage = 0;
     this.loading = true;
-    this.blogService.getBlogPosts().subscribe(result => this.saveResult(result));
+    this.blogService.getBlogPosts(this.currentPage).subscribe({
+      next: result => this.saveResult(result),
+      error: error => this.handleError(error)
+    });
   }
 
   loadMoreBlogPosts(): void {
@@ -46,7 +55,10 @@ export class PostListComponent implements OnInit {
     }
 
     this.loadingMore = true;
-    this.blogService.getBlogPosts(this.currentPage).subscribe(result => this.saveResult(result));
+    this.blogService.getBlogPosts(this.currentPage).subscribe({
+      next: result => this.saveResult(result),
+      error: error => this.handleError(error)
+    });
   }
 
   private saveResult(blogPostsResult: ServiceResult<BlogPost[]>) {
@@ -57,6 +69,11 @@ export class PostListComponent implements OnInit {
       this.loading = false;
       this.loadingMore = false;
     }
+  }
+
+  private handleError(error: any) {
+    this.loading = false;
+    this.loadingMore = false;
   }
 
   @HostListener("window:scroll", [])

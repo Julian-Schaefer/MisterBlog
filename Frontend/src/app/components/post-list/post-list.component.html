@@ -2,7 +2,6 @@
     <div style="width: 620px;">
         <div style="margin-bottom: 20px;">
             <mat-spinner *ngIf="loading" diameter="42" style="margin: auto;"></mat-spinner>
-            <button *ngIf="!loading" mat-raised-button color="primary" (click)="loadBlogPosts()">Refresh</button>
         </div>
 
         <div *ngIf="blogPosts && blogPosts.length > 0">
