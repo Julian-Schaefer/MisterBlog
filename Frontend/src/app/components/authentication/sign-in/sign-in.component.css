@@ -9,3 +9,12 @@ mat-card#sign-in {
 .input-form-field {
     width: 100%;
 }
+
+div#bottom-bar {
+    padding: 20px;
+    text-align: center;
+    border: 1.2px solid darkblue;
+    border-radius: 20px;
+    box-shadow: 0px 0px 2px #888888;
+    margin-top: 20px;
+}

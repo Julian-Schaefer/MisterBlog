@@ -15,12 +15,13 @@ p#from {
     float: left;
 }
 
-p#author {
+p#authors {
     float: right;
 }
 
 p#introduction {
     clear: both;
+	text-align: justify;
 }
 
 button#continue-reading-button {
