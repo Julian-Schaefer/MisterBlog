@@ -1,7 +1,7 @@
-import { ForwardRefHandling } from '@angular/compiler';
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { Subscription } from 'rxjs';
 import { BlogService } from 'src/app/services/blog/blog.service';
 import { BlogPost } from 'src/app/services/BlogPost';
 import { ServiceResult, ServiceResultStatus } from 'src/app/services/ServiceResult';
@@ -13,17 +13,19 @@ import { selectBlogSelectionState } from '../selected-blogs/blog-selection.reduc
   templateUrl: './post-list.component.html',
   styleUrls: ['./post-list.component.css']
 })
-export class PostListComponent implements OnInit {
+export class PostListComponent implements OnInit, OnDestroy {
 
   loading: boolean;
   loadingMore: boolean;
   blogPosts: BlogPost[];
+
   private currentPage: number;
+  private routerEventSubscription: Subscription;
 
   blogSelectionState$ = this.store.select(selectBlogSelectionState);
 
   constructor(private blogService: BlogService, public utilService: UtilService, private store: Store, private router: Router) {
-    this.router.events.subscribe(evt => {
+    this.routerEventSubscription = this.router.events.subscribe(evt => {
       if (evt instanceof NavigationEnd) {
         this.loadBlogPosts();
       }
@@ -40,7 +42,17 @@ export class PostListComponent implements OnInit {
     })
   }
 
+  ngOnDestroy() {
+    if (this.routerEventSubscription) {
+      this.routerEventSubscription.unsubscribe();
+    }
+  }
+
   loadBlogPosts(): void {
+    if (this.loading) {
+      return;
+    }
+
     this.currentPage = 0;
     this.loading = true;
     this.blogService.getBlogPosts(this.currentPage).subscribe({

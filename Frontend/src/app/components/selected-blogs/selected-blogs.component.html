@@ -1,7 +1,7 @@
 <mat-card>
     <div *ngIf="(state$ | async)?.loading === false && (state$ | async) as state; else loading">
 
-        <h1>Selected Blogs:</h1>
+        <h2>Selected Blogs:</h2>
         <div *ngIf="!state.error">
 
             <ul>
