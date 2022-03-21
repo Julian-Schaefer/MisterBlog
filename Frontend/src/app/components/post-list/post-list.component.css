@@ -1,5 +1,7 @@
-#blog-post-card {
+mat-card#blog-post-card {
     margin-bottom: 32px;
+    border-radius: 25px;
+    padding: 25px;
 }
 
 a#blog-post-link {
