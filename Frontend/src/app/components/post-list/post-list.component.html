@@ -10,7 +10,8 @@
                     [queryParams]="{ url: blogPost.postUrl }">
                     <h2 id=" blog-post-title">{{blogPost.title}}</h2>
                 </a>
-                <p id="from">From {{utilService.getHostname(blogPost.blogUrl)}}</p>
+                <p id="from">From <a [href]="blogPost.blogUrl"
+                        target="_blank">{{utilService.getHostname(blogPost.blogUrl)}}</a></p>
                 <p id="authors">
                     By
                     <span>{{blogPost.authors.join(', ')}}</span>
