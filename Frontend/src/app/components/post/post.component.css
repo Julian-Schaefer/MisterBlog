@@ -13,26 +13,25 @@ mat-card#blog-post {
     margin-right: auto; 
     margin-top: 20px; 
     margin-bottom: 100px; 
-    padding: 48px;
     padding-bottom: 20px;
     text-align: justify;
     border-radius: 25px;
-    padding: 25px;
+    padding: 48px;
 }
 
-mat-card div p {
+div#content p {
     font-size: 16px;
     line-height: 26px;
 }
 
-mat-card div code {
+div#content code {
     background: rgb(242, 242, 242);
     padding: 20px;
     display: block;
     font-family: monospace;
 }
 
-mat-card img {
+div#content img {
     border: rgba(0, 0, 0, 0.3) 1px solid;
     margin: 20px;
     box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
@@ -41,6 +40,6 @@ mat-card img {
     margin-right: auto;
 }
 
-mat-card * {
+div#content * {
     max-width: 840px;
 }

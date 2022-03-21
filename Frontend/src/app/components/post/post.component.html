@@ -2,9 +2,18 @@
 
 <mat-card *ngIf="blogPost" id="blog-post">
     <h1><b>{{blogPost.title}}</b></h1>
-    <p>By {{blogPost.authors.join(', ')}} on {{blogPost.date | date | async}}</p>
-    <div [innerHTML]="blogPost.content | safeHtml"></div>
 
+    <p style="float: left;">From <a [href]="blogPost.blogUrl"
+            target="_blank">{{utilService.getHostname(blogPost.blogUrl)}}</a></p>
+    <p style="float: right;">By {{blogPost.authors.join(', ')}} on {{blogPost.date | date | async}}</p>
+    <div style="clear: both;"></div>
+
+    <mat-divider></mat-divider>
+    <div style="height: 20px;"></div>
+
+    <div id="content" [innerHTML]="blogPost.content | safeHtml"></div>
+
+    <div style="height: 20px;"></div>
     <mat-divider></mat-divider>
     <button id="original-post-button" mat-raised-button color="primary">
         <a id="original-post-link" target="_blank" rel="noopener noreferrer" href="{{blogPost.postUrl}}">Go to original
