@@ -5,8 +5,8 @@ import { UtilService } from 'src/app/services/util.service';
 import { SelectedBlog } from 'src/app/services/SelectedBlog';
 import { AddBlogDialogComponent } from '../add-blog-dialog/add-blog-dialog.component';
 import { Store } from '@ngrx/store';
-import * as actions from './blog-selection.actions';
-import { selectBlogSelectionState } from './blog-selection.reducer';
+import * as actions from './redux/blog-selection.actions';
+import { selectBlogSelectionState } from './redux/blog-selection.reducer';
 @Component({
   selector: 'selected-blogs',
   templateUrl: './selected-blogs.component.html',
