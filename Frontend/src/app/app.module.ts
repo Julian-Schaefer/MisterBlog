@@ -44,8 +44,8 @@ import { AddBlogDialogComponent } from './components/add-blog-dialog/add-blog-di
 import { DateProxyPipe } from './pipes/date-proxy.pipe';
 import { registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
-import * as blogSelectionReducer from 'src/app/components/selected-blogs/blog-selection.reducer';
-import { BlogSelectionEffects } from './components/selected-blogs/blog-selection.effects';
+import * as blogSelectionReducer from 'src/app/components/selected-blogs/redux/blog-selection.reducer';
+import { BlogSelectionEffects } from './components/selected-blogs/redux/blog-selection.effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from 'src/environments/environment';
 import { AboutComponent } from './components/about/about.component';

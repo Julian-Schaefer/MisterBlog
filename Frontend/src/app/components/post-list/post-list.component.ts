@@ -6,7 +6,7 @@ import { BlogService } from 'src/app/services/blog/blog.service';
 import { BlogPost } from 'src/app/services/BlogPost';
 import { ServiceResult, ServiceResultStatus } from 'src/app/services/ServiceResult';
 import { UtilService } from 'src/app/services/util.service';
-import { selectBlogSelectionState } from '../selected-blogs/blog-selection.reducer';
+import { selectBlogSelectionState } from '../selected-blogs/redux/blog-selection.reducer';
 
 @Component({
   selector: 'app-post-list',
