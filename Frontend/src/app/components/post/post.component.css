@@ -16,6 +16,8 @@ mat-card#blog-post {
     padding: 48px;
     padding-bottom: 20px;
     text-align: justify;
+    border-radius: 25px;
+    padding: 25px;
 }
 
 mat-card div p {
