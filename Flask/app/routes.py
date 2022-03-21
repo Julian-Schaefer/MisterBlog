@@ -136,10 +136,6 @@ def getBlogPostFromUrl():
 
     article = download_article(url)
 
-    # https://newspaper.readthedocs.io/en/latest/user_guide/advanced.html
-    article.clean_doc
-    article.clean_top_node
-
     return jsonify({
         "title": article.title,
         "date": article.publish_date.isoformat(),
