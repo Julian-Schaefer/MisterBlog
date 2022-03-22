@@ -17,26 +17,21 @@ export class BlogService {
 
   constructor(private http: HttpClient) { }
 
-  getBlogPosts(page: number = 0): Observable<ServiceResult<BlogPost[]>> {
-    return new Observable<ServiceResult<BlogPost[]>>(observer => {
-      let blogPostString = localStorage.getItem(this.BLOG_POST_KEY);
-      if (blogPostString) {
-        let blogPosts = JSON.parse(blogPostString) as BlogPost[];
-        observer.next({ status: ServiceResultStatus.STARTED, content: blogPosts });
-      }
-
+  getBlogPosts(page: number = 0): Observable<BlogPost[]> {
+    return new Observable<BlogPost[]>(observer => {
       let relativeUrl = "/blog-selection";
       relativeUrl += "?page=" + page;
 
       this.http.get<BlogPost[]>(this.baseUrl + relativeUrl).subscribe({
         next: blogPosts => {
           if (page > 0) {
+            let blogPostString = localStorage.getItem(this.BLOG_POST_KEY);
             let previousBlogPosts = JSON.parse(blogPostString) as BlogPost[];
             blogPosts = previousBlogPosts.concat(blogPosts);
           }
 
           localStorage.setItem(this.BLOG_POST_KEY, JSON.stringify(blogPosts));
-          observer.next({ status: ServiceResultStatus.FINISHED, content: blogPosts });
+          observer.next(blogPosts);
         },
         error: error => observer.error(error)
       });

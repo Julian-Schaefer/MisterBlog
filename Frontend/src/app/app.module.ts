@@ -16,7 +16,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -44,8 +44,10 @@ import { AddBlogDialogComponent } from './components/add-blog-dialog/add-blog-di
 import { DateProxyPipe } from './pipes/date-proxy.pipe';
 import { registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
+import * as postListReducer from 'src/app/components/post-list/redux/post-list.reducer';
 import * as blogSelectionReducer from 'src/app/components/selected-blogs/redux/blog-selection.reducer';
 import { BlogSelectionEffects } from './components/selected-blogs/redux/blog-selection.effects';
+import { PostListEffects } from './components/post-list/redux/post-list.effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from 'src/environments/environment';
 import { AboutComponent } from './components/about/about.component';
@@ -105,8 +107,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
                 deps: [HttpClient]
             }
         }),
-        StoreModule.forRoot({ blogSelection: blogSelectionReducer.reducer }),
-        EffectsModule.forRoot([BlogSelectionEffects]),
+        StoreModule.forRoot({ blogSelection: blogSelectionReducer.reducer, postList: postListReducer.reducer }),
+        EffectsModule.forRoot([BlogSelectionEffects, PostListEffects]),
         MatButtonModule,
         MatDialogModule,
         MatInputModule,

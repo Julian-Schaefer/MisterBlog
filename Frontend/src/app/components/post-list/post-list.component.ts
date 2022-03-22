@@ -6,7 +6,9 @@ import { BlogService } from 'src/app/services/blog/blog.service';
 import { BlogPost } from 'src/app/services/BlogPost';
 import { ServiceResult, ServiceResultStatus } from 'src/app/services/ServiceResult';
 import { UtilService } from 'src/app/services/util.service';
+import { selectPostListState } from './redux/post-list.reducer';
 import { selectBlogSelectionState } from '../selected-blogs/redux/blog-selection.reducer';
+import * as actions from './redux/post-list.actions';
 
 @Component({
   selector: 'app-post-list',
@@ -15,16 +17,12 @@ import { selectBlogSelectionState } from '../selected-blogs/redux/blog-selection
 })
 export class PostListComponent implements OnInit, OnDestroy {
 
-  loading: boolean;
-  loadingMore: boolean;
-  blogPosts: BlogPost[];
-
-  private currentPage: number;
   private routerEventSubscription: Subscription;
 
+  state$ = this.store.select(selectPostListState);
   blogSelectionState$ = this.store.select(selectBlogSelectionState);
 
-  constructor(private blogService: BlogService, public utilService: UtilService, private store: Store, private router: Router) {
+  constructor(public utilService: UtilService, private store: Store, private router: Router) {
     this.routerEventSubscription = this.router.events.subscribe(evt => {
       if (evt instanceof NavigationEnd) {
         this.loadBlogPosts();
@@ -35,8 +33,8 @@ export class PostListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadBlogPosts();
 
-    this.blogSelectionState$.subscribe((state) => {
-      if (state.hasChanged) {
+    this.blogSelectionState$.subscribe((blogSelectionState) => {
+      if (blogSelectionState.hasChanged) {
         this.loadBlogPosts();
       }
     })
@@ -49,50 +47,17 @@ export class PostListComponent implements OnInit, OnDestroy {
   }
 
   loadBlogPosts(): void {
-    if (this.loading) {
-      return;
-    }
-
-    this.currentPage = 0;
-    this.loading = true;
-    this.blogService.getBlogPosts(this.currentPage).subscribe({
-      next: result => this.saveResult(result),
-      error: error => this.handleError(error)
-    });
+    this.store.dispatch(actions.refreshPostList());
   }
 
   loadMoreBlogPosts(): void {
-    if (this.loadingMore || this.currentPage == 0) {
-      return;
-    }
-
-    this.loadingMore = true;
-    this.blogService.getBlogPosts(this.currentPage).subscribe({
-      next: result => this.saveResult(result),
-      error: error => this.handleError(error)
-    });
-  }
-
-  private saveResult(blogPostsResult: ServiceResult<BlogPost[]>) {
-    this.blogPosts = blogPostsResult.content;
-    this.currentPage++;
-
-    if (blogPostsResult.status == ServiceResultStatus.FINISHED) {
-      this.loading = false;
-      this.loadingMore = false;
-    }
-  }
-
-  private handleError(error: any) {
-    this.loading = false;
-    this.loadingMore = false;
+    this.store.dispatch(actions.loadMorePostList());
   }
 
   @HostListener("window:scroll", [])
   onScroll(): void {
-    if (this.blogPosts && this.blogPosts.length > 0)
-      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-        this.loadMoreBlogPosts();
-      }
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+      this.loadMoreBlogPosts();
+    }
   }
 }
