@@ -73,11 +73,14 @@ def handleSelectedBlogs():
 
     blog_selections = db.session.query(
         BlogSelection).filter_by(user_id=user_id)
+
     results = [
         {
             "blogUrl": blog_selection.blog_url,
             "isSelected": blog_selection.is_selected
         } for blog_selection in blog_selections]
+
+    results.sort(key=lambda result: result.get('blogUrl'))
 
     return jsonify(results)
 

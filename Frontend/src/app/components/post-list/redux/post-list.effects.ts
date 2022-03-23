@@ -20,8 +20,7 @@ export class PostListEffects {
                         map(blogPosts => {
                             return PostListActions.getPostListSuccess({ blogPosts })
                         }),
-                        catchError(error => of(PostListActions.getPostListFailed({ error }))),
-                        take(1)
+                        catchError(error => of(PostListActions.getPostListFailed({ error })))
                     )
             })
         )
