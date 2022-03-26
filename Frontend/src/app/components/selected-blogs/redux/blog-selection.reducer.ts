@@ -24,11 +24,11 @@ export const reducer = createReducer(
         return ({ ...state, loading: false, selectedBlogs: blogSelections, hasChanged })
     }),
     on(BlogSelectionActions.getBlogSelectionFailed, (state, { error }) => ({ ...state, loading: false, error: error, hasChanged: false })),
-    on(BlogSelectionActions.toggleBlogSelection, (state, { blogSelection }) => {
-        const toggledBlogSelection: SelectedBlog = { ...blogSelection, isSelected: !blogSelection.isSelected };
+    on(BlogSelectionActions.toggleBlogSelection, (state, { toggledBlogSelection }) => {
         const newSelectedBlogs: SelectedBlog[] = [];
+
         for (const currentBlogSelection of state.selectedBlogs) {
-            if (currentBlogSelection.blogUrl !== blogSelection.blogUrl) {
+            if (currentBlogSelection.blogUrl !== toggledBlogSelection.blogUrl) {
                 newSelectedBlogs.push(currentBlogSelection);
             } else {
                 newSelectedBlogs.push(toggledBlogSelection);
