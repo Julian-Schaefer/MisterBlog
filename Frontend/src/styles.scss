@@ -21,10 +21,37 @@
 // emit any typography styles.
 //@include mat.button-theme($my-theme);
 
+// Input Field START
+.mat-form-field-invalid div.mat-form-field-flex{
+  border: red 1px solid !important;
+}
+
 div.mat-form-field-flex {
   border: black 1px solid !important;
   border-radius: 20px !important;
+  padding-top: 10px !important;
+  padding-bottom: 9px !important;
+  padding-left: 25px !important;
+  padding-right: 25px !important;
 }
+
+.mat-form-field-hide-placeholder div.mat-form-field-infix {
+  border-top: transparent 0px solid !important;
+}
+
+.mat-form-field-ripple {
+  height: 0px !important;
+}
+
+.mat-form-field-underline {
+  height: 0px !important;
+}
+
+.mat-form-field-subscript-wrapper mat-error {
+  margin-right: 20px;
+  float: right;
+}
+// Input Field END
 
 .mat-raised-button {
   border-radius: 20px !important;
