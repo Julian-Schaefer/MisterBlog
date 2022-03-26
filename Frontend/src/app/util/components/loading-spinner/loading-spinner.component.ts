@@ -1,5 +1,6 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-loading-spinner',
@@ -8,21 +9,34 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 export class LoadingSpinnerComponent implements OnInit, OnDestroy {
 
-  @Input('height')
-  height: string;
   @Input('scale')
-  scale: string;
+  scale: string = "0.6";
 
+  @Input('style')
+  style: string;
+
+  @Input('color')
+  color: string = "darkblue";
+
+  name: string;
   styleString: string;
 
-  constructor(private spinner: NgxSpinnerService) { }
+  @ViewChild('spinner') spinner: any;
+
+  constructor(private spinnerService: NgxSpinnerService) {
+    this.name = uuidv4();
+  }
 
   ngOnInit(): void {
-    this.styleString = "height: " + this.height + "; transform: scale(" + this.scale + ");";
-    this.spinner.show('spinner');
+    this.styleString = "transform: scale(" + this.scale + ");";
+    if (this.style) {
+      this.styleString = this.style + " transform: scale(" + this.scale + ");";
+    }
+
+    this.spinnerService.show(this.name);
   }
 
   ngOnDestroy(): void {
-    this.spinner.hide('spinner');
+    this.spinnerService.hide(this.name);
   }
 }
