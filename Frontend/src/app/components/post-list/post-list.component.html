@@ -4,9 +4,7 @@
 
         <div *ngIf="(state$ | async) as state">
 
-            <div style="margin-bottom: 20px;">
-                <mat-spinner *ngIf="state.loading" diameter="42" style="margin: auto;"></mat-spinner>
-            </div>
+            <app-loading-spinner *ngIf="state.loading"></app-loading-spinner>
 
             <div *ngIf="state.blogPosts && state.blogPosts.length > 0">
                 <mat-card id="blog-post-card" *ngFor="let blogPost of state.blogPosts">

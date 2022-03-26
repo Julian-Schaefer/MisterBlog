@@ -17,6 +17,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
+import { NgxSpinnerModule } from "ngx-spinner";
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -51,6 +52,7 @@ import { PostListEffects } from './components/post-list/redux/post-list.effects'
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from 'src/environments/environment';
 import { AboutComponent } from './components/about/about.component';
+import { LoadingSpinnerComponent } from './util/components/loading-spinner/loading-spinner.component';
 
 export const interceptorProviders =
     [
@@ -80,7 +82,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         AddBlogDialogComponent,
         DateProxyPipe,
         AboutComponent,
-        SocialSignInComponent
+        SocialSignInComponent,
+        LoadingSpinnerComponent
     ],
     imports: [
         BrowserModule,
@@ -121,6 +124,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         MatCheckboxModule,
         MatDividerModule,
         MatIconModule,
+        NgxSpinnerModule,
         StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
     ],
     providers: [interceptorProviders],
