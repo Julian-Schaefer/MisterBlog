@@ -18,7 +18,11 @@ export const initialState: State = {
 
 export const reducer = createReducer(
     initialState,
-    on(BlogSelectionActions.addBlogSelection, (state, { blogSelection }) => ({ ...state, selectedBlogs: [...state.selectedBlogs, blogSelection], hasChanged: true })),
+    on(BlogSelectionActions.addBlogSelection, (state, { blogSelection }) => {
+        const updatedBlogSelection = [...state.selectedBlogs, blogSelection];
+        updatedBlogSelection.sort((first, second) => first.blogUrl.localeCompare(second.blogUrl));
+        return ({ ...state, selectedBlogs: updatedBlogSelection, hasChanged: true });
+    }),
     on(BlogSelectionActions.getBlogSelection, (state, { showLoadingIndicator }) => (({ ...state, loading: showLoadingIndicator, error: null, hasChanged: false }))),
     on(BlogSelectionActions.getBlogSelectionSuccess, (state, { blogSelections, hasChanged }) => {
         return ({ ...state, loading: false, selectedBlogs: blogSelections, hasChanged })
