@@ -1,0 +1,8 @@
+div#dialog-content {
+    height: 130px;
+    width: 380px;
+}
+
+mat-form-field {
+    width: 100%;
+}
