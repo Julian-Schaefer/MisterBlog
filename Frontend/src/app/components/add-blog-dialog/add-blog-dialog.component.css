@@ -6,3 +6,10 @@ div#dialog-content {
 mat-form-field {
     width: 100%;
 }
+
+h2 {
+    font-family: Lobster !important;
+    font-size: 30px !important;
+    color:#3f51b5 !important;
+    text-align: center;
+}
