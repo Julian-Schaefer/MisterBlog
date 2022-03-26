@@ -27,9 +27,6 @@
     <button mat-raised-button color="primary" (click)="onAddClick()" [disabled]="!addBlogFormControl.valid"
         cdkFocusInitial>
         <span *ngIf="!loading">Add</span>
-        <mat-icon *ngIf="loading" class="loading-spinner">
-            <mat-spinner diameter="22">
-            </mat-spinner>
-        </mat-icon>
+        <app-loading-spinner *ngIf="loading" scale="0.25" color="white" style="height: 36px;"></app-loading-spinner>
     </button>
 </div>
