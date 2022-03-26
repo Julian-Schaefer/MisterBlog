@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
@@ -8,9 +8,17 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 export class LoadingSpinnerComponent implements OnInit, OnDestroy {
 
+  @Input('height')
+  height: string;
+  @Input('scale')
+  scale: string;
+
+  styleString: string;
+
   constructor(private spinner: NgxSpinnerService) { }
 
   ngOnInit(): void {
+    this.styleString = "height: " + this.height + "; transform: scale(" + this.scale + ");";
     this.spinner.show('spinner');
   }
 
