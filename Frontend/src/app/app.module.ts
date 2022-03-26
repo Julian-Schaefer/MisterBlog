@@ -31,8 +31,8 @@ import { PostListComponent } from './components/post-list/post-list.component';
 import { PostComponent } from './components/post/post.component';
 import { SelectedBlogsComponent } from './components/selected-blogs/selected-blogs.component';
 
-import { SafeHtmlPipe } from './util/SafeHtmlPipe';
-import { SafeURLPipe } from './util/SafeURLPipe';
+import { SafeHtmlPipe } from './pipes/SafeHtmlPipe';
+import { SafeURLPipe } from './pipes/SafeURLPipe';
 
 import { AuthenticationInterceptor } from './interceptors/authentication.interceptor';
 import { DateInterceptor } from './interceptors/date.interceptor';
