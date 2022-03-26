@@ -23,7 +23,7 @@ export const getBlogSelectionFailed = createAction(
 
 export const toggleBlogSelection = createAction(
     '[Blog Selection] Toggle',
-    props<{ blogSelection: SelectedBlog }>()
+    props<{ toggledBlogSelection: SelectedBlog }>()
 );
 
 export const deleteBlogSelection = createAction(

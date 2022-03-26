@@ -21,8 +21,9 @@ export class SelectedBlogsComponent implements OnInit {
     this.store.dispatch(actions.getBlogSelection({ showLoadingIndicator: true }));
   }
 
-  toggleSelectedBlog(selectedBlog: SelectedBlog): void {
-    this.store.dispatch(actions.toggleBlogSelection({ blogSelection: selectedBlog }));
+  toggleSelectedBlog(event: any, selectedBlog: SelectedBlog): void {
+    const toggledBlogSelection: SelectedBlog = { ...selectedBlog, isSelected: event.checked };
+    this.store.dispatch(actions.toggleBlogSelection({ toggledBlogSelection }));
   }
 
   deleteSelectedBlog(selectedBlog: SelectedBlog): void {

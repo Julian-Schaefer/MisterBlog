@@ -6,8 +6,8 @@
 
             <ul>
                 <li *ngFor="let selectedBlog of state.selectedBlogs" class="selected-blog">
-                    <mat-checkbox [checked]="selectedBlog.isSelected" [(ngModel)]="selectedBlog.isSelected"
-                        (change)="toggleSelectedBlog(selectedBlog)">
+                    <mat-checkbox [checked]="selectedBlog.isSelected"
+                        (change)="toggleSelectedBlog($event, selectedBlog)">
                         {{utilService.getHostname(selectedBlog.blogUrl)}}</mat-checkbox>
 
                     <button mat-mini-fab color="primary" (click)="deleteSelectedBlog(selectedBlog)" class="delete">
