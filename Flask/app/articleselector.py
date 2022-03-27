@@ -1,7 +1,7 @@
 from datetime import datetime
-import requests
 from bs4 import BeautifulSoup
 import re
+import requests
 from newspaper import Article
 from goose3 import Goose
 from urllib.parse import urlsplit
@@ -27,7 +27,8 @@ def bs_preprocess(html):
 
 
 def get_soup_from_url(url):
-    html_doc = requests.get(url).text
+    headers = {'User-Agent': 'Mozilla/5.0'}
+    html_doc = requests.get(url, headers=headers).text
     cleaned_html_doc = bs_preprocess(html_doc)
     soup = BeautifulSoup(cleaned_html_doc, 'html.parser')
     return soup
@@ -142,7 +143,7 @@ def get_href_from_link(blog_url, link):
 
 
 def get_invalid_article_paths(blog_url, article_paths, page_soup, compare_soup):
-    compare_links = compare_soup.find_all("a", href=True)
+    #compare_links = compare_soup.find_all("a", href=True)
 
     invalid_article_paths = []
     for article_path in article_paths:
@@ -163,11 +164,11 @@ def get_invalid_article_paths(blog_url, article_paths, page_soup, compare_soup):
                 external_links += 1
 
         for link in links_on_page:
-            for compare_link in compare_links:
+            for compare_link in links_on_compare_page:
                 if link["href"] == compare_link["href"]:
                     identical_links += 1
 
-        if identical_links >= len(links_on_page) or external_links > 0:
+        if identical_links > 0 or external_links > 0:
             invalid_article_paths += [article_path]
             continue
 
