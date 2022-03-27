@@ -73,6 +73,14 @@ export class AuthService {
         return from(this.signInWithProvider(new firebaseApp.auth.FacebookAuthProvider()));
     }
 
+    signInWithTwitter() {
+        return from(this.signInWithProvider(new firebaseApp.auth.TwitterAuthProvider()));
+    }
+
+    signInWithApple() {
+        return from(this.signInWithProvider(new firebaseApp.auth.GoogleAuthProvider()));
+    }
+
     private signInWithProvider(provider) {
         return this.auth.signInWithPopup(provider);
     }
