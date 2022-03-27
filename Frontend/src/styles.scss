@@ -27,12 +27,13 @@
 }
 
 div.mat-form-field-flex {
-  border: black 1px solid !important;
+  border: darkgray 1px solid !important;
   border-radius: 20px !important;
   padding-top: 10px !important;
   padding-bottom: 8px !important;
   padding-left: 25px !important;
   padding-right: 25px !important;
+  box-shadow: 0px 0px 2px #888888 !important;
 }
 
 .mat-form-field-hide-placeholder div.mat-form-field-infix {
