@@ -6,15 +6,15 @@
 
             <ul>
                 <li *ngFor="let selectedBlog of state.selectedBlogs" class="selected-blog">
-                    <mat-checkbox [checked]="selectedBlog.isSelected"
-                        (change)="toggleSelectedBlog($event, selectedBlog)">
-                        {{utilService.getHostname(selectedBlog.blogUrl)}}</mat-checkbox>
+                    <div id="selected-blog">
+                        <mat-checkbox [checked]="selectedBlog.isSelected"
+                            (change)="toggleSelectedBlog($event, selectedBlog)" [title]="selectedBlog.blogUrl">
+                            {{utilService.getHostname(selectedBlog.blogUrl)}}</mat-checkbox>
 
-                    <button mat-mini-fab color="primary" (click)="deleteSelectedBlog(selectedBlog)" class="delete">
-                        <mat-icon>delete</mat-icon>
-                    </button>
-
-                    <div style="clear: both;"></div>
+                        <button mat-mini-fab color="primary" (click)="deleteSelectedBlog(selectedBlog)" class="delete">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
                 </li>
             </ul>
 
