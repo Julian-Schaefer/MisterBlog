@@ -12,14 +12,26 @@ import { UtilService } from 'src/app/services/util.service';
 })
 export class PostComponent {
   blogPost: BlogPost;
+  blogUrl: string;
 
-  constructor(public utilService: UtilService, private blogService: BlogService, private router: Router, private activatedRoute: ActivatedRoute) {
+  constructor(private utilService: UtilService, private blogService: BlogService, private router: Router, private activatedRoute: ActivatedRoute) {
     if (this.router.getCurrentNavigation().extras.state) {
-      this.blogPost = this.router.getCurrentNavigation().extras.state.data as BlogPost;
+      this.setBlogPost(this.router.getCurrentNavigation().extras.state.data as BlogPost);
     } else {
       this.blogService.getBlogPostFromUrl(this.activatedRoute.snapshot.queryParamMap.get('url')).subscribe(data => {
-        this.blogPost = data;
+        this.setBlogPost(data);
       });
+    }
+  }
+
+  private setBlogPost(blogPost: BlogPost) {
+    this.blogPost = blogPost;
+
+    if (blogPost.blogUrl) {
+      this.blogUrl = this.utilService.getHostname(blogPost.blogUrl);
+    } else {
+      const blogUrl = this.utilService.getHostname(blogPost.postUrl);
+      this.blogUrl = blogUrl.substring(0, blogUrl.indexOf('/'))
     }
   }
 }
