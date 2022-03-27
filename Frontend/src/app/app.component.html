@@ -6,8 +6,9 @@
         </div>
 
         <div style="float: right;">
-            <div *ngIf="authService.user; else loggedOut">
-                <p id="greeting" style="float: left;">Hello, {{authService.user.displayName}}!
+            <div *ngIf="authService.user as user; else loggedOut">
+                <p id="greeting" style="float: left;">Hello{{user.displayName !== null ? ", " :
+                    ""}}{{user.displayName}}!
                 </p>
                 <div id="authentication-container">
                     <button mat-raised-button color="primary" (click)="authService.signOut()">Sign
