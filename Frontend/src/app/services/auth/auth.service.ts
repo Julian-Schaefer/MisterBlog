@@ -53,7 +53,12 @@ export class AuthService {
 
     get isLoggedIn(): boolean {
         const user = JSON.parse(localStorage.getItem('user'));
-        return (user !== null && user.emailVerified !== false) ? true : false;
+
+        if (user.providerId !== "password") {
+            return user !== null && user.uid !== null;
+        } else {
+            return (user !== null && user.emailVerified !== false);
+        }
     }
 
     getIdToken(): Observable<string> {
