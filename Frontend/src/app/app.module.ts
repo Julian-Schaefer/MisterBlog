@@ -47,8 +47,10 @@ import { registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
 import * as postListReducer from 'src/app/components/post-list/redux/post-list.reducer';
 import * as blogSelectionReducer from 'src/app/components/selected-blogs/redux/blog-selection.reducer';
+import * as authenticationReducer from 'src/app/components/authentication/redux/authentication.reducer';
 import { BlogSelectionEffects } from './components/selected-blogs/redux/blog-selection.effects';
 import { PostListEffects } from './components/post-list/redux/post-list.effects';
+import { AuthenticationEffects } from './components/authentication/redux/authentication.effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from 'src/environments/environment';
 import { AboutComponent } from './components/about/about.component';
@@ -110,8 +112,12 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
                 deps: [HttpClient]
             }
         }),
-        StoreModule.forRoot({ blogSelection: blogSelectionReducer.reducer, postList: postListReducer.reducer }),
-        EffectsModule.forRoot([BlogSelectionEffects, PostListEffects]),
+        StoreModule.forRoot({
+            blogSelection: blogSelectionReducer.reducer,
+            postList: postListReducer.reducer,
+            authentication: authenticationReducer.reducer
+        }),
+        EffectsModule.forRoot([BlogSelectionEffects, PostListEffects, AuthenticationEffects]),
         MatButtonModule,
         MatDialogModule,
         MatInputModule,
