@@ -4,9 +4,9 @@ mat-card {
 }
 
 h2 {
-    font-family: Lobster !important;
-    font-size: 32px !important;
-    color:#3f51b5 !important;
+    font-family: Lobster;
+    font-size: 32px;
+    color:#3f51b5;
     text-align: center;
 }
 
@@ -16,12 +16,18 @@ ul {
     padding-left: 8px;
 }
 
-li.selected-blog > mat-checkbox {
-    margin-top: 8px;
-    float: left;
+div#selected-blog {
+    display: flex;
+    flex-wrap: nowrap;
 }
 
-li.selected-blog > button.delete {
-    float: right;
+div#selected-blog > mat-checkbox {
+    margin-top: 8px;
+    margin-right: 8px;
+    overflow: hidden;
+    flex-grow: 1;
+}
+
+div#selected-blog > button.delete {
     transform: scale(0.8)
 }
