@@ -1,44 +1,48 @@
-<mat-card id="sign-in">
-    <div style="text-align: center;">
-        <h2>Sign In</h2>
-    </div>
+<div id="container">
+    <mat-card id="sign-in">
+        <div style="margin-bottom: 30px;">
+            <h2>Sign In</h2>
+        </div>
 
-    <mat-form-field class="input-form-field">
-        <mat-label>E-Mail</mat-label>
-        <input matInput type="email" #userEmail required>
-    </mat-form-field>
-
-    <br>
-
-    <mat-form-field class="input-form-field">
-        <mat-label>Enter your password</mat-label>
-        <input matInput [type]="hidePassword ? 'password' : 'text'" #userPassword required>
-        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'"
-            [attr.aria-pressed]="hidePassword">
-            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-        </button>
-    </mat-form-field>
-
-    <br>
-
-    <button mat-raised-button color="primary"
-        (click)="authService.signInWithEmail(userEmail.value, userPassword.value)">
-        Sign in
-    </button>
-
-    <div class="container" style="margin-top: 20px;">
-        <mat-divider></mat-divider>
-        <div class="text mat-typography">or sign in using</div>
-    </div>
-
-    <app-social-sign-in></app-social-sign-in>
-
-    <div id="bottom-bar">
-        <span>Having trouble signing in? <a routerLink="/forgot-password">Forgot Password?</a></span>
+        <mat-form-field class="input-form-field">
+            <mat-label>E-Mail</mat-label>
+            <input matInput type="email" #userEmail required>
+        </mat-form-field>
 
         <br>
 
-        <span>Don't have an account? <a routerLink="/sign-up">Sign Up</a></span>
-    </div>
+        <mat-form-field class="input-form-field">
+            <mat-label>Enter your password</mat-label>
+            <input matInput [type]="hidePassword ? 'password' : 'text'" #userPassword required>
+            <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'"
+                [attr.aria-pressed]="hidePassword">
+                <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+        </mat-form-field>
 
-</mat-card>
+        <br>
+
+        <button mat-raised-button color="primary"
+            (click)="authService.signInWithEmail(userEmail.value, userPassword.value)">
+            Sign in
+        </button>
+
+
+        <div id="divider-container">
+            <span class="divider"></span>
+            <p>or sign in using</p>
+            <span class="divider"></span>
+        </div>
+
+        <app-social-sign-in></app-social-sign-in>
+
+        <div id="bottom-bar">
+            <span>Having trouble signing in? <a routerLink="/forgot-password">Forgot Password?</a></span>
+
+            <br>
+
+            <span>Don't have an Account? <a routerLink="/sign-up">Sign Up</a></span>
+        </div>
+
+    </mat-card>
+</div>
