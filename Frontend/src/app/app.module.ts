@@ -21,7 +21,6 @@ import { NgxSpinnerModule } from "ngx-spinner";
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { PreviewComponent } from './components/preview/preview.component';
 import { ErrorDialogComponent } from './components/error-dialog/error-dialog.component';
 import { SignInComponent } from './components/authentication/sign-in/sign-in.component';
 import { SignUpComponent } from './components/authentication/sign-up/sign-up.component';
@@ -70,7 +69,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 @NgModule({
     declarations: [
         AppComponent,
-        PreviewComponent,
         ErrorDialogComponent,
         SignInComponent,
         SignUpComponent,
