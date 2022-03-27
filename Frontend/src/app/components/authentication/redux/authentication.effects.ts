@@ -30,8 +30,8 @@ export class AuthenticationEffects {
                 switch (action.provider) {
                     case AuthProvider.GOOGLE: observable = this.authService.signInWithGoogle(); break;
                     case AuthProvider.FACEBOOK: observable = this.authService.signInWithFacebook(); break;
-                    case AuthProvider.TWITTER: observable = this.authService.signInWithGoogle(); break;
-                    case AuthProvider.APPLE: observable = this.authService.signInWithGoogle(); break;
+                    case AuthProvider.TWITTER: observable = this.authService.signInWithTwitter(); break;
+                    case AuthProvider.APPLE: observable = this.authService.signInWithApple(); break;
                 }
 
                 return observable
