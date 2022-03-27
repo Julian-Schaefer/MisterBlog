@@ -3,7 +3,7 @@ import { User } from "../user";
 import firebaseApp from 'firebase/compat/app';
 import { AngularFireAuth } from "@angular/fire/compat/auth";
 import { Router } from "@angular/router";
-import { Observable } from 'rxjs';
+import { from, Observable } from 'rxjs';
 
 @Injectable(
     { providedIn: "root" }
@@ -21,18 +21,11 @@ export class AuthService {
         })
     }
 
-    signInWithEmail(email, password) {
-        return this.auth.signInWithEmailAndPassword(email, password)
-            .then((result) => {
-                this.handleAuthentication(result.user);
-                this.router.navigate(['']);
-            })
-            .catch((error) => {
-                window.alert(error.message)
-            })
+    signInWithEmail(email: string, password: string): Observable<firebaseApp.auth.UserCredential> {
+        return from(this.auth.signInWithEmailAndPassword(email, password));
     }
 
-    signUpWithEmail(email, password) {
+    signUpWithEmail(email: string, password: string) {
         return this.auth.createUserWithEmailAndPassword(email, password)
             .then((_) => {
                 this.sendVerificationMail();
@@ -68,40 +61,30 @@ export class AuthService {
     }
 
     signInWithGoogle() {
-        return this.signInWithProvider(new firebaseApp.auth.GoogleAuthProvider());
+        return from(this.signInWithProvider(new firebaseApp.auth.GoogleAuthProvider()));
     }
 
     signInWithFacebook() {
-        return this.signInWithProvider(new firebaseApp.auth.FacebookAuthProvider());
+        return from(this.signInWithProvider(new firebaseApp.auth.FacebookAuthProvider()));
     }
 
     private signInWithProvider(provider) {
-        return this.auth.signInWithPopup(provider)
-            .then((result) => {
-                this.handleAuthentication(result.user);
-                this.router.navigate(['']);
-            })
-            .catch((error) => {
-                window.alert(error)
-            });
+        return this.auth.signInWithPopup(provider);
     }
 
     signOut() {
-        return this.auth.signOut()
-            .catch((error) => {
-                window.alert(error)
-            });
+        return this.auth.signOut();
     }
 
     handleAuthentication(user: User) {
         if (user) {
             this.user = user;
             localStorage.setItem('user', JSON.stringify(this.user));
+            this.router.navigate(['']);
         } else {
             this.user = null;
             localStorage.removeItem('user');
             this.router.navigate(['about']);
         }
     }
-
 }

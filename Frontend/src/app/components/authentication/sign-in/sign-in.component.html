@@ -4,45 +4,48 @@
             <h2>Sign In</h2>
         </div>
 
-        <mat-form-field class="input-form-field">
-            <mat-label>E-Mail</mat-label>
-            <input matInput type="email" #userEmail required>
-        </mat-form-field>
-
-        <br>
-
-        <mat-form-field class="input-form-field">
-            <mat-label>Enter your password</mat-label>
-            <input matInput [type]="hidePassword ? 'password' : 'text'" #userPassword required>
-            <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'"
-                [attr.aria-pressed]="hidePassword">
-                <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-            </button>
-        </mat-form-field>
-
-        <br>
-
-        <button mat-raised-button color="primary"
-            (click)="authService.signInWithEmail(userEmail.value, userPassword.value)">
-            Sign in
-        </button>
-
-
-        <div id="divider-container">
-            <span class="divider"></span>
-            <p>or sign in using</p>
-            <span class="divider"></span>
-        </div>
-
-        <app-social-sign-in></app-social-sign-in>
-
-        <div id="bottom-bar">
-            <span>Having trouble signing in? <a routerLink="/forgot-password">Forgot Password?</a></span>
+        <div *ngIf="(state$ | async) as state">
+            <mat-form-field class="input-form-field">
+                <mat-label>E-Mail</mat-label>
+                <input matInput type="email" #userEmail required>
+            </mat-form-field>
 
             <br>
 
-            <span>Don't have an Account? <a routerLink="/sign-up">Sign Up</a></span>
-        </div>
+            <mat-form-field class="input-form-field">
+                <mat-label>Enter your password</mat-label>
+                <input matInput [type]="hidePassword ? 'password' : 'text'" #userPassword required>
+                <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
+                    [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+                    <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+            </mat-form-field>
 
+            <br>
+
+            <button mat-raised-button color="primary" (click)="signInWithEmail(userEmail.value, userPassword.value)">
+                <span *ngIf="!state.authenticationInProgress">Sign in</span>
+                <app-loading-spinner *ngIf="state.authenticationInProgress" scale="0.25" color="white"
+                    style="height: 36px;"></app-loading-spinner>
+            </button>
+
+            <p *ngIf="state.error" id="error">{{state.error}}</p>
+
+            <div id="divider-container">
+                <span class="divider"></span>
+                <p>or sign in using</p>
+                <span class="divider"></span>
+            </div>
+
+            <app-social-sign-in></app-social-sign-in>
+
+            <div id="bottom-bar">
+                <span>Having trouble signing in? <a routerLink="/forgot-password">Forgot Password?</a></span>
+
+                <br>
+
+                <span>Don't have an Account? <a routerLink="/sign-up">Sign Up</a></span>
+            </div>
+        </div>
     </mat-card>
 </div>

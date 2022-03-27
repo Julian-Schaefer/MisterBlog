@@ -48,3 +48,8 @@ div#divider-container p {
     flex-grow: 1;
     border-bottom: 1px solid grey;
 }
+
+p#error {
+    margin-top: 20px;
+    color: darkred;
+}
