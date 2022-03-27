@@ -4,7 +4,7 @@
     <h1><b>{{blogPost.title}}</b></h1>
 
     <p style="float: left;">From <a [href]="blogPost.blogUrl"
-            target="_blank">{{utilService.getHostname(blogPost.blogUrl)}}</a></p>
+            target="_blank">{{blogUrl}}</a></p>
     <p style="float: right;">By {{blogPost.authors.join(', ')}} on {{blogPost.date | date | async}}</p>
     <div style="clear: both;"></div>
 
