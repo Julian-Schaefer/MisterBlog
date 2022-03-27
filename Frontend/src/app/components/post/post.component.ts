@@ -14,7 +14,7 @@ export class PostComponent {
   blogPost: BlogPost;
   blogUrl: string;
 
-  constructor(private utilService: UtilService, private blogService: BlogService, private router: Router, private activatedRoute: ActivatedRoute) {
+  constructor(public utilService: UtilService, private blogService: BlogService, private router: Router, private activatedRoute: ActivatedRoute) {
     if (this.router.getCurrentNavigation().extras.state) {
       this.setBlogPost(this.router.getCurrentNavigation().extras.state.data as BlogPost);
     } else {
@@ -28,10 +28,9 @@ export class PostComponent {
     this.blogPost = blogPost;
 
     if (blogPost.blogUrl) {
-      this.blogUrl = this.utilService.getHostname(blogPost.blogUrl);
+      this.blogUrl = blogPost.blogUrl;
     } else {
-      const blogUrl = this.utilService.getHostname(blogPost.postUrl);
-      this.blogUrl = blogUrl.substring(0, blogUrl.indexOf('/'))
+      this.blogUrl = blogPost.postUrl.substring(0, blogPost.postUrl.indexOf('/', "https://".length))
     }
   }
 }
