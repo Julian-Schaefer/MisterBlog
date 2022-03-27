@@ -3,8 +3,7 @@
 <mat-card *ngIf="blogPost" id="blog-post">
     <h1><b>{{blogPost.title}}</b></h1>
 
-    <p style="float: left;">From <a [href]="blogPost.blogUrl"
-            target="_blank">{{blogUrl}}</a></p>
+    <p style="float: left;">From <a [href]="blogUrl" target="_blank">{{utilService.getHostname(blogUrl)}}</a></p>
     <p style="float: right;">By {{blogPost.authors.join(', ')}} on {{blogPost.date | date | async}}</p>
     <div style="clear: both;"></div>
 
