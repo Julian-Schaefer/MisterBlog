@@ -3,5 +3,7 @@
 
 heroku git:remote -a misterblog-frontend
 cd ..
-git subtree push --prefix Frontend/ heroku master
-cd Flask
+
+git push -ff heroku `git subtree split --prefix Frontend/ HEAD`:master
+
+cd Frontend

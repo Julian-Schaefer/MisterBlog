@@ -1,10 +1,10 @@
 <div id="container">
-    <mat-card id="sign-in">
-        <div style="margin-bottom: 30px;">
-            <h2>Sign In</h2>
-        </div>
+    <div *ngIf="(state$ | async) as state">
+        <mat-card id="sign-in" [ngClass]="{'authentication-error' : state.error !== null}">
+            <div style="margin-bottom: 30px;">
+                <h2>Sign In</h2>
+            </div>
 
-        <div *ngIf="(state$ | async) as state">
             <mat-form-field class="input-form-field">
                 <mat-label>E-Mail</mat-label>
                 <input matInput type="email" #userEmail required>
@@ -46,6 +46,6 @@
 
                 <span>Don't have an Account? <a routerLink="/sign-up">Sign Up</a></span>
             </div>
-        </div>
-    </mat-card>
+        </mat-card>
+    </div>
 </div>
