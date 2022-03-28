@@ -18,4 +18,4 @@ RUN curl -L https://github.com/a8m/envsubst/releases/download/v1.1.0/envsubst-`u
     mv envsubst /usr/local/bin
 COPY ./nginx.config /etc/nginx/nginx.template
 CMD ["/bin/sh", "-c", "envsubst < /etc/nginx/nginx.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
-COPY --from=build /usr/src/app/dist/Blogify /usr/share/nginx/html
+COPY --from=build /usr/src/app/dist/Mister-Blog /usr/share/nginx/html
