@@ -10,8 +10,6 @@ import { AuthService } from './services/auth/auth.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'Blogify';
-
   constructor(public authService: AuthService, private translateService: TranslateService,
     private domSanitizer: DomSanitizer,
     private matIconRegistry: MatIconRegistry) {

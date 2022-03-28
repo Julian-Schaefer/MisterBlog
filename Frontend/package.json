@@ -1,10 +1,11 @@
 {
-  "name": "blogify",
+  "name": "mister-blog",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "start:prod": "node server.js",
+    "build": "ng build --configuration production",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -30,6 +31,7 @@
     "@ngx-translate/core": "^14.0.0",
     "@ngx-translate/http-loader": "^7.0.0",
     "@schematics/angular": "^13.1.2",
+    "express": "^4.17.3",
     "firebase": "^9.6.1",
     "moment": "^2.29.1",
     "ngx-spinner": "^13.1.1",
