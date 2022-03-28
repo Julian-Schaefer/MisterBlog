@@ -10,6 +10,10 @@ mat-card#sign-in {
     padding: 40px;
 }
 
+mat-card.authentication-error {
+    border: red 1px solid;
+}
+
 h2 {
     font-family: Lobster !important;
     font-size: 32px !important;
