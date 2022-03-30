@@ -54,6 +54,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from 'src/environments/environment';
 import { AboutComponent } from './components/about/about.component';
 import { LoadingSpinnerComponent } from './util/components/loading-spinner/loading-spinner.component';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 
 export const interceptorProviders =
     [
@@ -86,22 +87,14 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         LoadingSpinnerComponent
     ],
     imports: [
-        BrowserModule,
+        BrowserModule.withServerTransition({ appId: 'serverApp' }),
         HttpClientModule,
         AppRoutingModule,
         FormsModule,
         ReactiveFormsModule,
         BrowserAnimationsModule,
-        AngularFireModule.initializeApp({
-            apiKey: "AIzaSyDLY466XtHAJhe3aX89RbueINfryvSQS-c",
-            authDomain: "blogify-cdb97.firebaseapp.com",
-            databaseURL: "https://blogify-cdb97.firebaseio.com",
-            projectId: "blogify-cdb97",
-            storageBucket: "blogify-cdb97.appspot.com",
-            messagingSenderId: "797738042746",
-            appId: "1:797738042746:web:f79a733cfc9cbad72802c3",
-            measurementId: "G-V0GCNMMWW7"
-        }),
+        provideFirebaseApp(() => initializeApp(environment.firebase)),
+        AngularFireModule.initializeApp(environment.firebase),
         AngularFireAuthModule,
         TranslateModule.forRoot({
             loader: {
