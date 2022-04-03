@@ -1,0 +1,1 @@
+gcloud run deploy misterblog-flask --source .
