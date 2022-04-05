@@ -14,6 +14,12 @@ COPY . ./
 # Install production dependencies.
 RUN pip install pipenv
 RUN pipenv install --system
+RUN python -m nltk.downloader brown
+RUN python -m nltk.downloader punkt
+RUN python -m nltk.downloader maxent_treebank_pos_tagger
+RUN python -m nltk.downloader movie_reviews
+RUN python -m nltk.downloader wordnet
+RUN python -m nltk.downloader stopwords
 RUN pipenv --clear
 
 # Run the web service on container startup. Here we use the gunicorn
