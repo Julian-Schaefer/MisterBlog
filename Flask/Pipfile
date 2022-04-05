@@ -18,6 +18,7 @@ flask-script = "*"
 flask-cors = "*"
 dateparser = "*"
 goose3 = "*"
+"google.cloud.logging" = "*"
 
 [dev-packages]
 autopep8 = "*"

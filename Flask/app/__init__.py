@@ -1,5 +1,7 @@
+import logging
 from flask import Flask, request
 from flask_cors import CORS
+import google.cloud.logging as gcloud_logging
 
 from . import config
 from . import firebase
@@ -38,5 +40,18 @@ def create_app(config_class=config.Config):
 
     from . import database
     database.init_app(app)
+
+    return app
+
+
+def start_on_gcloud():
+    app = create_app()
+
+    logging_client = gcloud_logging.Client()
+    logging_client.setup_logging()
+
+    gunicorn_logger = logging.getLogger('gunicorn.error')
+    app.logger.handlers = gunicorn_logger.handlers
+    app.logger.setLevel(gunicorn_logger.level)
 
     return app

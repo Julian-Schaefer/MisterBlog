@@ -6,6 +6,9 @@ FROM python:3.9-slim
 # Allow statements and log messages to immediately appear in the Knative logs
 ENV PYTHONUNBUFFERED True
 
+# Log Level
+ENV LOG_LEVEL warning
+
 # Copy local code to the container image.
 ENV APP_HOME /app
 WORKDIR $APP_HOME
@@ -14,12 +17,12 @@ COPY . ./
 # Install production dependencies.
 RUN pip install pipenv
 RUN pipenv install --system
-RUN python -m nltk.downloader brown
-RUN python -m nltk.downloader punkt
-RUN python -m nltk.downloader maxent_treebank_pos_tagger
-RUN python -m nltk.downloader movie_reviews
-RUN python -m nltk.downloader wordnet
-RUN python -m nltk.downloader stopwords
+RUN python -m nltk.downloader brown -d /usr/local/nltk_data
+RUN python -m nltk.downloader punkt -d /usr/local/nltk_data
+RUN python -m nltk.downloader maxent_treebank_pos_tagger -d /usr/local/nltk_data
+RUN python -m nltk.downloader movie_reviews -d /usr/local/nltk_data
+RUN python -m nltk.downloader wordnet -d /usr/local/nltk_data
+RUN python -m nltk.downloader stopwords -d /usr/local/nltk_data
 RUN pipenv --clear
 
 # Run the web service on container startup. Here we use the gunicorn
@@ -27,4 +30,4 @@ RUN pipenv --clear
 # For environments with multiple CPU cores, increase the number of workers
 # to be equal to the cores available.
 # Timeout is set to 0 to disable the timeouts of the workers to allow Cloud Run to handle instance scaling.
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0  "app:create_app()"
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 10 --timeout 0 --log-level $LOG_LEVEL "app:start_on_gcloud()"

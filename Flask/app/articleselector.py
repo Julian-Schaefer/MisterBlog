@@ -1,4 +1,5 @@
 from datetime import datetime
+import logging
 from bs4 import BeautifulSoup
 import re
 import requests
@@ -378,6 +379,7 @@ def validate_date(publish_date):
                 return None
             publish_date_datetime = dateparser.parse(publish_date)
         except ValueError:
+            logging.info('Could not validate date', exc_info=True)
             return None
 
     return publish_date_datetime.replace(tzinfo=pytz.utc)
@@ -404,4 +406,5 @@ def download_article(url):
 
         return article
     except:
+        logging.info('Could not download Article', exc_info=True)
         return None
