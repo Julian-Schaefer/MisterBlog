@@ -7,17 +7,18 @@ import { VerifyEmailComponent } from './components/authentication/verify-email/v
 import { PostListComponent } from './components/post-list/post-list.component';
 import { PostComponent } from './components/post/post.component';
 import { AuthGuard } from './guards/auth.guard';
+import { PublicGuard } from './guards/public.guard';
 import { AboutComponent } from './components/about/about.component';
 
 const routes: Routes = [
   { path: 'posts', component: PostListComponent, canActivate: [AuthGuard] },
   { path: 'post', component: PostComponent, canActivate: [AuthGuard] },
   // Unauthenticated
-  { path: '', component: AboutComponent },
-  { path: 'sign-in', component: SignInComponent },
-  { path: 'sign-up', component: SignUpComponent },
-  { path: 'forgot-password', component: ForgotPasswordComponent },
-  { path: 'verify-email-address', component: VerifyEmailComponent },
+  { path: '', component: AboutComponent, canActivate: [PublicGuard] },
+  { path: 'sign-in', component: SignInComponent, canActivate: [PublicGuard] },
+  { path: 'sign-up', component: SignUpComponent, canActivate: [PublicGuard] },
+  { path: 'forgot-password', component: ForgotPasswordComponent, canActivate: [PublicGuard] },
+  { path: 'verify-email-address', component: VerifyEmailComponent, canActivate: [PublicGuard] },
   { path: '**', redirectTo: '' }
 ];
 
