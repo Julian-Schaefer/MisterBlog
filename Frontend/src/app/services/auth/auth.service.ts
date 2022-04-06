@@ -117,7 +117,10 @@ export class AuthService {
             return;
 
         await this.auth.setPersistence(firebaseApp.auth.Auth.Persistence.LOCAL);
-        return this.auth.signInWithPopup(provider);
+        return this.auth.signInWithPopup(provider).then((user) => {
+            this.router.navigate(['posts']);
+            return user;
+        });
     }
 
     signOut(): Observable<void> {
@@ -133,7 +136,6 @@ export class AuthService {
         if (user) {
             this.user = user;
             this.localStorageService.setItem('user', JSON.stringify(this.user));
-            this.router.navigate(['posts']);
         } else {
             this.user = null;
             this.localStorageService.removeItem('user');
