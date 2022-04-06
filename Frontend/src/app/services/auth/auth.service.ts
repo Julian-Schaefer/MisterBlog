@@ -5,6 +5,7 @@ import { AngularFireAuth } from "@angular/fire/compat/auth";
 import { Router } from "@angular/router";
 import { EMPTY, from, Observable } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
+import { LocalStorageService } from '../local-storage-service/local-storage.service';
 
 @Injectable(
     { providedIn: "root" }
@@ -18,6 +19,7 @@ export class AuthService {
         public auth: AngularFireAuth,
         public router: Router,
         public ngZone: NgZone,
+        private localStorageService: LocalStorageService,
         @Inject(PLATFORM_ID) platformId: Object
     ) {
         this.isBrowser = isPlatformBrowser(platformId);
@@ -75,12 +77,14 @@ export class AuthService {
         if (!this.isBrowser)
             return false;
 
-        const user = JSON.parse(localStorage.getItem('user'));
+        const user = JSON.parse(this.localStorageService.getItem('user'));
+
+        if (!user) return false;
 
         if (user.providerId !== "password") {
-            return user !== null && user.uid !== null;
+            return user != null && user.uid != null;
         } else {
-            return (user !== null && user.emailVerified !== false);
+            return user != null && user.uid != null && user.emailVerified != false;
         }
     }
 
@@ -120,18 +124,18 @@ export class AuthService {
             return;
 
         return from(this.auth.signOut().then((_) => {
-            this.router.navigate(['about']);
+            this.router.navigate(['']);
         }));
     }
 
     handleAuthentication(user: User) {
         if (user) {
             this.user = user;
-            //localStorage.setItem('user', JSON.stringify(this.user));
-            this.router.navigate(['']);
+            this.localStorageService.setItem('user', JSON.stringify(this.user));
+            this.router.navigate(['posts']);
         } else {
             this.user = null;
-            //localStorage.removeItem('user');
+            this.localStorageService.removeItem('user');
         }
     }
 }

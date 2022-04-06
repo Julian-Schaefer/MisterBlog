@@ -1,8 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { AppComponent } from '../../app.component';
-
-
 
 @Injectable({
   providedIn: 'root'
@@ -11,9 +8,9 @@ export class LocalStorageService implements Storage {
 
   private readonly isBrowser;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+  constructor(@Inject(PLATFORM_ID) platformId: Object) {
+    this.isBrowser = isPlatformBrowser(platformId);
   }
-
 
   [name: string]: any;
 
