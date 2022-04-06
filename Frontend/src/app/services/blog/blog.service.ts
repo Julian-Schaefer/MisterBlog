@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BlogPost } from '../BlogPost';
 import { SelectedBlog } from '../SelectedBlog';
-import { ServiceResult, ServiceResultStatus } from '../ServiceResult';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { isPlatformBrowser } from '@angular/common';
+import { LocalStorageService } from '../local-storage-service/local-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,9 @@ export class BlogService {
 
   private baseUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+    private localStorageService: LocalStorageService) {
+  }
 
   getBlogPosts(page: number = 0): Observable<BlogPost[]> {
     return new Observable<BlogPost[]>(observer => {
@@ -25,12 +28,12 @@ export class BlogService {
       this.http.get<BlogPost[]>(this.baseUrl + relativeUrl).subscribe({
         next: blogPosts => {
           if (page > 0) {
-            let blogPostString = localStorage.getItem(this.BLOG_POST_KEY);
+            let blogPostString = this.localStorageService.getItem(this.BLOG_POST_KEY);
             let previousBlogPosts = JSON.parse(blogPostString) as BlogPost[];
             blogPosts = previousBlogPosts.concat(blogPosts);
           }
 
-          localStorage.setItem(this.BLOG_POST_KEY, JSON.stringify(blogPosts));
+          this.localStorageService.setItem(this.BLOG_POST_KEY, JSON.stringify(blogPosts));
           observer.next(blogPosts);
         },
         error: error => observer.error(error)
