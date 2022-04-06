@@ -9,17 +9,16 @@ import { PostComponent } from './components/post/post.component';
 import { AuthGuard } from './guards/auth.guard';
 import { AboutComponent } from './components/about/about.component';
 
-
-
 const routes: Routes = [
-  { path: '', component: PostListComponent, canActivate: [AuthGuard] },
+  { path: 'posts', component: PostListComponent, canActivate: [AuthGuard] },
   { path: 'post', component: PostComponent, canActivate: [AuthGuard] },
   // Unauthenticated
-  { path: 'about', component: AboutComponent },
+  { path: '', component: AboutComponent },
   { path: 'sign-in', component: SignInComponent },
   { path: 'sign-up', component: SignUpComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
-  { path: 'verify-email-address', component: VerifyEmailComponent }
+  { path: 'verify-email-address', component: VerifyEmailComponent },
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({
@@ -27,8 +26,8 @@ const routes: Routes = [
     scrollPositionRestoration: 'enabled',
     relativeLinkResolution: 'legacy',
     onSameUrlNavigation: 'reload',
-    initialNavigation: 'enabledBlocking'
-})],
+    initialNavigation: 'enabled'
+  })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
