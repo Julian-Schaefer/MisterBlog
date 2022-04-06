@@ -11,7 +11,8 @@
     "dev:ssr": "ng run Mister-Blog:serve-ssr",
     "serve:ssr": "node dist/Mister-Blog/server/main.js",
     "build:ssr": "ng build --configuration production && ng run Mister-Blog:server",
-    "prerender": "ng run Mister-Blog:prerender"
+    "prerender": "ng run Mister-Blog:prerender",
+    "postinstall": "npm run build:ssr"
   },
   "private": true,
   "dependencies": {
