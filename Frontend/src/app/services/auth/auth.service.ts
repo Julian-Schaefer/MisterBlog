@@ -3,7 +3,7 @@ import { User } from "../user";
 import firebaseApp from 'firebase/compat/app';
 import { AngularFireAuth } from "@angular/fire/compat/auth";
 import { Router } from "@angular/router";
-import { EMPTY, from, Observable } from 'rxjs';
+import { EMPTY, from, Observable, of } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 import { LocalStorageService } from '../local-storage-service/local-storage.service';
 
@@ -88,9 +88,10 @@ export class AuthService {
         }
     }
 
-    getIdToken(): Observable<any | null> {
-        if (!this.isBrowser)
-            return null;
+    getIdToken(): Observable<string | null> {
+        if (!this.isBrowser) {
+            return of(null);
+        }
 
         return this.auth.idToken;
     }
