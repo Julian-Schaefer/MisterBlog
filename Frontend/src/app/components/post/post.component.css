@@ -7,8 +7,12 @@ a#original-post-link {
     text-decoration: none;
 }
 
-mat-card#blog-post {
+div#root-container {
     max-width: 860px;
+    margin: auto;
+}
+
+mat-card#blog-post {
     margin-left: 10px;
     margin-right: 10px;
     margin-top: 20px;
