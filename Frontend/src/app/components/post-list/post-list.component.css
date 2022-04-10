@@ -1,8 +1,28 @@
+div#root-container {
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+div#left-container {
+    max-width: 620px;
+    margin: auto;
+}
+
+div#right-container {
+    width: 330px;
+    margin-right: 10px;
+}
+
 mat-card#blog-post-card {
     margin-bottom: 32px;
     border-radius: 25px;
     padding: 25px;
     padding-bottom: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 a#blog-post-link {
@@ -24,7 +44,8 @@ p#authors {
 
 p#introduction {
     clear: both;
-	text-align: justify;
+    text-align: justify;
+    overflow: hidden;
 }
 
 button#continue-reading-button {

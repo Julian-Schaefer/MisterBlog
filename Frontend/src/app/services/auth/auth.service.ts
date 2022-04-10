@@ -35,7 +35,10 @@ export class AuthService {
         if (!this.isBrowser)
             return;
 
-        return from(this.auth.signInWithEmailAndPassword(email, password));
+        return from(this.auth.signInWithEmailAndPassword(email, password).then((user) => {
+            this.router.navigate(['posts']);
+            return user;
+        }));
     }
 
     signUpWithEmail(email: string, password: string) {
