@@ -1,6 +1,15 @@
 import { createAction, props } from '@ngrx/store';
 import { BlogPost } from 'src/app/services/BlogPost';
 
+export const initializePostList = createAction(
+    '[Post List] Initialize'
+);
+
+export const initializePostListSuccess = createAction(
+    '[Post List] Initialize Success',
+    props<{ blogPosts: BlogPost[] }>()
+);
+
 export const refreshPostList = createAction(
     '[Post List] Refresh'
 );

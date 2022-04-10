@@ -20,6 +20,16 @@ export class BlogService {
     private localStorageService: LocalStorageService) {
   }
 
+  getBlogPostsFromLocalStorage(): BlogPost[] {
+    let blogPostString = this.localStorageService.getItem(this.BLOG_POST_KEY);
+    if (blogPostString) {
+      let blogPosts = JSON.parse(blogPostString) as BlogPost[];
+      return blogPosts;
+    } else {
+      return [];
+    }
+  }
+
   getBlogPosts(page: number = 0): Observable<BlogPost[]> {
     return new Observable<BlogPost[]>(observer => {
       let relativeUrl = "/blog-selection";
@@ -28,8 +38,7 @@ export class BlogService {
       this.http.get<BlogPost[]>(this.baseUrl + relativeUrl).subscribe({
         next: blogPosts => {
           if (page > 0) {
-            let blogPostString = this.localStorageService.getItem(this.BLOG_POST_KEY);
-            let previousBlogPosts = JSON.parse(blogPostString) as BlogPost[];
+            let previousBlogPosts = this.getBlogPostsFromLocalStorage();
             blogPosts = previousBlogPosts.concat(blogPosts);
           }
 

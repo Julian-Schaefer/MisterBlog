@@ -10,6 +10,17 @@ import { selectPostListState } from './post-list.reducer';
 @Injectable()
 export class PostListEffects {
 
+    initializePostList$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(PostListActions.initializePostList),
+            map(() => {
+                const blogPosts = this.blogService.getBlogPostsFromLocalStorage();
+                return PostListActions.initializePostListSuccess({ blogPosts });
+            }),
+            catchError(_ => EMPTY)
+        )
+    );
+
     refreshPostList$ = createEffect(() =>
         this.actions$.pipe(
             ofType(PostListActions.refreshPostList, PostListActions.loadMorePostList),
