@@ -1,33 +1,4 @@
-<div id="header">
-    <div id="header-margin">
-        <div style="float: left; height: 70px;">
-            <h1 id="heading" routerLink="/posts"><img src="assets/logo.svg" style="height: 36px; padding-top: 20px;"
-                    draggable="false"></h1>
-        </div>
-
-        <div style="float: right;">
-            <div *ngIf="authService.user as user; else loggedOut">
-                <p id="greeting" style="float: left;">Hello{{user.displayName !== null ? ", " :
-                    ""}}{{user.displayName}}!
-                </p>
-                <div id="authentication-container">
-                    <button mat-raised-button color="primary" (click)="authService.signOut()">Sign
-                        out</button>
-                </div>
-            </div>
-
-            <ng-template #loggedOut>
-                <div id="authentication-container">
-                    <a [routerLink]="['/sign-in']"><button mat-raised-button color="primary">Sign
-                            in</button></a>
-                    <p style="margin: 12px;">or</p>
-                    <a [routerLink]="['/sign-up']"><button mat-raised-button color="primary">Sign
-                            up</button></a>
-                </div>
-            </ng-template>
-        </div>
-    </div>
-</div>
+<app-header></app-header>
 
 <div id="router-container">
     <router-outlet></router-outlet>
