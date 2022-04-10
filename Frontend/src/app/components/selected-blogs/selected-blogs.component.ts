@@ -1,5 +1,5 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BlogService } from 'src/app/services/blog/blog.service';
 import { UtilService } from 'src/app/services/util.service';
 import { SelectedBlog } from 'src/app/services/SelectedBlog';
@@ -13,9 +13,15 @@ import { selectBlogSelectionState } from './redux/blog-selection.reducer';
   styleUrls: ['./selected-blogs.component.css']
 })
 export class SelectedBlogsComponent implements OnInit {
+  @Input() useOwnBorder = true;
+
   state$ = this.store.select(selectBlogSelectionState);
 
-  constructor(private dialog: MatDialog, public utilService: UtilService, private store: Store) { }
+  constructor(private dialog: MatDialog, public utilService: UtilService, private store: Store, @Inject(MAT_DIALOG_DATA) data: any) {
+    if (data) {
+      this.useOwnBorder = data.useOwnBorder;
+    }
+  }
 
   ngOnInit(): void {
     this.store.dispatch(actions.getBlogSelection({ showLoadingIndicator: true }));

@@ -9,6 +9,8 @@ import { UtilService } from 'src/app/services/util.service';
 import { selectPostListState } from './redux/post-list.reducer';
 import { selectBlogSelectionState } from '../selected-blogs/redux/blog-selection.reducer';
 import * as actions from './redux/post-list.actions';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { SelectedBlogsComponent } from '../selected-blogs/selected-blogs.component';
 
 @Component({
   selector: 'app-post-list',
@@ -22,7 +24,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   state$ = this.store.select(selectPostListState);
   blogSelectionState$ = this.store.select(selectBlogSelectionState);
 
-  constructor(public utilService: UtilService, private store: Store, private router: Router) {
+  constructor(public utilService: UtilService, private store: Store, private router: Router, private dialog: MatDialog) {
     this.routerEventSubscription = this.router.events.subscribe(evt => {
       if (evt instanceof NavigationEnd) {
         this.loadBlogPosts();
@@ -52,6 +54,14 @@ export class PostListComponent implements OnInit, OnDestroy {
 
   loadMoreBlogPosts(): void {
     this.store.dispatch(actions.loadMorePostList());
+  }
+
+  onSelectedBlogsClick(): void {
+    this.dialog.open(SelectedBlogsComponent, {
+      data: {
+        useOwnBorder: false
+      }
+    });
   }
 
   @HostListener("window:scroll", [])

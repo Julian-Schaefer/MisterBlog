@@ -6,7 +6,7 @@ mat-card {
 h2 {
     font-family: Lobster;
     font-size: 32px;
-    color:#3f51b5;
+    color: #3f51b5;
     text-align: center;
 }
 
@@ -21,13 +21,13 @@ div#selected-blog {
     flex-wrap: nowrap;
 }
 
-div#selected-blog > mat-checkbox {
+div#selected-blog>mat-checkbox {
     margin-top: 8px;
     margin-right: 8px;
     overflow: hidden;
     flex-grow: 1;
 }
 
-div#selected-blog > button.delete {
+div#selected-blog>button.delete {
     transform: scale(0.8)
 }

@@ -1,12 +1,17 @@
-<div style="width: 1000px; margin-left: auto; margin-right: auto; margin-top: 20px; margin-bottom: 20;">
+<div id="root-container" fxflex fxLayout="column" fxLayoutAlign="center end" fxLayout.gt-sm="row"
+    fxLayoutAlign.gt-sm="space-between start">
 
-    <div style="width: 620px;">
-
+    <div id="left-container">
         <div *ngIf="(state$ | async) as state">
+
+            <div fxHide fxShow.lt-md style="margin-bottom: 20px;" fxLayout="row" fxLayoutAlign="end">
+                <button mat-raised-button color="primary" (click)="onSelectedBlogsClick()">Filter</button>
+            </div>
 
             <app-loading-spinner *ngIf="state.loading" style="margin-bottom: 20px;"></app-loading-spinner>
 
             <div *ngIf="state.blogPosts && state.blogPosts.length > 0">
+
                 <mat-card id="blog-post-card" *ngFor="let blogPost of state.blogPosts">
                     <a id="blog-post-link" routerLink="/post" [state]="{ data: blogPost }"
                         [queryParams]="{ url: blogPost.postUrl }">
@@ -34,7 +39,7 @@
 
     </div>
 
-    <div style="width: 328px; position: fixed; left: 50%; top: 70px; margin-left: 152px; margin-top: 20px;">
+    <div fxHide fxShow.gt-sm id="right-container">
         <selected-blogs></selected-blogs>
     </div>
 

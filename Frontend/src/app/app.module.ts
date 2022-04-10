@@ -5,7 +5,7 @@ import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatBadgeModule } from '@angular/material/badge';
@@ -128,7 +128,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         NgxSpinnerModule,
         StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
     ],
-    providers: [interceptorProviders],
+    providers: [interceptorProviders, { provide: MAT_DIALOG_DATA, useValue: null }],
     bootstrap: [AppComponent]
 })
 export class AppModule {

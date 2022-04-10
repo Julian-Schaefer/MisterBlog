@@ -1,4 +1,13 @@
-<mat-card>
+<mat-card *ngIf="useOwnBorder">
+    <ng-container *ngTemplateOutlet="selectedBlogsTemplate;"></ng-container>
+</mat-card>
+
+<div *ngIf="!useOwnBorder">
+    <ng-container *ngTemplateOutlet="selectedBlogsTemplate;"></ng-container>
+</div>
+
+<ng-template #selectedBlogsTemplate>
+
     <div *ngIf="(state$ | async)?.loading === false && (state$ | async) as state; else loading">
 
         <h2>Selected Blogs:</h2>
@@ -27,7 +36,8 @@
         </div>
     </div>
 
-    <ng-template #loading>
-        <app-loading-spinner></app-loading-spinner>
-    </ng-template>
-</mat-card>
+</ng-template>
+
+<ng-template #loading>
+    <app-loading-spinner></app-loading-spinner>
+</ng-template>
