@@ -17,13 +17,13 @@ mat-card#blog-post {
     margin-right: 10px;
     margin-top: 20px;
     margin-bottom: 100px;
-    text-align: justify;
     border-radius: 25px;
     padding: 24px;
     padding-bottom: 20px;
 }
 
 div#content {
+    text-align: justify;
     overflow-wrap: break-word;
     word-wrap: break-word;
     word-break: break-word;
