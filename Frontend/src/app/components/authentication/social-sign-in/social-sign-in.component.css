@@ -1,8 +1,9 @@
 div.social-container {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin: 16px;
+   margin-top: 16px;
+   margin-bottom: 16px;
+   margin-left: auto;
+   margin-right: auto;
+   max-width: 360px;
 }
 
 .mat-twitter {
@@ -14,7 +15,7 @@ div.social-container {
 }
 
 .mat-facebook {
-  background-color: #2374E1;
+   background-color: #2374E1;
 }
 
 .mat-fab {
