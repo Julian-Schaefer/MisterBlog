@@ -18,6 +18,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { NgxSpinnerModule } from "ngx-spinner";
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -55,6 +56,7 @@ import { environment } from 'src/environments/environment';
 import { AboutComponent } from './components/about/about.component';
 import { LoadingSpinnerComponent } from './util/components/loading-spinner/loading-spinner.component';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { HeaderComponent } from './components/header/header.component';
 
 export const interceptorProviders =
     [
@@ -84,7 +86,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         DateProxyPipe,
         AboutComponent,
         SocialSignInComponent,
-        LoadingSpinnerComponent
+        LoadingSpinnerComponent,
+        HeaderComponent
     ],
     imports: [
         BrowserModule.withServerTransition({ appId: 'serverApp' }),
@@ -109,6 +112,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
             authentication: authenticationReducer.reducer
         }),
         EffectsModule.forRoot([BlogSelectionEffects, PostListEffects, AuthenticationEffects]),
+        FlexLayoutModule,
         MatButtonModule,
         MatDialogModule,
         MatInputModule,

@@ -1,0 +1,31 @@
+<div id="header">
+    <div id="header-margin">
+        <div style="float: left;">
+            <h1 id="heading" routerLink="/posts"><img src="assets/logo.svg" style="height: 36px; padding-top: 20px;"
+                    draggable="false"></h1>
+        </div>
+
+        <div style="float: right;">
+            <div *ngIf="authService.user as user; else loggedOut" class="authentication-container" fxLayout="row"
+                fxLayoutAlign="space-between center">
+                <p id="greeting" fxHide fxShow.gt-sm>Hello{{user.displayName !== null ? ", " :
+                    ""}}{{user.displayName}}!
+                </p>
+                <div>
+                    <button mat-raised-button color="primary" (click)="authService.signOut()">Sign
+                        out</button>
+                </div>
+            </div>
+
+            <ng-template #loggedOut>
+                <div class="authentication-container" fxLayout="row" fxLayoutAlign="space-between center">
+                    <a [routerLink]="['/sign-in']"><button mat-raised-button color="primary">Sign
+                            in</button></a>
+                    <p style="margin: 12px;" fxHide fxShow.gt-sm>or</p>
+                    <a [routerLink]="['/sign-up']" fxHide fxShow.gt-sm><button mat-raised-button color="primary">Sign
+                            up</button></a>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+</div>
