@@ -4,7 +4,8 @@
     <div id="left-container">
         <div *ngIf="(state$ | async) as state">
 
-            <div fxHide fxShow.lt-md style="margin-bottom: 20px;" fxLayout="row" fxLayoutAlign="end">
+            <div fxHide fxShow.lt-md style="margin-bottom: 20px; margin-right: 10px;" fxLayout="row"
+                fxLayoutAlign="end">
                 <button mat-raised-button color="primary" (click)="onSelectedBlogsClick()">Filter</button>
             </div>
 

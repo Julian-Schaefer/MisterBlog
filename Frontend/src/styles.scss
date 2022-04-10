@@ -22,7 +22,7 @@
 //@include mat.button-theme($my-theme);
 
 // Input Field START
-.mat-form-field-invalid div.mat-form-field-flex{
+.mat-form-field-invalid div.mat-form-field-flex {
   border: red 1px solid !important;
 }
 
@@ -52,6 +52,7 @@ div.mat-form-field-flex {
   margin-right: 20px;
   float: right;
 }
+
 // Input Field END
 
 .mat-raised-button {
@@ -63,9 +64,11 @@ mat-dialog-container.mat-dialog-container {
   border-radius: 25px !important;
   padding: 40px !important;
 }
+
 // Dialog END
 
-html, body {
+html,
+body {
   min-height: 100%;
   height: auto;
   margin: 0;
@@ -76,7 +79,8 @@ body {
   background-color: rgb(240, 240, 240);
 }
 
-a, a:visited {
+a,
+a:visited {
   color: darkblue;
   font-weight: bold;
 }

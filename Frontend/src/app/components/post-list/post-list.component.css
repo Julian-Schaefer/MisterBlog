@@ -45,7 +45,10 @@ p#authors {
 p#introduction {
     clear: both;
     text-align: justify;
-    overflow: hidden;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
 }
 
 button#continue-reading-button {
