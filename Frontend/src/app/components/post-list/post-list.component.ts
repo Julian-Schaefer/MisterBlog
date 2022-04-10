@@ -33,13 +33,14 @@ export class PostListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.store.dispatch(actions.initializePostList());
     this.loadBlogPosts();
 
     this.blogSelectionState$.subscribe((blogSelectionState) => {
       if (blogSelectionState.hasChanged) {
         this.loadBlogPosts();
       }
-    })
+    });
   }
 
   ngOnDestroy() {
