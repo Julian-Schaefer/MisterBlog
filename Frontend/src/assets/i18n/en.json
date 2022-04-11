@@ -4,5 +4,13 @@
     },
     "date": {
         "dateFormatPattern": "MMM d, y, h:mm a"
+    },
+    "error": {
+        "unknown-error": "An unknown error has occured.",
+        "auth": {
+            "invalid-email": "The email address is badly formatted.",
+            "wrong-password": "The password is invalid or the user does not have a password.",
+            "too-many-requests": "Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later."
+        }
     }
 }
