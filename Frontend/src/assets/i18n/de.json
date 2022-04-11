@@ -4,5 +4,10 @@
     },
     "date": {
         "dateFormatPattern": "MMM d, y, h:mm"
+    },
+    "error": {
+        "auth": {
+            "invalid-email": "Falsche email bruder"
+        }
     }
 }

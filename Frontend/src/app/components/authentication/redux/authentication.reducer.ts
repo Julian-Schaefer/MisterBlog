@@ -20,7 +20,7 @@ export const reducer = createReducer(
         return ({ ...initialState });
     }),
     on(AuthenticationActions.signInFailed, (state, { error }) => {
-        return ({ ...state, authenticationInProgress: false, error: error.message });
+        return ({ ...state, authenticationInProgress: false, error: error });
     }),
     on(AuthenticationActions.signInWithEmail, (state) => {
         return ({ ...state, authenticationInProgress: true, error: null });
