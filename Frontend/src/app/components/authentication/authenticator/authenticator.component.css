@@ -3,7 +3,7 @@ div#container {
     padding: 20px;
 }
 
-mat-card#sign-in {
+mat-card#authentication {
     margin: auto;
     max-width: 460px;
     border-radius: 45px;
@@ -17,7 +17,7 @@ mat-card.authentication-error {
 h2 {
     font-family: Lobster !important;
     font-size: 32px !important;
-    color:#3f51b5 !important;
+    color: #3f51b5 !important;
     text-align: center;
 }
 
@@ -42,7 +42,7 @@ div#divider-container {
     align-items: center;
     margin-top: 20px;
 }
-  
+
 div#divider-container p {
     margin: 10px;
     font-weight: 400;
