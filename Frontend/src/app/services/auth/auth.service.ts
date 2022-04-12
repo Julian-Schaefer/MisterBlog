@@ -23,22 +23,11 @@ export class AuthService {
         @Inject(PLATFORM_ID) platformId: Object
     ) {
         this.isBrowser = isPlatformBrowser(platformId);
-
         if (this.isBrowser) {
             this.auth.authState.subscribe(user => {
-                this.handleAuthentication(user);
+                this.handleAuthentication(user, false);
             });
         }
-    }
-
-    signInWithEmail(email: string, password: string): Observable<firebaseApp.auth.UserCredential> {
-        if (!this.isBrowser)
-            return;
-
-        return from(this.auth.signInWithEmailAndPassword(email, password).then((user) => {
-            this.router.navigate(['posts']);
-            return user;
-        }));
     }
 
     signUpWithEmail(email: string, password: string) {
@@ -115,14 +104,23 @@ export class AuthService {
         return from(this.signInWithProvider(new firebaseApp.auth.GoogleAuthProvider()));
     }
 
+    signInWithEmail(email: string, password: string): Observable<firebaseApp.auth.UserCredential> {
+        if (!this.isBrowser)
+            return;
+
+        return from(this.auth.signInWithEmailAndPassword(email, password).then((credential) => {
+            this.handleAuthentication(credential.user, true);
+            return credential;
+        }));
+    }
+
     private async signInWithProvider(provider): Promise<firebaseApp.auth.UserCredential> {
         if (!this.isBrowser)
             return;
 
-        await this.auth.setPersistence(firebaseApp.auth.Auth.Persistence.LOCAL);
-        return this.auth.signInWithPopup(provider).then((user) => {
-            this.router.navigate(['posts']);
-            return user;
+        return this.auth.signInWithPopup(provider).then((credential) => {
+            this.handleAuthentication(credential.user, true);
+            return credential;
         });
     }
 
@@ -131,17 +129,23 @@ export class AuthService {
             return;
 
         return from(this.auth.signOut().then((_) => {
-            this.router.navigate(['']);
+            this.handleAuthentication(null, true);
         }));
     }
 
-    handleAuthentication(user: User) {
+    handleAuthentication(user: User, shouldNavigate: boolean) {
         if (user) {
             this.user = user;
             this.localStorageService.setItem('user', JSON.stringify(this.user));
+            if (shouldNavigate) {
+                this.router.navigate(['posts']);
+            }
         } else {
             this.user = null;
             this.localStorageService.removeItem('user');
+            if (shouldNavigate) {
+                this.router.navigate(['']);
+            }
         }
     }
 }
