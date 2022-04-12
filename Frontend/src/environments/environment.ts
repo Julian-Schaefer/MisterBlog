@@ -7,7 +7,7 @@ export const environment = {
   apiUrl: "http://localhost:5000",
   firebase: {
     apiKey: "AIzaSyDLY466XtHAJhe3aX89RbueINfryvSQS-c",
-    authDomain: "blogify-cdb97.firebaseapp.com",
+    authDomain: "auth.misterblog.me",
     databaseURL: "https://blogify-cdb97.firebaseio.com",
     projectId: "blogify-cdb97",
     storageBucket: "blogify-cdb97.appspot.com",
