@@ -23,8 +23,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ErrorDialogComponent } from './components/error-dialog/error-dialog.component';
-import { SignInComponent } from './components/authentication/sign-in/sign-in.component';
-import { SignUpComponent } from './components/authentication/sign-up/sign-up.component';
 import { SocialSignInComponent } from './components/authentication/social-sign-in/social-sign-in.component';
 import { ForgotPasswordComponent } from './components/authentication/forgot-password/forgot-password.component';
 import { VerifyEmailComponent } from './components/authentication/verify-email/verify-email.component';
@@ -57,6 +55,7 @@ import { AboutComponent } from './components/about/about.component';
 import { LoadingSpinnerComponent } from './util/components/loading-spinner/loading-spinner.component';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { HeaderComponent } from './components/header/header.component';
+import { AuthenticatorComponent } from './components/authentication/authenticator/authenticator.component';
 
 export const interceptorProviders =
     [
@@ -73,8 +72,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     declarations: [
         AppComponent,
         ErrorDialogComponent,
-        SignInComponent,
-        SignUpComponent,
+        AuthenticatorComponent,
         ForgotPasswordComponent,
         VerifyEmailComponent,
         PostListComponent,
