@@ -59,10 +59,25 @@ export class AuthenticationEffects {
                 return observable
                     .pipe(
                         map(_ => AuthenticationActions.signInSuccess()),
-                        catchError(error => of(AuthenticationActions.signInFailed({ error }))),
+                        catchError(error => this.getErrorMessageFromError(error).pipe(
+                            map((errorMessage) => AuthenticationActions.signInFailed({ error: errorMessage })))),
                         take(1)
                     );
             })
+        )
+    );
+
+    resetPassword$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(AuthenticationActions.resetPassword),
+            mergeMap((action) => this.authService.resetPassword(action.email)
+                .pipe(
+                    map(_ => AuthenticationActions.resetPasswordSuccess()),
+                    catchError(error => this.getErrorMessageFromError(error).pipe(
+                        map((errorMessage) => AuthenticationActions.resetPasswordFailed({ error: errorMessage }))
+                    ))
+                )
+            )
         )
     );
 
