@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import * as actions from '../redux/authentication.actions';
@@ -20,7 +20,7 @@ export class AuthenticatorComponent implements OnInit, OnDestroy {
 
   private subscription: Subscription;
 
-  constructor(private store: Store, private route: ActivatedRoute, private formBuilder: FormBuilder) {
+  constructor(private store: Store, private route: ActivatedRoute, private router: Router, private formBuilder: FormBuilder) {
     this.store.dispatch(actions.reset());
     this.authenticationForm = this.formBuilder.group({
       email: [null, [Validators.required]],
@@ -36,6 +36,12 @@ export class AuthenticatorComponent implements OnInit, OnDestroy {
           this.isSignUp = true;
         }
       });
+
+    this.state$.subscribe(state => {
+      if (state.success && this.isSignUp) {
+        this.router.navigate(['verify-email']);
+      }
+    })
   }
 
   ngOnDestroy(): void {
@@ -51,6 +57,6 @@ export class AuthenticatorComponent implements OnInit, OnDestroy {
   }
 
   private signUpWithEmail(email: string, password: string) {
-    this.store.dispatch(actions.signInWithEmail({ email, password }))
+    this.store.dispatch(actions.signUpWithEmail({ email, password }))
   }
 }

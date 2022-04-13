@@ -17,7 +17,7 @@ const routes: Routes = [
   { path: 'sign-in', component: AuthenticatorComponent, canActivate: [PublicGuard], data: { isSignUp: false } },
   { path: 'sign-up', component: AuthenticatorComponent, canActivate: [PublicGuard], data: { isSignUp: true } },
   { path: 'forgot-password', component: ForgotPasswordComponent, canActivate: [PublicGuard] },
-  { path: 'verify-email-address', component: VerifyEmailComponent, canActivate: [PublicGuard] },
+  { path: 'verify-email', component: VerifyEmailComponent, canActivate: [PublicGuard] },
   { path: '**', redirectTo: '' }
 ];
 

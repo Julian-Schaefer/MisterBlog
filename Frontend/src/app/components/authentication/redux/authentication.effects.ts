@@ -43,6 +43,19 @@ export class AuthenticationEffects {
         )
     );
 
+    signUpWithEmail$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(AuthenticationActions.signUpWithEmail),
+            mergeMap((action) => this.authService.signUpWithEmail(action.email, action.password)
+                .pipe(
+                    map(_ => AuthenticationActions.signUpWithEmailSuccess()),
+                    catchError(error => this.getErrorMessageFromError(error).pipe(
+                        map((errorMessage) => AuthenticationActions.signUpWithEmailFailed({ error: errorMessage }))
+                    ))
+                )
+            )
+        )
+    );
 
     signInWithProvider$ = createEffect(() =>
         this.actions$.pipe(
@@ -80,6 +93,21 @@ export class AuthenticationEffects {
             )
         )
     );
+
+    sendVerificationEmail$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(AuthenticationActions.sendVerificationEmail),
+            mergeMap((action) => this.authService.sendVerificationEmail()
+                .pipe(
+                    map(_ => AuthenticationActions.sendVerificationEmailSuccess()),
+                    catchError(error => this.getErrorMessageFromError(error).pipe(
+                        map((errorMessage) => AuthenticationActions.sendVerificationEmailFailed({ error: errorMessage }))
+                    ))
+                )
+            )
+        )
+    );
+
 
     constructor(
         private actions$: Actions,

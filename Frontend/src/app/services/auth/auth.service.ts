@@ -30,27 +30,24 @@ export class AuthService {
         }
     }
 
-    signUpWithEmail(email: string, password: string) {
+    signUpWithEmail(email: string, password: string): Observable<void> {
         if (!this.isBrowser)
             return;
 
-        return this.auth.createUserWithEmailAndPassword(email, password)
+        return from(this.auth.createUserWithEmailAndPassword(email, password)
             .then((_) => {
-                this.sendVerificationMail();
-            }).catch((error) => {
-                window.alert(error.message)
+                this.sendVerificationEmail();
             })
+        );
     }
 
-    async sendVerificationMail() {
+    sendVerificationEmail(): Observable<void> {
         if (!this.isBrowser)
             return;
 
-        let user = await this.auth.currentUser;
-        return user.sendEmailVerification()
-            .then(() => {
-                this.router.navigate(['verify-email-address']);
-            })
+        return from(this.auth.currentUser.then(user => {
+            return user.sendEmailVerification();
+        }));
     }
 
     resetPassword(email: string): Observable<void> {
