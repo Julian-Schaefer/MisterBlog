@@ -5,32 +5,37 @@
                 <h2 *ngIf="!isSignUp">Sign In</h2>
                 <h2 *ngIf="isSignUp">Sign Up</h2>
             </div>
+            <form [formGroup]="authenticationForm">
 
-            <mat-form-field class="input-form-field">
-                <mat-label>E-Mail</mat-label>
-                <input matInput type="email" #userEmail required>
-            </mat-form-field>
+                <mat-form-field class="input-form-field">
+                    <mat-label>E-Mail</mat-label>
+                    <input matInput type="email" #userEmail formControlName="email">
+                </mat-form-field>
 
-            <br>
+                <br>
 
-            <mat-form-field class="input-form-field">
-                <mat-label>Enter your password</mat-label>
-                <input matInput [type]="hidePassword ? 'password' : 'text'" #userPassword required>
-                <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
-                    [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
-                    <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                <mat-form-field class="input-form-field">
+                    <mat-label>Enter your password</mat-label>
+                    <input matInput [type]="hidePassword ? 'password' : 'text'" #userPassword
+                        formControlName="password">
+                    <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
+                        [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+                        <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                </mat-form-field>
+
+                <br>
+
+                <button mat-raised-button color="primary" (click)="signInOrSignUp(userEmail.value, userPassword.value)"
+                    [disabled]="authenticationForm.invalid">
+                    <span *ngIf="!state.authenticationInProgress">Sign in</span>
+                    <app-loading-spinner *ngIf="state.authenticationInProgress" scale="0.25" color="white"
+                        style="height: 36px;"></app-loading-spinner>
                 </button>
-            </mat-form-field>
 
-            <br>
+                <p *ngIf="state.error" id="error">{{state.error}}</p>
 
-            <button mat-raised-button color="primary" (click)="signInOrSignUp(userEmail.value, userPassword.value)">
-                <span *ngIf="!state.authenticationInProgress">Sign in</span>
-                <app-loading-spinner *ngIf="state.authenticationInProgress" scale="0.25" color="white"
-                    style="height: 36px;"></app-loading-spinner>
-            </button>
-
-            <p *ngIf="state.error" id="error">{{state.error}}</p>
+            </form>
 
             <div id="divider-container">
                 <span class="divider"></span>

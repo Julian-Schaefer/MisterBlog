@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
@@ -15,11 +16,16 @@ export class AuthenticatorComponent implements OnInit, OnDestroy {
   hidePassword = true;
   state$ = this.store.select(selectAuthenticationState);
   isSignUp = false;
+  authenticationForm: FormGroup;
 
   private subscription: Subscription;
 
-  constructor(private store: Store, private route: ActivatedRoute) {
+  constructor(private store: Store, private route: ActivatedRoute, private formBuilder: FormBuilder) {
     this.store.dispatch(actions.reset());
+    this.authenticationForm = this.formBuilder.group({
+      email: [null, [Validators.required]],
+      password: [null, [Validators.required]]
+    });
   }
 
   ngOnInit(): void {

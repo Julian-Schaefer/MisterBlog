@@ -11,7 +11,8 @@ mat-card#authentication {
 }
 
 mat-card.authentication-error {
-    border: red 1px solid;
+    border: #a50101 1px solid;
+    box-shadow: 0px 0px 3px #a50101;
 }
 
 h2 {
@@ -55,5 +56,6 @@ div#divider-container p {
 
 p#error {
     margin-top: 20px;
-    color: darkred;
+    color: #a50101;
+    text-align: center;
 }
