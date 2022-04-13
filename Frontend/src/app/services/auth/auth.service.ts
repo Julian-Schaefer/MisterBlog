@@ -53,16 +53,11 @@ export class AuthService {
             })
     }
 
-    resetPassword(passwordResetEmail) {
+    resetPassword(email: string): Observable<void> {
         if (!this.isBrowser)
-            return;
+            return EMPTY;
 
-        return this.auth.sendPasswordResetEmail(passwordResetEmail)
-            .then(() => {
-                window.alert('Password reset email sent, check your inbox.');
-            }).catch((error) => {
-                window.alert(error)
-            })
+        return from(this.auth.sendPasswordResetEmail(email));
     }
 
     get isLoggedIn(): boolean {

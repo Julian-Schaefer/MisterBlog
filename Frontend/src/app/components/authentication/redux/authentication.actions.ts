@@ -28,3 +28,17 @@ export const signInFailed = createAction(
     '[Authentication] Sign in failed',
     props<{ error: any }>()
 );
+
+export const resetPassword = createAction(
+    '[Authentication] Reset Password',
+    props<{ email: string }>()
+);
+
+export const resetPasswordSuccess = createAction(
+    '[Authentication] Reset Password success'
+);
+
+export const resetPasswordFailed = createAction(
+    '[Authentication] Reset Password failed',
+    props<{ error: any }>()
+);

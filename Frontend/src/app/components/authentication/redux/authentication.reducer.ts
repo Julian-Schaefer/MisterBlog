@@ -1,13 +1,15 @@
 import { createReducer, on } from '@ngrx/store';
 import * as AuthenticationActions from './authentication.actions';
 
-export interface State {
-    authenticationInProgress: boolean;
+export interface AuthenticationState {
+    inProgress: boolean;
+    success: boolean;
     error: string;
 }
 
-export const initialState: State = {
-    authenticationInProgress: false,
+export const initialState: AuthenticationState = {
+    inProgress: false,
+    success: false,
     error: null,
 };
 
@@ -17,22 +19,31 @@ export const reducer = createReducer(
         return ({ ...initialState });
     }),
     on(AuthenticationActions.signInSuccess, (_) => {
-        return ({ ...initialState });
+        return ({ ...initialState, success: true });
     }),
     on(AuthenticationActions.signInFailed, (state, { error }) => {
-        return ({ ...state, authenticationInProgress: false, error: error });
+        return ({ ...state, inProgress: false, success: false, error: error });
     }),
     on(AuthenticationActions.signInWithEmail, (state) => {
-        return ({ ...state, authenticationInProgress: true, error: null });
+        return ({ ...state, inProgress: true, success: false, error: null });
     }),
     on(AuthenticationActions.signUpWithEmail, (state) => {
-        return ({ ...state, authenticationInProgress: true, error: null });
+        return ({ ...state, inProgress: true, success: false, error: null });
     }),
     on(AuthenticationActions.signInWithProvider, (state) => {
-        return ({ ...state, authenticationInProgress: true, error: null });
-    })
+        return ({ ...state, inProgress: true, success: false, error: null });
+    }),
+    on(AuthenticationActions.resetPassword, (state) => {
+        return ({ ...state, inProgress: true, success: false, error: null });
+    }),
+    on(AuthenticationActions.resetPasswordSuccess, (_) => {
+        return ({ ...initialState, success: true });
+    }),
+    on(AuthenticationActions.resetPasswordFailed, (state, { error }) => {
+        return ({ ...state, inProgress: false, success: false, error: error });
+    }),
 );
 
-export const selectAuthenticationState = (state: any): State => {
+export const selectAuthenticationState = (state: any): AuthenticationState => {
     return state.authentication;
 }
