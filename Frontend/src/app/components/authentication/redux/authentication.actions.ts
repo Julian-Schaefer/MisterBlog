@@ -15,6 +15,15 @@ export const signUpWithEmail = createAction(
     props<{ email: string, password: string }>()
 );
 
+export const signUpWithEmailSuccess = createAction(
+    '[Authentication] Sign up with Email Success'
+);
+
+export const signUpWithEmailFailed = createAction(
+    '[Authentication] Sign up with Email Failed',
+    props<{ error: any }>()
+);
+
 export const signInWithProvider = createAction(
     '[Authentication] Sign in with Provider',
     props<{ provider: AuthProvider }>()
@@ -40,5 +49,18 @@ export const resetPasswordSuccess = createAction(
 
 export const resetPasswordFailed = createAction(
     '[Authentication] Reset Password failed',
+    props<{ error: any }>()
+);
+
+export const sendVerificationEmail = createAction(
+    '[Authentication] Send Verification Email'
+);
+
+export const sendVerificationEmailSuccess = createAction(
+    '[Authentication] Send Verification Email success'
+);
+
+export const sendVerificationEmailFailed = createAction(
+    '[Authentication] Send Verification Email failed',
     props<{ error: any }>()
 );

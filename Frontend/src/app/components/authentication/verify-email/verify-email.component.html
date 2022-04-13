@@ -1,27 +1,43 @@
-<div class="displayTable">
-    <div class="displayTableCell">
+<div id="container">
+    <div *ngIf="(state$ | async) as state">
+        <mat-card id="authentication" [ngClass]="{'authentication-error' : state.error !== null}">
+            <div *ngIf="authService.user as user; else nothingToSee">
+                <h1>Thank you for signing up!</h1>
 
-        <div class="authBlock">
-            <h3>Thank You for Registering</h3>
+                <br>
 
-            <div class="formGroup" *ngIf="authService.user as user">
-                <p class="text-center">We have sent a confirmation email to <strong>{{user.email}}</strong>.</p>
-                <p class="text-center">Please check your email and click on the link to verfiy your email address.</p>
+                <p>We have sent a confirmation email to <strong>{{user.email}}</strong>. Please check your email and
+                    click on the link to verfiy your email address.</p>
+
+                <br>
+
+                <div class="center">
+                    <button mat-raised-button color="primary" (click)="sendVerificationEmail()">
+                        <span *ngIf="!state.inProgress">Resend Verification Email</span>
+                        <app-loading-spinner *ngIf="state.inProgress" scale="0.25" color="white" style="height: 36px;">
+                        </app-loading-spinner>
+                    </button>
+                </div>
+
+                <br>
+
+                <p *ngIf="state.success" id="success">Success! Verification Email has been resend.</p>
+                <p *ngIf="state.error" id="error">{{state.error}}</p>
+
             </div>
 
-            <!-- Calling SendVerificationMail() method using authService Api -->
-            <div class="formGroup">
-                <button type="button" class="btn btnPrimary" (click)="authService.sendVerificationMail()">
-                    <i class="fas fa-redo-alt"></i>
-                    Resend Verification Email
-                </button>
+            <br>
+
+
+            <div id="bottom-bar">
+                <span>Go back to sign in? <a class="redirect" routerLink="/sign-in">Sign In</a></span>
             </div>
-
-        </div>
-
-        <div class="redirectToLogin">
-            <span>Go back to?<span class="redirect" routerLink="/sign-in"> Sign in</span></span>
-        </div>
-
+        </mat-card>
     </div>
 </div>
+
+<ng-template #nothingToSee>
+    <h1>Not found</h1>
+    <br>
+    <p id="success">Hmm, there is nothing for you to see here.</p>
+</ng-template>

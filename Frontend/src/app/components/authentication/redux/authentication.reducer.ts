@@ -27,19 +27,34 @@ export const reducer = createReducer(
     on(AuthenticationActions.signInWithEmail, (state) => {
         return ({ ...state, inProgress: true, success: false, error: null });
     }),
+    on(AuthenticationActions.signInWithProvider, (state) => {
+        return ({ ...state, inProgress: true, success: false, error: null });
+    }),
     on(AuthenticationActions.signUpWithEmail, (state) => {
         return ({ ...state, inProgress: true, success: false, error: null });
     }),
-    on(AuthenticationActions.signInWithProvider, (state) => {
-        return ({ ...state, inProgress: true, success: false, error: null });
+    on(AuthenticationActions.signUpWithEmailSuccess, (_) => {
+        return ({ ...initialState, inProgress: false, success: true });
+    }),
+    on(AuthenticationActions.signUpWithEmailFailed, (state, { error }) => {
+        return ({ ...state, inProgress: false, success: false, error: error });
     }),
     on(AuthenticationActions.resetPassword, (state) => {
         return ({ ...state, inProgress: true, success: false, error: null });
     }),
     on(AuthenticationActions.resetPasswordSuccess, (_) => {
-        return ({ ...initialState, success: true });
+        return ({ ...initialState, inProgress: false, success: true });
     }),
     on(AuthenticationActions.resetPasswordFailed, (state, { error }) => {
+        return ({ ...state, inProgress: false, success: false, error: error });
+    }),
+    on(AuthenticationActions.sendVerificationEmail, (state) => {
+        return ({ ...state, inProgress: true, success: false, error: null });
+    }),
+    on(AuthenticationActions.sendVerificationEmailSuccess, (_) => {
+        return ({ ...initialState, inProgress: false, success: true });
+    }),
+    on(AuthenticationActions.sendVerificationEmailFailed, (state, { error }) => {
         return ({ ...state, inProgress: false, success: false, error: error });
     }),
 );

@@ -28,7 +28,8 @@
 
                 <button mat-raised-button color="primary" (click)="signInOrSignUp(userEmail.value, userPassword.value)"
                     [disabled]="authenticationForm.invalid">
-                    <span *ngIf="!state.inProgress">Sign in</span>
+                    <span *ngIf="!state.inProgress && !isSignUp">Sign in</span>
+                    <span *ngIf="!state.inProgress && isSignUp">Sign up</span>
                     <app-loading-spinner *ngIf="state.inProgress" scale="0.25" color="white" style="height: 36px;">
                     </app-loading-spinner>
                 </button>
