@@ -56,6 +56,7 @@ import { LoadingSpinnerComponent } from './util/components/loading-spinner/loadi
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { HeaderComponent } from './components/header/header.component';
 import { AuthenticatorComponent } from './components/authentication/authenticator/authenticator.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 export const interceptorProviders =
     [
@@ -124,7 +125,13 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         MatDividerModule,
         MatIconModule,
         NgxSpinnerModule,
-        StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
+        StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+        ServiceWorkerModule.register('ngsw-worker.js', {
+          enabled: environment.production,
+          // Register the ServiceWorker as soon as the application is stable
+          // or after 30 seconds (whichever comes first).
+          registrationStrategy: 'registerWhenStable:30000'
+        })
     ],
     providers: [interceptorProviders, { provide: MAT_DIALOG_DATA, useValue: null }],
     bootstrap: [AppComponent]
