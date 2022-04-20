@@ -6,6 +6,7 @@ import { Router } from "@angular/router";
 import { EMPTY, from, Observable, of } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 import { LocalStorageService } from '../local-storage-service/local-storage.service';
+import { AuthProvider } from 'src/app/components/authentication/redux/AuthProvider';
 
 @Injectable(
     { providedIn: "root" }
@@ -80,22 +81,6 @@ export class AuthService {
         return this.auth.idToken;
     }
 
-    signInWithGoogle(): Observable<firebaseApp.auth.UserCredential> {
-        return from(this.signInWithProvider(new firebaseApp.auth.GoogleAuthProvider()));
-    }
-
-    signInWithFacebook(): Observable<firebaseApp.auth.UserCredential> {
-        return from(this.signInWithProvider(new firebaseApp.auth.FacebookAuthProvider()));
-    }
-
-    signInWithTwitter(): Observable<firebaseApp.auth.UserCredential> {
-        return from(this.signInWithProvider(new firebaseApp.auth.TwitterAuthProvider()));
-    }
-
-    signInWithApple(): Observable<firebaseApp.auth.UserCredential> {
-        return from(this.signInWithProvider(new firebaseApp.auth.GoogleAuthProvider()));
-    }
-
     signInWithEmail(email: string, password: string): Observable<firebaseApp.auth.UserCredential> {
         if (!this.isBrowser)
             return;
@@ -106,14 +91,22 @@ export class AuthService {
         }));
     }
 
-    private async signInWithProvider(provider): Promise<firebaseApp.auth.UserCredential> {
+    signInWithProvider(provider: AuthProvider): Observable<firebaseApp.auth.UserCredential> {
         if (!this.isBrowser)
             return;
 
-        return this.auth.signInWithPopup(provider).then((credential) => {
+        let authProvider: firebaseApp.auth.AuthProvider;
+        switch (provider) {
+            case AuthProvider.GOOGLE: authProvider = new firebaseApp.auth.GoogleAuthProvider(); break;
+            case AuthProvider.FACEBOOK: authProvider = new firebaseApp.auth.FacebookAuthProvider(); break;
+            case AuthProvider.TWITTER: authProvider = new firebaseApp.auth.TwitterAuthProvider(); break;
+            case AuthProvider.APPLE: authProvider = new firebaseApp.auth.GoogleAuthProvider(); break;
+        }
+
+        return from(this.auth.signInWithPopup(authProvider).then((credential) => {
             this.handleAuthentication(credential.user, true);
             return credential;
-        });
+        }));
     }
 
     signOut(): Observable<void> {

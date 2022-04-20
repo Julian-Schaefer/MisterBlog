@@ -1,31 +1,31 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, of } from 'rxjs';
-import { map, mergeMap, catchError, take } from 'rxjs/operators';
+import { from, lastValueFrom } from 'rxjs';
+import { map, mergeMap, catchError } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import * as AuthenticationActions from './authentication.actions';
-import { AuthProvider } from './AuthProvider';
+import { NGXLogger } from "ngx-logger";
 
 @Injectable()
 export class AuthenticationEffects {
 
-    private getErrorMessageFromError(error: any): Observable<string> {
+    private async getErrorMessageFromError(error: any): Promise<string> {
+        let errorMessage = await lastValueFrom(this.translateService.get("error.unknown-error"));
+
         if (error.name && error.name === "FirebaseError") {
             if (error.code && error.code.startsWith("auth/")) {
                 const errorCode = "error.auth." + error.code.substring("auth/".length);
-                return this.translateService.get(errorCode).pipe(
-                    map((errorMessage) => {
-                        if (errorMessage !== errorCode) {
-                            return errorMessage;
-                        }
+                errorMessage = await lastValueFrom(this.translateService.get(errorCode));
 
-                        return error.message;
-                    }));
+                if (errorMessage === errorCode) {
+                    this.logger.warn("No Translation found for error: ", errorCode, error.message);
+                    errorMessage = await lastValueFrom(this.translateService.get("error.auth.unknown-error"));
+                }
             }
         }
 
-        return this.translateService.get("unknown-error");
+        return errorMessage;
     }
 
 
@@ -35,9 +35,9 @@ export class AuthenticationEffects {
             mergeMap((action) => this.authService.signInWithEmail(action.email, action.password)
                 .pipe(
                     map(_ => AuthenticationActions.signInSuccess()),
-                    catchError(error => this.getErrorMessageFromError(error).pipe(
-                        map((errorMessage) => AuthenticationActions.signInFailed({ error: errorMessage }))
-                    ))
+                    catchError(error => from(this.getErrorMessageFromError(error)).pipe(map(errorMessage =>
+                        AuthenticationActions.signInFailed({ error: errorMessage })))
+                    )
                 )
             )
         )
@@ -49,9 +49,9 @@ export class AuthenticationEffects {
             mergeMap((action) => this.authService.signUpWithEmail(action.email, action.password)
                 .pipe(
                     map(_ => AuthenticationActions.signUpWithEmailSuccess()),
-                    catchError(error => this.getErrorMessageFromError(error).pipe(
-                        map((errorMessage) => AuthenticationActions.signUpWithEmailFailed({ error: errorMessage }))
-                    ))
+                    catchError(error => from(this.getErrorMessageFromError(error)).pipe(map(errorMessage =>
+                        AuthenticationActions.signInFailed({ error: errorMessage })))
+                    )
                 )
             )
         )
@@ -61,20 +61,12 @@ export class AuthenticationEffects {
         this.actions$.pipe(
             ofType(AuthenticationActions.signInWithProvider),
             mergeMap((action) => {
-                let observable: Observable<any>;
-                switch (action.provider) {
-                    case AuthProvider.GOOGLE: observable = this.authService.signInWithGoogle(); break;
-                    case AuthProvider.FACEBOOK: observable = this.authService.signInWithFacebook(); break;
-                    case AuthProvider.TWITTER: observable = this.authService.signInWithTwitter(); break;
-                    case AuthProvider.APPLE: observable = this.authService.signInWithApple(); break;
-                }
-
-                return observable
+                return this.authService.signInWithProvider(action.provider)
                     .pipe(
                         map(_ => AuthenticationActions.signInSuccess()),
-                        catchError(error => this.getErrorMessageFromError(error).pipe(
-                            map((errorMessage) => AuthenticationActions.signInFailed({ error: errorMessage })))),
-                        take(1)
+                        catchError(error => from(this.getErrorMessageFromError(error)).pipe(map(errorMessage =>
+                            AuthenticationActions.signInFailed({ error: errorMessage })))
+                        ),
                     );
             })
         )
@@ -86,9 +78,9 @@ export class AuthenticationEffects {
             mergeMap((action) => this.authService.resetPassword(action.email)
                 .pipe(
                     map(_ => AuthenticationActions.resetPasswordSuccess()),
-                    catchError(error => this.getErrorMessageFromError(error).pipe(
-                        map((errorMessage) => AuthenticationActions.resetPasswordFailed({ error: errorMessage }))
-                    ))
+                    catchError(error => from(this.getErrorMessageFromError(error)).pipe(map(errorMessage =>
+                        AuthenticationActions.signInFailed({ error: errorMessage })))
+                    )
                 )
             )
         )
@@ -97,12 +89,12 @@ export class AuthenticationEffects {
     sendVerificationEmail$ = createEffect(() =>
         this.actions$.pipe(
             ofType(AuthenticationActions.sendVerificationEmail),
-            mergeMap((action) => this.authService.sendVerificationEmail()
+            mergeMap((_) => this.authService.sendVerificationEmail()
                 .pipe(
                     map(_ => AuthenticationActions.sendVerificationEmailSuccess()),
-                    catchError(error => this.getErrorMessageFromError(error).pipe(
-                        map((errorMessage) => AuthenticationActions.sendVerificationEmailFailed({ error: errorMessage }))
-                    ))
+                    catchError(error => from(this.getErrorMessageFromError(error)).pipe(map(errorMessage =>
+                        AuthenticationActions.signInFailed({ error: errorMessage })))
+                    )
                 )
             )
         )
@@ -112,6 +104,7 @@ export class AuthenticationEffects {
     constructor(
         private actions$: Actions,
         private authService: AuthService,
-        private translateService: TranslateService
+        private translateService: TranslateService,
+        private logger: NGXLogger
     ) { }
 }
