@@ -57,6 +57,7 @@ import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { HeaderComponent } from './components/header/header.component';
 import { AuthenticatorComponent } from './components/authentication/authenticator/authenticator.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { LoggerModule, NgxLoggerLevel } from "ngx-logger";
 
 export const interceptorProviders =
     [
@@ -98,6 +99,9 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         provideFirebaseApp(() => initializeApp(environment.firebase)),
         AngularFireModule.initializeApp(environment.firebase),
         AngularFireAuthModule,
+        LoggerModule.forRoot({
+            level: NgxLoggerLevel.INFO
+        }),
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -127,10 +131,10 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         NgxSpinnerModule,
         StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
         ServiceWorkerModule.register('ngsw-worker.js', {
-          enabled: environment.production,
-          // Register the ServiceWorker as soon as the application is stable
-          // or after 30 seconds (whichever comes first).
-          registrationStrategy: 'registerWhenStable:30000'
+            enabled: environment.production,
+            // Register the ServiceWorker as soon as the application is stable
+            // or after 30 seconds (whichever comes first).
+            registrationStrategy: 'registerWhenStable:30000'
         })
     ],
     providers: [interceptorProviders, { provide: MAT_DIALOG_DATA, useValue: null }],
