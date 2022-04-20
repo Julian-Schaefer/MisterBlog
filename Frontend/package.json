@@ -45,6 +45,7 @@
     "globalthis": "^1.0.2",
     "localstorage-polyfill": "^1.0.1",
     "moment": "^2.29.1",
+    "ngx-logger": "^5.0.9",
     "ngx-spinner": "^13.1.1",
     "rxjs": "~7.4.0",
     "tslib": "^2.3.1",
