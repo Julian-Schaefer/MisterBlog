@@ -58,6 +58,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { AuthenticatorComponent } from './components/authentication/authenticator/authenticator.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { LoggerModule, NgxLoggerLevel } from "ngx-logger";
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 export const interceptorProviders =
     [
@@ -116,6 +117,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         }),
         EffectsModule.forRoot([BlogSelectionEffects, PostListEffects, AuthenticationEffects]),
         FlexLayoutModule,
+        NgxSkeletonLoaderModule,
         MatButtonModule,
         MatDialogModule,
         MatInputModule,

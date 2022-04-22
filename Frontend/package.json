@@ -46,6 +46,7 @@
     "localstorage-polyfill": "^1.0.1",
     "moment": "^2.29.1",
     "ngx-logger": "^5.0.9",
+    "ngx-skeleton-loader": "^5.0.0",
     "ngx-spinner": "^13.1.1",
     "rxjs": "~7.4.0",
     "tslib": "^2.3.1",
