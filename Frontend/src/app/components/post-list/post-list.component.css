@@ -16,7 +16,7 @@ div#right-container {
     margin-right: 10px;
 }
 
-mat-card#blog-post-card {
+mat-card {
     margin-bottom: 32px;
     border-radius: 25px;
     padding: 25px;

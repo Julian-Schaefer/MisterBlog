@@ -13,7 +13,7 @@
 
             <div *ngIf="state.blogPosts && state.blogPosts.length > 0">
 
-                <mat-card id="blog-post-card" *ngFor="let blogPost of state.blogPosts">
+                <mat-card *ngFor="let blogPost of state.blogPosts">
                     <a id="blog-post-link" routerLink="/post" [state]="{ data: blogPost }"
                         [queryParams]="{ url: blogPost.postUrl }">
                         <h2 id=" blog-post-title">{{blogPost.title}}</h2>
@@ -35,7 +35,14 @@
                 </mat-card>
             </div>
 
-            <mat-spinner *ngIf="state.loadingMore" diameter="42" style="margin: auto;"></mat-spinner>
+            <div *ngIf="state.loadingMore">
+                <mat-card>
+                    <ngx-skeleton-loader count="4" appearance="line" animation="progress-dark"></ngx-skeleton-loader>
+                </mat-card>
+                <mat-card>
+                    <ngx-skeleton-loader count="5" appearance="line" animation="progress-dark"></ngx-skeleton-loader>
+                </mat-card>
+            </div>
         </div>
 
     </div>
