@@ -1,0 +1,12 @@
+{
+  "defaultProject": "Mister-Blog",
+  "projects": {
+    "Mister-Blog": {
+      "name": "Mister-Blog",
+      "integrations": {
+        "capacitor": {}
+      },
+      "type": "angular"
+    }
+  }
+}
