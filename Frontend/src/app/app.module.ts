@@ -59,6 +59,7 @@ import { AuthenticatorComponent } from './components/authentication/authenticato
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { LoggerModule, NgxLoggerLevel } from "ngx-logger";
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { IonicModule } from '@ionic/angular';
 
 export const interceptorProviders =
     [
@@ -137,7 +138,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
             // Register the ServiceWorker as soon as the application is stable
             // or after 30 seconds (whichever comes first).
             registrationStrategy: 'registerWhenStable:30000'
-        })
+        }),
+        IonicModule.forRoot()
     ],
     providers: [interceptorProviders, { provide: MAT_DIALOG_DATA, useValue: null }],
     bootstrap: [AppComponent]
