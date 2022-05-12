@@ -1,60 +1,63 @@
-<div id="container">
-    <div *ngIf="(state$ | async) as state">
-        <mat-card [ngClass]="{'authentication-error' : state.error !== null}">
-            <div style="margin-bottom: 30px;">
-                <h1 *ngIf="!isSignUp">Sign In</h1>
-                <h1 *ngIf="isSignUp">Sign Up</h1>
-            </div>
-            <form [formGroup]="authenticationForm">
+<ion-content>
+    <div id="container">
+        <div *ngIf="(state$ | async) as state">
+            <mat-card [ngClass]="{'authentication-error' : state.error !== null}">
+                <div style="margin-bottom: 30px;">
+                    <h1 *ngIf="!isSignUp">Sign In</h1>
+                    <h1 *ngIf="isSignUp">Sign Up</h1>
+                </div>
+                <form [formGroup]="authenticationForm">
 
-                <mat-form-field>
-                    <mat-label>E-Mail</mat-label>
-                    <input matInput type="email" #userEmail formControlName="email">
-                </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>E-Mail</mat-label>
+                        <input matInput type="email" #userEmail formControlName="email">
+                    </mat-form-field>
 
-                <br>
+                    <br>
 
-                <mat-form-field>
-                    <mat-label>Enter your password</mat-label>
-                    <input matInput [type]="hidePassword ? 'password' : 'text'" #userPassword
-                        formControlName="password">
-                    <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
-                        [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
-                        <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    <mat-form-field>
+                        <mat-label>Enter your password</mat-label>
+                        <input matInput [type]="hidePassword ? 'password' : 'text'" #userPassword
+                            formControlName="password">
+                        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
+                            [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+                            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                        </button>
+                    </mat-form-field>
+
+                    <br>
+
+                    <button mat-raised-button color="primary"
+                        (click)="signInOrSignUp(userEmail.value, userPassword.value)"
+                        [disabled]="authenticationForm.invalid">
+                        <span *ngIf="!state.inProgress && !isSignUp">Sign in</span>
+                        <span *ngIf="!state.inProgress && isSignUp">Sign up</span>
+                        <app-loading-spinner *ngIf="state.inProgress" scale="0.25" color="white" style="height: 36px;">
+                        </app-loading-spinner>
                     </button>
-                </mat-form-field>
 
-                <br>
+                    <p *ngIf="state.error" id="error">{{state.error}}</p>
 
-                <button mat-raised-button color="primary" (click)="signInOrSignUp(userEmail.value, userPassword.value)"
-                    [disabled]="authenticationForm.invalid">
-                    <span *ngIf="!state.inProgress && !isSignUp">Sign in</span>
-                    <span *ngIf="!state.inProgress && isSignUp">Sign up</span>
-                    <app-loading-spinner *ngIf="state.inProgress" scale="0.25" color="white" style="height: 36px;">
-                    </app-loading-spinner>
-                </button>
+                </form>
 
-                <p *ngIf="state.error" id="error">{{state.error}}</p>
+                <div id="divider-container">
+                    <span class="divider"></span>
+                    <p *ngIf="isSignUp">or sign up using</p>
+                    <p *ngIf="!isSignUp">or sign in using</p>
+                    <span class="divider"></span>
+                </div>
 
-            </form>
+                <app-social-sign-in></app-social-sign-in>
 
-            <div id="divider-container">
-                <span class="divider"></span>
-                <p *ngIf="isSignUp">or sign up using</p>
-                <p *ngIf="!isSignUp">or sign in using</p>
-                <span class="divider"></span>
-            </div>
+                <div id="bottom-bar">
+                    <span>Having trouble signing in? <a routerLink="/forgot-password">Forgot Password?</a></span>
 
-            <app-social-sign-in></app-social-sign-in>
+                    <br>
 
-            <div id="bottom-bar">
-                <span>Having trouble signing in? <a routerLink="/forgot-password">Forgot Password?</a></span>
-
-                <br>
-
-                <span *ngIf="isSignUp">Already have an Account? <a routerLink="/sign-in">Sign In</a></span>
-                <span *ngIf="!isSignUp">Don't have an Account? <a routerLink="/sign-up">Sign Up</a></span>
-            </div>
-        </mat-card>
+                    <span *ngIf="isSignUp">Already have an Account? <a routerLink="/sign-in">Sign In</a></span>
+                    <span *ngIf="!isSignUp">Don't have an Account? <a routerLink="/sign-up">Sign Up</a></span>
+                </div>
+            </mat-card>
+        </div>
     </div>
-</div>
+</ion-content>

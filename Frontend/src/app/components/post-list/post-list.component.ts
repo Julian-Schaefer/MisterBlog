@@ -65,9 +65,11 @@ export class PostListComponent implements OnInit, OnDestroy {
     });
   }
 
-  @HostListener("window:scroll", [])
-  onScroll(): void {
-    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+  async handleScroll($event: any) {
+    const scrollElement = await $event.target.getScrollElement();
+    const bufferHeight = 80;
+
+    if (scrollElement.scrollTop >= scrollElement.scrollHeight - scrollElement.clientHeight - bufferHeight) {
       this.loadMoreBlogPosts();
     }
   }
