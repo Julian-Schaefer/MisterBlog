@@ -1,54 +1,58 @@
-<div id="root-container" fxflex fxLayout="column" fxLayoutAlign="center end" fxLayout.gt-sm="row"
-    fxLayoutAlign.gt-sm="space-between start">
+<ion-content [scrollEvents]="true" (ionScroll)="handleScroll($event)">
+    <div id="root-container" fxflex fxLayout="column" fxLayoutAlign="center end" fxLayout.gt-sm="row"
+        fxLayoutAlign.gt-sm="space-between start">
 
-    <div id="left-container">
-        <div *ngIf="(state$ | async) as state">
+        <div id="left-container">
+            <div *ngIf="(state$ | async) as state">
 
-            <div fxHide fxShow.lt-md style="margin-bottom: 20px; margin-right: 10px;" fxLayout="row"
-                fxLayoutAlign="end">
-                <button mat-raised-button color="primary" (click)="onSelectedBlogsClick()">Filter</button>
+                <div fxHide fxShow.lt-md style="margin-bottom: 20px; margin-right: 10px;" fxLayout="row"
+                    fxLayoutAlign="end">
+                    <button mat-raised-button color="primary" (click)="onSelectedBlogsClick()">Filter</button>
+                </div>
+
+                <app-loading-spinner *ngIf="state.loading" style="margin-bottom: 20px;"></app-loading-spinner>
+
+                <div *ngIf="state.blogPosts && state.blogPosts.length > 0">
+
+                    <mat-card *ngFor="let blogPost of state.blogPosts">
+                        <a id="blog-post-link" routerLink="/post" [state]="{ data: blogPost }"
+                            [queryParams]="{ url: blogPost.postUrl }">
+                            <h2 id=" blog-post-title">{{blogPost.title}}</h2>
+                        </a>
+                        <p id="from">From <a [href]="blogPost.blogUrl"
+                                target="_blank">{{utilService.getHostname(blogPost.blogUrl)}}</a></p>
+                        <p id="authors">
+                            By
+                            <span>{{blogPost.authors.join(', ')}}</span>
+                            on {{blogPost.date | date | async}}
+                        </p>
+                        <p id="introduction">{{blogPost.summary}}</p>
+
+                        <mat-divider></mat-divider>
+                        <button id="continue-reading-button" mat-raised-button color="primary" routerLink="/post"
+                            [state]="{ data: blogPost }" [queryParams]="{ url: blogPost.postUrl }">{{
+                            'postList.continueReading'
+                            | translate }}</button>
+                    </mat-card>
+                </div>
+
+                <div *ngIf="state.loadingMore">
+                    <mat-card>
+                        <ngx-skeleton-loader count="4" appearance="line" animation="progress-dark">
+                        </ngx-skeleton-loader>
+                    </mat-card>
+                    <mat-card>
+                        <ngx-skeleton-loader count="5" appearance="line" animation="progress-dark">
+                        </ngx-skeleton-loader>
+                    </mat-card>
+                </div>
             </div>
 
-            <app-loading-spinner *ngIf="state.loading" style="margin-bottom: 20px;"></app-loading-spinner>
+        </div>
 
-            <div *ngIf="state.blogPosts && state.blogPosts.length > 0">
-
-                <mat-card *ngFor="let blogPost of state.blogPosts">
-                    <a id="blog-post-link" routerLink="/post" [state]="{ data: blogPost }"
-                        [queryParams]="{ url: blogPost.postUrl }">
-                        <h2 id=" blog-post-title">{{blogPost.title}}</h2>
-                    </a>
-                    <p id="from">From <a [href]="blogPost.blogUrl"
-                            target="_blank">{{utilService.getHostname(blogPost.blogUrl)}}</a></p>
-                    <p id="authors">
-                        By
-                        <span>{{blogPost.authors.join(', ')}}</span>
-                        on {{blogPost.date | date | async}}
-                    </p>
-                    <p id="introduction">{{blogPost.summary}}</p>
-
-                    <mat-divider></mat-divider>
-                    <button id="continue-reading-button" mat-raised-button color="primary" routerLink="/post"
-                        [state]="{ data: blogPost }" [queryParams]="{ url: blogPost.postUrl }">{{
-                        'postList.continueReading'
-                        | translate }}</button>
-                </mat-card>
-            </div>
-
-            <div *ngIf="state.loadingMore">
-                <mat-card>
-                    <ngx-skeleton-loader count="4" appearance="line" animation="progress-dark"></ngx-skeleton-loader>
-                </mat-card>
-                <mat-card>
-                    <ngx-skeleton-loader count="5" appearance="line" animation="progress-dark"></ngx-skeleton-loader>
-                </mat-card>
-            </div>
+        <div fxHide fxShow.gt-sm id="right-container">
+            <selected-blogs></selected-blogs>
         </div>
 
     </div>
-
-    <div fxHide fxShow.gt-sm id="right-container">
-        <selected-blogs></selected-blogs>
-    </div>
-
-</div>
+</ion-content>
