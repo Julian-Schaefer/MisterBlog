@@ -11,9 +11,10 @@
 
                 <app-loading-spinner *ngIf="state.loading" style="margin-bottom: 20px;"></app-loading-spinner>
 
-                <mat-card *ngIf="!state.loading && (!state.blogPosts || state.blogPosts.length === 0)">Nothing to see
-                    here.
-                </mat-card>
+                <div *ngIf="!state.loading && (!state.blogPosts || state.blogPosts.length === 0)"
+                    style="text-align: center; margin-top: 20px;">
+                    <img src="./assets/svg/illustrations/empty.svg" width="200px" draggable="false" />
+                </div>
 
                 <div *ngIf="state.blogPosts && state.blogPosts.length > 0">
 
