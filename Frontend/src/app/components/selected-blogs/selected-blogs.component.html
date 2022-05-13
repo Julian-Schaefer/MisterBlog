@@ -10,7 +10,7 @@
 
     <div *ngIf="(state$ | async)?.loading === false && (state$ | async) as state; else loading">
 
-        <h2>Selected Blogs:</h2>
+        <h2>Your Blogs:</h2>
         <div *ngIf="!state.error">
 
             <ul>
