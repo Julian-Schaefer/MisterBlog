@@ -1,16 +1,19 @@
 <ion-content [scrollEvents]="true" (ionScroll)="handleScroll($event)">
-    <div id="root-container" fxflex fxLayout="column" fxLayoutAlign="center end" fxLayout.gt-sm="row"
+    <div id="root-container" fxflex fxLayout="column" fxLayoutAlign="center stretch" fxLayout.gt-sm="row"
         fxLayoutAlign.gt-sm="space-between start">
 
-        <div id="left-container">
+        <div fxFlex ngClass.gt-sm="left-container">
             <div *ngIf="(state$ | async) as state">
-
                 <div fxHide fxShow.lt-md style="margin-bottom: 20px; margin-right: 10px;" fxLayout="row"
                     fxLayoutAlign="end">
                     <button mat-raised-button color="primary" (click)="onSelectedBlogsClick()">Filter</button>
                 </div>
 
                 <app-loading-spinner *ngIf="state.loading" style="margin-bottom: 20px;"></app-loading-spinner>
+
+                <mat-card *ngIf="!state.loading && (!state.blogPosts || state.blogPosts.length === 0)">Nothing to see
+                    here.
+                </mat-card>
 
                 <div *ngIf="state.blogPosts && state.blogPosts.length > 0">
 
@@ -41,7 +44,7 @@
                         <ngx-skeleton-loader count="4" appearance="line" animation="progress-dark">
                         </ngx-skeleton-loader>
                     </mat-card>
-                    <mat-card>
+                    <mat-card style="margin-bottom: 0px;">
                         <ngx-skeleton-loader count="5" appearance="line" animation="progress-dark">
                         </ngx-skeleton-loader>
                     </mat-card>

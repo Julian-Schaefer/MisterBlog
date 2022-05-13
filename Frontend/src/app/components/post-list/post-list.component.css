@@ -1,19 +1,19 @@
 div#root-container {
-    max-width: 1000px;
+    max-width: 1040px;
     margin-left: auto;
     margin-right: auto;
     margin-top: 20px;
     margin-bottom: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
-div#left-container {
-    max-width: 620px;
-    margin: auto;
+div.left-container {
+    margin-right: 20px;
 }
 
 div#right-container {
     width: 330px;
-    margin-right: 10px;
 }
 
 mat-card {
@@ -21,8 +21,6 @@ mat-card {
     border-radius: 25px;
     padding: 25px;
     padding-bottom: 20px;
-    margin-left: 10px;
-    margin-right: 10px;
 }
 
 a#blog-post-link {
