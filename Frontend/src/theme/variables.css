@@ -6,6 +6,10 @@
 /* https://ionicframework.com/docs/theming/color-generator */
 
 /** Ionic CSS Variables **/
+ion-content {
+    --ion-background-color: rgb(250, 250, 250);
+}
+
 :root {
     /** primary **/
     --ion-color-primary: darkblue;
