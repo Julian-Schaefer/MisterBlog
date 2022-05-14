@@ -10,23 +10,27 @@
             <div style="float: right">
                 <div *ngIf="authService.user as user; else loggedOut" class="authentication-container" fxLayout="row"
                     fxLayoutAlign="space-between center">
-                    <p id="greeting" fxHide fxShow.gt-xs>Hello{{user.displayName !== null ? ", " :
+                    <p id="greeting" fxHide fxShow.gt-xs>{{ 'general.hello' | translate
+                        }}{{user.displayName !== null ? ", " :
                         ""}}{{user.displayName}}!
                     </p>
                     <div>
-                        <button mat-raised-button color="primary" (click)="authService.signOut()">Sign
-                            out</button>
+                        <button mat-raised-button color="primary" (click)="authService.signOut()">{{
+                            'authentication.sign-out'
+                            |
+                            translate
+                            }}</button>
                     </div>
                 </div>
 
                 <ng-template #loggedOut>
                     <div class="authentication-container" fxLayout="row" fxLayoutAlign="space-between center">
-                        <a [routerLink]="['/sign-in']"><button mat-raised-button color="primary">Sign
-                                in</button></a>
-                        <p style="margin: 12px;" fxHide fxShow.gt-xs>or</p>
-                        <a [routerLink]="['/sign-up']" fxHide fxShow.gt-xs><button mat-raised-button
-                                color="primary">Sign
-                                up</button></a>
+                        <a [routerLink]="['/sign-in']"><button mat-raised-button color="primary">{{
+                                'authentication.sign-in' |
+                                translate}}</button></a>
+                        <p style="margin: 12px;" fxHide fxShow.gt-xs>{{ 'general.or' | translate}}</p>
+                        <a [routerLink]="['/sign-up']" fxHide fxShow.gt-xs><button mat-raised-button color="primary">{{
+                                'authentication.sign-up' | translate}}</button></a>
                     </div>
                 </ng-template>
             </div>

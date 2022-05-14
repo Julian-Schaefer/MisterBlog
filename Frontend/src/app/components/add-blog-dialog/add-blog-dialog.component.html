@@ -1,32 +1,41 @@
-<h2 mat-dialog-title>Add a new Blog</h2>
+<h2 mat-dialog-title>{{
+    'addBlogDialog.addNewBlog'
+    | translate }}</h2>
 <div id="dialog-content" mat-dialog-content>
-    <p>Please specify the URL of the new Blog below.</p>
+    <p>{{
+        'addBlogDialog.specifyBlogUrl'
+        | translate }}</p>
     <mat-form-field>
         <mat-label>URL</mat-label>
-        <input matInput [(ngModel)]="blogUrl" placeholder="www.example.com" [formControl]="addBlogFormControl">
+        <input matInput [(ngModel)]="blogUrl" placeholder="{{
+            'addBlogDialog.exampleUrl' | translate }}" [formControl]="addBlogFormControl">
 
         <mat-error *ngIf="addBlogFormControl.hasError('pattern') && !addBlogFormControl.hasError('required')">
-            Please enter a valid URL
+            {{ 'addBlogDialog.pleaseEnterValidUrl' | translate }}
         </mat-error>
         <mat-error *ngIf="addBlogFormControl.hasError('required')">
-            URL is <strong>required</strong>
+            {{ 'addBlogDialog.urlIs' | translate }} <strong>{{ 'general.required' | translate }}</strong>
         </mat-error>
         <mat-error *ngIf="addBlogFormControl.hasError('not_supported')">
-            The specified Blog URL is not supported. Please contact our support for help
+            {{ 'addBlogDialog.blogUrlNotSupported' | translate }}
         </mat-error>
         <mat-error *ngIf="addBlogFormControl.hasError('conflict')">
-            You have already added this Blog URL. Please check your selected Blogs
+            {{ 'addBlogDialog.blogAlreadyAdded' | translate }}
         </mat-error>
         <mat-error *ngIf="addBlogFormControl.hasError('unknown')">
-            An unknown error has occured
+            {{ 'error.unknown-error' | translate }}
         </mat-error>
     </mat-form-field>
 </div>
 <div mat-dialog-actions>
-    <button mat-raised-button (click)="onCancelClick()">Cancel</button>
+    <button mat-raised-button (click)="onCancelClick()">{{
+        'general.cancel'
+        | translate }}</button>
     <button mat-raised-button color="primary" (click)="onAddClick()" [disabled]="!addBlogFormControl.valid"
         cdkFocusInitial>
-        <span *ngIf="!loading">Add</span>
+        <span *ngIf="!loading">{{
+            'general.add'
+            | translate }}</span>
         <app-loading-spinner *ngIf="loading" scale="0.25" color="white" style="height: 36px;"></app-loading-spinner>
     </button>
 </div>
