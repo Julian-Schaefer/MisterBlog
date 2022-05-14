@@ -21,7 +21,7 @@ export const initialState: PostListState = {
 export const reducer = createReducer(
     initialState,
     on(PostListActions.initializePostListSuccess, (state, { blogPosts }) => ({ ...state, blogPosts })),
-    on(PostListActions.refreshPostList, (state) => ({ ...state, loading: true, currentPage: 0 })),
+    on(PostListActions.refreshPostList, (state) => ({ ...state, loading: true, loadingMore: false, currentPage: 0 })),
     on(PostListActions.loadMorePostList, (state) => ({ ...state, loadingMore: true, currentPage: state.currentPage + 1 })),
     on(PostListActions.getPostListSuccess, (state, { blogPosts }) => ({ ...state, blogPosts, loading: false })),
     on(PostListActions.getPostListFailed, (state, { error }) => ({ ...state, blogPosts: [], loading: false, error }))
