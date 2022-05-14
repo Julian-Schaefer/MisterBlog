@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
@@ -8,25 +8,37 @@ import { selectBlogSelectionState } from '../selected-blogs/redux/blog-selection
 import * as actions from './redux/post-list.actions';
 import { MatDialog } from '@angular/material/dialog';
 import { SelectedBlogsComponent } from '../selected-blogs/selected-blogs.component';
+import { IonContent } from '@ionic/angular';
 
 @Component({
   selector: 'app-post-list',
   templateUrl: './post-list.component.html',
   styleUrls: ['./post-list.component.css']
 })
-export class PostListComponent implements OnInit, OnDestroy {
+export class PostListComponent implements OnInit {
 
   private routerEventSubscription: Subscription;
+  @ViewChild(IonContent, { static: false }) content: IonContent;
 
   state$ = this.store.select(selectPostListState);
   blogSelectionState$ = this.store.select(selectBlogSelectionState);
 
-  constructor(public utilService: UtilService, private store: Store, private router: Router, private dialog: MatDialog) {
+  constructor(public utilService: UtilService, private store: Store, private router: Router, private dialog: MatDialog) { }
+
+  ionViewWillEnter() {
+    const componentUrl = this.router.url;
     this.routerEventSubscription = this.router.events.subscribe(evt => {
-      if (evt instanceof NavigationEnd) {
+      if (evt instanceof NavigationEnd && evt.url && evt.url === componentUrl) {
         this.loadBlogPosts();
+        this.content.scrollToTop(700);
       }
     })
+  }
+
+  ionViewWillLeave() {
+    if (this.routerEventSubscription) {
+      this.routerEventSubscription.unsubscribe();
+    }
   }
 
   ngOnInit(): void {
@@ -38,12 +50,6 @@ export class PostListComponent implements OnInit, OnDestroy {
         this.loadBlogPosts();
       }
     });
-  }
-
-  ngOnDestroy() {
-    if (this.routerEventSubscription) {
-      this.routerEventSubscription.unsubscribe();
-    }
   }
 
   loadBlogPosts(): void {
