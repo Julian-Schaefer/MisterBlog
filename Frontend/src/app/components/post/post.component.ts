@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { BlogPost } from 'src/app/services/BlogPost';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BlogService } from 'src/app/services/blog/blog.service';
@@ -14,10 +14,16 @@ export class PostComponent {
   blogPost: BlogPost;
   blogUrl: string;
 
-  constructor(public utilService: UtilService, private blogService: BlogService, private router: Router, private activatedRoute: ActivatedRoute) {
-    if (this.router.getCurrentNavigation().extras.state) {
-      this.setBlogPost(this.router.getCurrentNavigation().extras.state.data as BlogPost);
+  constructor(public utilService: UtilService, private blogService: BlogService, private router: Router, private activatedRoute: ActivatedRoute) { }
+
+  ionViewWillEnter() {
+    const blogPost = history.state.data as BlogPost;
+    if (blogPost) {
+      this.setBlogPost(blogPost);
     } else {
+      this.blogPost = null;
+      this.blogUrl = null;
+
       this.blogService.getBlogPostFromUrl(this.activatedRoute.snapshot.queryParamMap.get('url')).subscribe(data => {
         this.setBlogPost(data);
       });

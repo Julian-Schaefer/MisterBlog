@@ -1,15 +1,12 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { BlogService } from 'src/app/services/blog/blog.service';
-import { BlogPost } from 'src/app/services/BlogPost';
-import { ServiceResult, ServiceResultStatus } from 'src/app/services/ServiceResult';
 import { UtilService } from 'src/app/services/util.service';
 import { selectPostListState } from './redux/post-list.reducer';
 import { selectBlogSelectionState } from '../selected-blogs/redux/blog-selection.reducer';
 import * as actions from './redux/post-list.actions';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { SelectedBlogsComponent } from '../selected-blogs/selected-blogs.component';
 
 @Component({
