@@ -3,20 +3,20 @@
         <div *ngIf="(state$ | async) as state">
             <mat-card [ngClass]="{'authentication-error' : state.error !== null}">
                 <div style="margin-bottom: 30px;">
-                    <h1 *ngIf="!isSignUp">Sign In</h1>
-                    <h1 *ngIf="isSignUp">Sign Up</h1>
+                    <h1 *ngIf="!isSignUp">{{ 'authentication.sign-in' | translate }}</h1>
+                    <h1 *ngIf="isSignUp">{{ 'authentication.sign-up' | translate }}</h1>
                 </div>
-                <form [formGroup]="authenticationForm">
 
+                <form [formGroup]="authenticationForm">
                     <mat-form-field>
-                        <mat-label>E-Mail</mat-label>
+                        <mat-label>{{ 'authentication.email' | translate }}</mat-label>
                         <input matInput type="email" #userEmail formControlName="email">
                     </mat-form-field>
 
                     <br>
 
                     <mat-form-field>
-                        <mat-label>Enter your password</mat-label>
+                        <mat-label>{{ 'authentication.enter-password' | translate }}</mat-label>
                         <input matInput [type]="hidePassword ? 'password' : 'text'" #userPassword
                             formControlName="password">
                         <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
@@ -30,8 +30,8 @@
                     <button mat-raised-button color="primary"
                         (click)="signInOrSignUp(userEmail.value, userPassword.value)"
                         [disabled]="authenticationForm.invalid">
-                        <span *ngIf="!state.inProgress && !isSignUp">Sign in</span>
-                        <span *ngIf="!state.inProgress && isSignUp">Sign up</span>
+                        <span *ngIf="!state.inProgress && !isSignUp">{{ 'authentication.sign-in' | translate }}</span>
+                        <span *ngIf="!state.inProgress && isSignUp">{{ 'authentication.sign-up' | translate }}</span>
                         <app-loading-spinner *ngIf="state.inProgress" scale="0.25" color="white" style="height: 36px;">
                         </app-loading-spinner>
                     </button>
@@ -42,20 +42,23 @@
 
                 <div id="divider-container">
                     <span class="divider"></span>
-                    <p *ngIf="isSignUp">or sign up using</p>
-                    <p *ngIf="!isSignUp">or sign in using</p>
+                    <p *ngIf="isSignUp">{{ 'authentication.or-sign-up-using' | translate }}</p>
+                    <p *ngIf="!isSignUp">{{ 'authentication.or-sign-in-using' | translate }}</p>
                     <span class="divider"></span>
                 </div>
 
                 <app-social-sign-in></app-social-sign-in>
 
                 <div id="bottom-bar">
-                    <span>Having trouble signing in? <a routerLink="/forgot-password">Forgot Password?</a></span>
+                    <span>{{ 'authentication.trouble-signing-in' | translate }} <a routerLink="/forgot-password">{{
+                            'authentication.forgot-password' | translate }}</a></span>
 
                     <br>
 
-                    <span *ngIf="isSignUp">Already have an Account? <a routerLink="/sign-in">Sign In</a></span>
-                    <span *ngIf="!isSignUp">Don't have an Account? <a routerLink="/sign-up">Sign Up</a></span>
+                    <span *ngIf="isSignUp">{{ 'authentication.already-have-account' | translate }} <a
+                            routerLink="/sign-in">{{ 'authentication.sign-in' | translate }}</a></span>
+                    <span *ngIf="!isSignUp">{{ 'authentication.dont-have-account' | translate }} <a
+                            routerLink="/sign-up">{{ 'authentication.sign-up' | translate }}</a></span>
                 </div>
             </mat-card>
         </div>

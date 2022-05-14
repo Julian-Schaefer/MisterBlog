@@ -1,13 +1,59 @@
 {
+    "general": {
+        "cancel": "Abbrechen",
+        "add": "Hinzufügen",
+        "required": "benötigt",
+        "hello": "Hallo",
+        "or": "oder"
+    },
     "postList": {
-        "continueReading": "Weiterlesen"
+        "continueReading": "Weiterlesen",
+        "yourBlogs": "Deine Blogs",
+        "nothingHere": "Hier ist noch nichts zu sehen. Füge deinen ersten Blog hinzu!",
+        "addBlog": "Blog hinzufügen"
+    },
+    "addBlogDialog": {
+        "addNewBlog": "Neuen Blog hinzufügen",
+        "specifyBlogUrl": "Bitte gib hier die URL des neuen Blogs an.",
+        "exampleUrl": "www.beispiel.com",
+        "urlIs": "URL wird",
+        "pleaseEnterValidUrl": "Bitte gib eine valide URL ein",
+        "blogUrlNotSupported": "Diese Blog URL wird nicht unterstützt. Bitte kontaktiere den Support für Hilfe",
+        "blogAlreadyAdded": "Du hast diesen Blog bereits hinzugefügt. Bitte überprüfe deine Blogs."
     },
     "date": {
         "dateFormatPattern": "MMM d, y, h:mm"
     },
+    "authentication": {
+        "sign-in": "Einloggen",
+        "sign-up": "Registrieren",
+        "sign-out": "Ausloggen",
+        "email": "E-Mail",
+        "enter-password": "Passwort eingeben",
+        "or-sign-in-using": "oder logge dich ein mit",
+        "or-sign-up-using": "oder registriere dich mit",
+        "trouble-signing-in": "Probleme beim Einloggen?",
+        "forgot-password": "Passwort vergessen?",
+        "dont-have-account": "Du hast noch keinen Account?",
+        "already-have-account": "Du hast bereits einen Account?",
+        "request-password": "Bitte gib deine E-Mail ein, um dein Passwort zurückzusetzen.",
+        "enter-email": "E-Mail eingeben",
+        "reset-password": "Passwort zurücksetzen",
+        "back-to-sign-in": "Zurück zum Einloggen?",
+        "success": "Erfolg!",
+        "verification-email-sent": "Wir haben eine <b>Verifizierungs-Mail</b> gesendet! Bitte prüfe dein Postfach.",
+        "thanks-for-sign-up": "Danke und willkommen!",
+        "resend-verification-email": "Verifizierung erneut senden",
+        "confirmation-email-sent": "Wir haben eine Bestätings-Mail an <strong>{{email}}</strong> gesendet. Bitte prüfe dein Postfach und klicke auf den Link um deine E-Mail zu bestätigen.",
+        "confirmation-email-resent": "Erfolg! Die Bestätigungs-Mail wurde erneut gesendet.",
+        "nothing-here": "Hmm, hier gibt es nichts zu sehen.",
+        "not-found": "Nicht gefunden"
+    },
     "error": {
+        "unknown-error": "Ein unbekannter Fehler ist aufgetreten.",
         "auth": {
-            "invalid-email": "Falsche email bruder"
+            "invalid-email": "Die angegebene E-Mail ist falsch formatiert.",
+            "wrong-password": "Das eingegebene Passwort ist falsch."
         }
     }
 }

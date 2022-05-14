@@ -1,6 +1,50 @@
 {
+    "general": {
+        "cancel": "Cancel",
+        "add": "Add",
+        "required": "required",
+        "hello": "Hello",
+        "or": "or"
+    },
     "postList": {
-        "continueReading": "Continue reading"
+        "continueReading": "Continue reading",
+        "yourBlogs": "Your Blogs",
+        "nothingHere": "Nothing here yet. Go ahead and add your first Blog!",
+        "addBlog": "Add Blog"
+    },
+    "addBlogDialog": {
+        "addNewBlog": "Add a new Blog",
+        "specifyBlogUrl": "Please specify the URL of the new Blog below.",
+        "exampleUrl": "www.example.com",
+        "urlIs": "URL is",
+        "pleaseEnterValidUrl": "Please enter a valid URL",
+        "blogUrlNotSupported": "The specified Blog URL is not supported. Please contact our support for help",
+        "blogAlreadyAdded": "You have already added this Blog URL. Please check your Blogs"
+    },
+    "authentication": {
+        "sign-in": "Sign in",
+        "sign-up": "Sign up",
+        "sign-out": "Sign out",
+        "email": "Email",
+        "enter-password": "Enter your password",
+        "or-sign-in-using": "or sign in using",
+        "or-sign-up-using": "or sign up using",
+        "trouble-signing-in": "Having trouble signing in?",
+        "forgot-password": "Forgot Password?",
+        "dont-have-account": "Don't have an Account?",
+        "already-have-account": "Already have an Account?",
+        "request-password": "Please enter your email address to request a password reset.",
+        "enter-email": "Enter your email",
+        "reset-password": "Reset Password",
+        "back-to-sign-in": "Go back to sign in?",
+        "success": "Success!",
+        "verification-email-sent": "We have sent a <b>verification email</b>! Please check your inbox.",
+        "thanks-for-sign-up": "Thank you for signing up!",
+        "resend-verification-email": "Resend Verification Email",
+        "confirmation-email-sent": "We have sent a confirmation email to <strong>{{email}}</strong>. Please check your email and click on the link to verfiy your email address.",
+        "confirmation-email-resent": "Success! Confirmation Email has been resend.",
+        "nothing-here": "Hmm, there is nothing for you to see here.",
+        "not-found": "Not found"
     },
     "date": {
         "dateFormatPattern": "MMM d, y, h:mm a"
@@ -9,7 +53,7 @@
         "unknown-error": "An unknown error has occured.",
         "auth": {
             "invalid-email": "The email address is badly formatted.",
-            "wrong-password": "The password is invalid or the user does not have a password.",
+            "wrong-password": "The password is wrong.",
             "too-many-requests": "Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later."
         }
     }
