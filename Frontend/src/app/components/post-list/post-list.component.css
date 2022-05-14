@@ -19,7 +19,9 @@ div#right-container {
 mat-card {
     margin-bottom: 32px;
     border-radius: 25px;
-    padding: 25px;
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 20px;
     padding-bottom: 20px;
 }
 
@@ -29,26 +31,49 @@ a#blog-post-link {
 }
 
 h2#blog-post-title {
-    font-size: 18pt;
+    font-size: 16pt;
+    margin-bottom: 8px;
 }
 
-p#from {
-    float: left;
+a#blog-url {
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 11pt;
+}
+
+p#date {
+    font-weight: 500;
+    font-size: 11pt;
+}
+
+div#authors-container {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    text-align: right;
+    margin-top: 8px;
 }
 
 p#authors {
-    float: right;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-weight: 500;
+    font-size: 11pt;
+}
+
+div.divider {
+    margin-bottom: 12px;
+}
+
+button {
+    margin-top: 20px;
 }
 
 p#introduction {
-    clear: both;
     text-align: justify;
     overflow-wrap: break-word;
     word-wrap: break-word;
     word-break: break-word;
     hyphens: auto;
-}
-
-button#continue-reading-button {
-    margin-top: 20px;
 }
