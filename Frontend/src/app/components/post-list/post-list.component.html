@@ -21,20 +21,43 @@
                     <mat-card *ngFor="let blogPost of state.blogPosts">
                         <a id="blog-post-link" routerLink="/post" [state]="{ data: blogPost }"
                             [queryParams]="{ url: blogPost.postUrl }">
-                            <h2 id=" blog-post-title">{{blogPost.title}}</h2>
+                            <h2 id="blog-post-title">{{blogPost.title}}</h2>
                         </a>
-                        <p id="from">From <a [href]="blogPost.blogUrl"
-                                target="_blank">{{utilService.getHostname(blogPost.blogUrl)}}</a></p>
-                        <p id="authors">
-                            By
-                            <span>{{blogPost.authors.join(', ')}}</span>
-                            on {{blogPost.date | date | async}}
-                        </p>
+
+                        <div fxLayout="row">
+                            <div fxFlex="60">
+                                <a id="blog-url" [href]="blogPost.blogUrl"
+                                    target="_blank">{{utilService.getHostname(blogPost.blogUrl)}}</a>
+                            </div>
+
+                            <div fxFlex="40" style="text-align: right;">
+                                <p id="date">{{blogPost.date | date | async}}</p>
+                            </div>
+                        </div>
+
+                        <div class="divider">
+                            <mat-divider></mat-divider>
+                        </div>
+
                         <p id="introduction">{{blogPost.summary}}</p>
 
+                        <div fxLayout="row wrap" *ngIf="blogPost.authors && blogPost.authors.length > 0">
+                            <div fxFlex="40"></div>
+
+                            <div fxFlex="60">
+                                <div id="authors-container">
+                                    <p id="authors">
+                                        By
+                                        <span>{{blogPost.authors.join(', ')}}</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
                         <mat-divider></mat-divider>
-                        <button id="continue-reading-button" mat-raised-button color="primary" routerLink="/post"
-                            [state]="{ data: blogPost }" [queryParams]="{ url: blogPost.postUrl }">{{
+
+                        <button mat-raised-button color="primary" routerLink="/post" [state]="{ data: blogPost }"
+                            [queryParams]="{ url: blogPost.postUrl }">{{
                             'postList.continueReading'
                             | translate }}</button>
                     </mat-card>
