@@ -18,7 +18,7 @@ class BlogService {
     if (kReleaseMode) {
       return "https://blogify-flask.herokuapp.com/";
     } else {
-      return "http://localhost:5000";
+      return "http://localhost:4999";
     }
   }
 
