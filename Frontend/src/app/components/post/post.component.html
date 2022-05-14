@@ -5,22 +5,43 @@
         <mat-card *ngIf="blogPost" id="blog-post">
             <h1><b>{{blogPost.title}}</b></h1>
 
-            <p style="float: left;">From <a [href]="blogUrl" target="_blank">{{utilService.getHostname(blogUrl)}}</a>
-            </p>
-            <p style="float: right;">By {{blogPost.authors.join(', ')}} on {{blogPost.date | date | async}}</p>
-            <div style="clear: both;"></div>
+
+            <div fxLayout="row">
+                <div fxFlex="60">
+                    <p>{{ "postDetails.published-on" | translate }} <a id="blog-url" [href]="blogUrl"
+                            target="_blank">{{utilService.getHostname(blogUrl)}}</a></p>
+                </div>
+
+                <div fxFlex="40" style="text-align: right;">
+                    <p id="date">{{blogPost.date | date | async}}</p>
+                </div>
+            </div>
 
             <mat-divider></mat-divider>
-            <div style="height: 20px;"></div>
+            <div style="height: 12px;"></div>
 
             <div id="content" [innerHTML]="blogPost.content | safeHtml"></div>
 
-            <div style="height: 20px;"></div>
+
+            <div fxLayout="row wrap" *ngIf="blogPost.authors && blogPost.authors.length > 0">
+                <div fxFlex="40"></div>
+
+                <div fxFlex="60">
+                    <div id="authors-container">
+                        <p id="authors">
+                            {{ "general.by" | translate }}
+                            <span>{{blogPost.authors.join(', ')}}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="height: 12px;"></div>
             <mat-divider></mat-divider>
+
             <button id="original-post-button" mat-raised-button color="primary">
-                <a id="original-post-link" target="_blank" rel="noopener noreferrer" href="{{blogPost.postUrl}}">Go to
-                    original
-                    Post</a></button>
+                <a id="original-post-link" target="_blank" rel="noopener noreferrer" href="{{blogPost.postUrl}}">{{
+                    "postDetails.go-to-original-post" | translate }}</a></button>
         </mat-card>
     </div>
 </ion-content>

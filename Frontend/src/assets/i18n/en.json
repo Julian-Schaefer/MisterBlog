@@ -4,13 +4,18 @@
         "add": "Add",
         "required": "required",
         "hello": "Hello",
-        "or": "or"
+        "or": "or",
+        "by": "By"
     },
     "postList": {
         "continueReading": "Continue reading",
         "yourBlogs": "Your Blogs",
         "nothingHere": "Nothing here yet. Go ahead and add your first Blog!",
         "addBlog": "Add Blog"
+    },
+    "postDetails": {
+        "published-on": "Published by",
+        "go-to-original-post": "Go to original Post"
     },
     "addBlogDialog": {
         "addNewBlog": "Add a new Blog",

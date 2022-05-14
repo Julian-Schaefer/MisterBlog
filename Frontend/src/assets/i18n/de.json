@@ -4,13 +4,18 @@
         "add": "Hinzufügen",
         "required": "benötigt",
         "hello": "Hallo",
-        "or": "oder"
+        "or": "oder",
+        "by": "Von"
     },
     "postList": {
         "continueReading": "Weiterlesen",
         "yourBlogs": "Deine Blogs",
         "nothingHere": "Hier ist noch nichts zu sehen. Füge deinen ersten Blog hinzu!",
         "addBlog": "Blog hinzufügen"
+    },
+    "postDetails": {
+        "published-on": "Erschienen auf",
+        "go-to-original-post": "Originalen Post öffnen"
     },
     "addBlogDialog": {
         "addNewBlog": "Neuen Blog hinzufügen",

@@ -22,6 +22,27 @@ mat-card#blog-post {
     padding-bottom: 20px;
 }
 
+a#blog-url {
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 11pt;
+}
+
+p#date {
+    font-weight: 500;
+    font-size: 11pt;
+}
+
+div#authors-container {
+    text-align: right;
+    margin-top: 8px;
+}
+
+p#authors {
+    font-weight: 500;
+    font-size: 11pt;
+}
+
 div#content {
     text-align: justify;
     overflow-wrap: break-word;
