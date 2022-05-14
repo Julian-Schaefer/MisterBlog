@@ -21,7 +21,9 @@
             },
             "args": [
                 "run",
-                "--no-debugger"
+                "--no-debugger",
+                "--port",
+                "4999"
             ],
             "jinja": true
         }
