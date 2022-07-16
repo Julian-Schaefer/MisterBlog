@@ -4,7 +4,10 @@
     "Mister-Blog": {
       "name": "Mister-Blog",
       "integrations": {
-        "capacitor": {}
+        "capacitor": {},
+        "cordova": {
+          "enabled": false
+        }
       },
       "type": "angular"
     }

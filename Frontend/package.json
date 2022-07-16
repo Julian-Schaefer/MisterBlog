@@ -32,6 +32,7 @@
     "@angular/platform-server": "~13.3.3",
     "@angular/router": "~13.3.3",
     "@angular/service-worker": "~13.3.3",
+    "@awesome-cordova-plugins/facebook": "^5.43.0",
     "@capacitor/android": "3.5.0",
     "@capacitor/app": "^1.1.1",
     "@capacitor/core": "3.5.0",
