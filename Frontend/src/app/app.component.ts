@@ -1,16 +1,19 @@
 import { isPlatformServer } from '@angular/common';
-import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from './services/auth/auth.service';
+import { StatusBar, Style } from '@capacitor/status-bar';
+import { Capacitor } from '@capacitor/core';
+
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   private platformId: Object;
 
   constructor(public authService: AuthService, private translateService: TranslateService,
@@ -28,6 +31,14 @@ export class AppComponent {
     this.registerIcon("google_signin", './assets/svg/google_signin.svg');
     this.registerIcon("twitter", './assets/svg/twitter.svg');
     this.registerIcon("apple", './assets/svg/apple.svg');
+  }
+
+  ngOnInit(): void {
+    if (Capacitor.isPluginAvailable('StatusBar')) {
+      StatusBar.setStyle({
+        style: Style.Dark
+      });
+    }
   }
 
   private registerIcon(name: string, filename: string) {
