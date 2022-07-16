@@ -1,6 +1,0 @@
-{
-	"appId": "org.sheeper.misterblog",
-	"appName": "Mister-Blog",
-	"webDir": "dist/Mister-Blog/browser",
-	"bundledWebRuntime": false
-}
