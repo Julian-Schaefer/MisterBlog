@@ -38,6 +38,10 @@ export class AppComponent implements OnInit {
       StatusBar.setStyle({
         style: Style.Dark
       });
+
+      if (Capacitor.getPlatform() === 'android') {
+        StatusBar.setBackgroundColor({ color: '#00008b' });
+      }
     }
   }
 
