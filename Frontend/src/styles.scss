@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 .mat-form-field-invalid div.mat-form-field-flex {
   border: red 1px solid !important;
 }
