@@ -13,10 +13,11 @@
 
                 <div *ngIf="!state.loading && (!state.blogPosts || state.blogPosts.length === 0)"
                     style="text-align: center; margin-top: 20px;">
-                    <img src="./assets/svg/illustrations/empty.svg" width="200px" draggable="false" />
+                    <img src="./assets/svg/illustrations/empty.svg" width="200px" draggable="false"
+                        style="margin: auto;" />
                 </div>
 
-                <div *ngIf="state.blogPosts && state.blogPosts.length > 0">
+                <div *ngIf="state.blogPosts && state.blogPosts.length> 0">
 
                     <mat-card *ngFor="let blogPost of state.blogPosts">
                         <a id="blog-post-link" routerLink="/post" [state]="{ data: blogPost }"
