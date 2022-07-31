@@ -7,6 +7,9 @@
             "label": "Start Environment",
             "type": "shell",
             "command": "./start-DB.sh",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
             "windows": {
                 "command": ".\\start-DB.cmd"
             },
