@@ -8,32 +8,37 @@ import pytz
 from urllib.parse import urldefrag
 from readability import Document
 import app.html_utils as html_utils
+from app.rss_selector import get_links_from_feed
 
 
-def get_articles(page, blogSelection):
-    article_selectors = blogSelection.article_selectors
-    page_counter_url = blogSelection.page_counter_url
-
-    if page > 1:
-        blog_page_url = page_counter_url.replace("{page-counter}", str(page))
+def get_articles(page, blog_selection):
+    if blog_selection.rss_url:
+        article_urls = get_links_from_feed(blog_selection.rss_url, page)
     else:
-        blog_page_url = blogSelection.blog_url
+        article_selectors = blog_selection.article_selectors
+        page_counter_url = blog_selection.page_counter_url
 
-    page_soup = html_utils.get_soup_from_url(blog_page_url)
+        if page > 1:
+            blog_page_url = page_counter_url.replace(
+                "{page-counter}", str(page))
+        else:
+            blog_page_url = blog_selection.blog_url
 
-    article_urls = []
-    for article_selector in article_selectors:
-        links_on_page = page_soup.select(
-            html_utils.selector_path_to_string(article_selector), href=True)
+        page_soup = html_utils.get_soup_from_url(blog_page_url)
 
-        for link_on_page in links_on_page:
-            href = html_utils.get_href_from_link(
-                blogSelection.blog_url, link_on_page)
-            href = urldefrag(href)[0]
-            if href not in article_urls:
-                article_urls += [href]
+        article_urls = []
+        for article_selector in article_selectors:
+            links_on_page = page_soup.select(
+                html_utils.selector_path_to_string(article_selector), href=True)
 
-    return (blogSelection, article_urls)
+            for link_on_page in links_on_page:
+                href = html_utils.get_href_from_link(
+                    blog_selection.blog_url, link_on_page)
+                href = urldefrag(href)[0]
+                if href not in article_urls:
+                    article_urls += [href]
+
+    return (blog_selection, article_urls)
 
 
 def get_invalid_article_paths(blog_url, article_paths, page_soup, compare_soup):
