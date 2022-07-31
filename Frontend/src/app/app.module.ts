@@ -59,7 +59,8 @@ import { AuthenticatorComponent } from './components/authentication/authenticato
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { LoggerModule, NgxLoggerLevel } from "ngx-logger";
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+import { RouteReuseStrategy } from '@angular/router';
 
 export const interceptorProviders =
     [
@@ -69,7 +70,7 @@ export const interceptorProviders =
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
-    return new TranslateHttpLoader(http);
+    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
 @NgModule({
@@ -93,6 +94,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ],
     imports: [
         BrowserModule.withServerTransition({ appId: 'serverApp' }),
+        IonicModule.forRoot(),
         HttpClientModule,
         AppRoutingModule,
         FormsModule,
@@ -139,9 +141,9 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
             // or after 30 seconds (whichever comes first).
             registrationStrategy: 'registerWhenStable:30000'
         }),
-        IonicModule.forRoot()
     ],
-    providers: [interceptorProviders, { provide: MAT_DIALOG_DATA, useValue: null }],
+    providers: [interceptorProviders, { provide: MAT_DIALOG_DATA, useValue: null },
+        { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
     bootstrap: [AppComponent]
 })
 export class AppModule {
