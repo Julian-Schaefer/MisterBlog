@@ -6,6 +6,7 @@ import json
 from app.articleselector import get_article_selectors, get_articles, download_article
 from app.blog_selection import BlogSelection
 from app.database import db
+from app.rss_selector import get_rss_url
 
 bp = Blueprint('routes', __name__)
 
@@ -39,23 +40,36 @@ def addBlogSelection():
         if blog_selection_exists:
             return {"error": "The specified Blog URL has already been added for this User."}, 409
 
-        article_selectors = get_article_selectors(blog_url)
-        if article_selectors and len(article_selectors[0]) > 0:
+        rss_url_result = get_rss_url(blog_url)
+        if rss_url_result and rss_url_result[1]:
             new_blog_selection = BlogSelection(
-                blog_url=blog_url, user_id=user_id,
+                blog_url=blog_url,
+                user_id=user_id,
                 is_selected=True,
-                article_selectors=json.dumps(article_selectors[0]),
-                page_counter_url=article_selectors[1])
-            db.session.add(new_blog_selection)
-            db.session.commit()
-            return {"message": f"Blog Selection {new_blog_selection.blog_url} for User {new_blog_selection.user_id} has been created successfully."}
+                rss_url=rss_url_result[0],
+                article_selectors=None,
+                page_counter_url=None)
         else:
-            return {"error": "The provided Blog URL is not supported."}, 406
+            article_selectors = get_article_selectors(blog_url)
+            if article_selectors and len(article_selectors[0]) > 0:
+                new_blog_selection = BlogSelection(
+                    blog_url=blog_url,
+                    user_id=user_id,
+                    is_selected=True,
+                    rss_url=None,
+                    article_selectors=json.dumps(article_selectors[0]),
+                    page_counter_url=article_selectors[1])
+            else:
+                return {"error": "The provided Blog URL is not supported."}, 406
+
+        db.session.add(new_blog_selection)
+        db.session.commit()
+        return {"message": f"Blog Selection {new_blog_selection.blog_url} for User {new_blog_selection.user_id} has been created successfully."}
     else:
         return {"error": "The request payload is not in JSON format."}, 400
 
 
-@bp.route('/blog-selection/selected', methods=['POST', 'GET'])
+@ bp.route('/blog-selection/selected', methods=['POST', 'GET'])
 def handleSelectedBlogs():
     user_id = request.user['user_id']
     if request.method == 'POST':
@@ -85,7 +99,7 @@ def handleSelectedBlogs():
     return jsonify(results)
 
 
-@bp.route("/blog-selection", methods=["GET"])
+@ bp.route("/blog-selection", methods=["GET"])
 def getBlogPosts():
     user_id = request.user['user_id']
     page = int(request.args.get('page'))
@@ -97,8 +111,9 @@ def getBlogPosts():
     if blog_selections.count() > 0:
         blog_selection_arguments = []
         for blog_selection in blog_selections:
-            blog_selection.article_selectors = json.loads(
-                blog_selection.article_selectors)
+            if blog_selection.article_selectors:
+                blog_selection.article_selectors = json.loads(
+                    blog_selection.article_selectors)
             blog_selection_arguments.append((page, blog_selection))
 
         pool = ThreadPool(len(blog_selection_arguments))
@@ -133,7 +148,7 @@ def getBlogPosts():
     } for (blog_url, article) in cleaned_articles])
 
 
-@bp.route("/blog-selection/post", methods=["GET"])
+@ bp.route("/blog-selection/post", methods=["GET"])
 def getBlogPostFromUrl():
     url = request.args.get('url')
 
