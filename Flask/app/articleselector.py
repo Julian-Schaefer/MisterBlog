@@ -1,112 +1,13 @@
 from datetime import datetime
 import logging
-from bs4 import BeautifulSoup
-import re
 import requests
 from newspaper import Article
 from goose3 import Goose
-from urllib.parse import urlsplit
 import dateparser
 import pytz
-import tldextract
 from urllib.parse import urldefrag
-
-
-def bs_preprocess(html):
-    pat = re.compile('(^[\s]+)|([\s]+$)', re.MULTILINE)
-    # remove leading and trailing whitespaces
-    html = re.sub(pat, '', html)
-    html = re.sub('\n', ' ', html)     # convert newlines to spaces
-    # this preserves newline delimiters
-    # remove whitespaces before opening tags
-    html = re.sub('[\s]+<', '<', html)
-    # remove whitespaces after closing tags
-    html = re.sub('>[\s]+', '>', html)
-    # remove comments
-    html = re.sub("(<!--.*?-->)", "", html, flags=re.DOTALL)
-    return html
-
-
-def get_soup_from_url(url):
-    headers = {'User-Agent': 'Mozilla/5.0'}
-    html_doc = requests.get(url, headers=headers).text
-    cleaned_html_doc = bs_preprocess(html_doc)
-    soup = BeautifulSoup(cleaned_html_doc, 'html.parser')
-    return soup
-
-
-def get_element(node):
-    length = len(list(node.previous_siblings)) + 1
-    return '%s:nth-child(%s)' % (node.name, length)
-
-
-def get_css_path(node):
-    path = [get_element(node)]
-    for parent in node.parents:
-        if parent.name == 'body':
-            path.insert(0, 'body')
-            break
-        path.insert(0, get_element(parent))
-    return path
-
-
-def get_page_counter_url(url):
-    soup = get_soup_from_url(url)
-
-    possible_hrefs = []
-    for link in soup.find_all('a', href=True):
-        href = link["href"]
-        if "2" in href:
-            possible_hrefs += [href]
-
-    possible_hrefs.sort(key=len)
-
-    for href in possible_hrefs:
-        try:
-            if href.startswith("/"):
-                href = get_root_url(url) + href
-
-            soup = get_soup_from_url(href)
-
-            for new_link in soup.find_all('a', href=True):
-                new_href = new_link["href"]
-                if new_href.startswith("/"):
-                    new_href = get_root_url(url) + new_href
-
-                if new_href == href:
-                    continue
-
-                if "3" in new_href:
-                    common = longest_common_substring(href, new_href)
-                    if common == '' or common[-1] in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
-                        continue
-
-                    common_end2 = href[len(common+"3"):]
-                    common_end3 = new_href[len(common+"2"):]
-                    if common_end2 == common_end3:
-                        constructed_2 = common + "2" + \
-                            new_href[len(common+"2"):]
-                        constructed_3 = common + "3" + href[len(common+"3"):]
-
-                        if constructed_2 == href and constructed_3 == new_href:
-                            return common + "{page-counter}" + href[len(common+"3"):]
-        except:
-            continue
-
-    return None
-
-
-def longest_common_substring(firstString, secondString):
-    """ returns the longest common substring from the beginning of firstString and secondString """
-    def _iter():
-        for a, b in zip(firstString, secondString):
-            if a == b:
-                yield a
-            else:
-                return
-
-    common_start = ''.join(_iter())
-    return common_start
+from readability import Document
+import app.html_utils as html_utils
 
 
 def get_articles(page, blogSelection):
@@ -118,15 +19,16 @@ def get_articles(page, blogSelection):
     else:
         blog_page_url = blogSelection.blog_url
 
-    page_soup = get_soup_from_url(blog_page_url)
+    page_soup = html_utils.get_soup_from_url(blog_page_url)
 
     article_urls = []
     for article_selector in article_selectors:
         links_on_page = page_soup.select(
-            selector_path_to_string(article_selector), href=True)
+            html_utils.selector_path_to_string(article_selector), href=True)
 
         for link_on_page in links_on_page:
-            href = get_href_from_link(blogSelection.blog_url, link_on_page)
+            href = html_utils.get_href_from_link(
+                blogSelection.blog_url, link_on_page)
             href = urldefrag(href)[0]
             if href not in article_urls:
                 article_urls += [href]
@@ -134,32 +36,23 @@ def get_articles(page, blogSelection):
     return (blogSelection, article_urls)
 
 
-def get_href_from_link(blog_url, link):
-    root_url = get_root_url(blog_url)
-    href = link["href"]
-    if href.startswith("/"):
-        return root_url + href
-
-    return href
-
-
 def get_invalid_article_paths(blog_url, article_paths, page_soup, compare_soup):
-    #compare_links = compare_soup.find_all("a", href=True)
+    # compare_links = compare_soup.find_all("a", href=True)
 
     invalid_article_paths = []
     for article_path in article_paths:
         links_on_page = page_soup.select(
-            selector_path_to_string(article_path), href=True)
+            html_utils.selector_path_to_string(article_path), href=True)
         links_on_compare_page = compare_soup.select(
-            selector_path_to_string(article_path), href=True)
-        hrefs_on_page = [get_href_from_link(
+            html_utils.selector_path_to_string(article_path), href=True)
+        hrefs_on_page = [html_utils.get_href_from_link(
             blog_url, link) for link in links_on_page]
-        hrefs_on_compare_page = [get_href_from_link(
+        hrefs_on_compare_page = [html_utils.get_href_from_link(
             blog_url, link) for link in links_on_compare_page]
 
         identical_links = 0
         external_links = 0
-        domain = get_domain(blog_url)
+        domain = html_utils.get_domain(blog_url)
         for href in hrefs_on_page:
             if domain not in href:
                 external_links += 1
@@ -184,16 +77,16 @@ def get_invalid_article_paths(blog_url, article_paths, page_soup, compare_soup):
 
 
 def get_article_selectors(blog_url):
-    page_counter_url = get_page_counter_url(blog_url)
+    page_counter_url = html_utils.get_page_counter_url(blog_url)
     if not page_counter_url:
         return None
 
     second_page_url = page_counter_url.replace("{page-counter}", str(2))
     third_page_url = page_counter_url.replace("{page-counter}", str(3))
 
-    first_page_soup = get_soup_from_url(blog_url)
-    second_page_soup = get_soup_from_url(second_page_url)
-    third_page_soup = get_soup_from_url(third_page_url)
+    first_page_soup = html_utils.get_soup_from_url(blog_url)
+    second_page_soup = html_utils.get_soup_from_url(second_page_url)
+    third_page_soup = html_utils.get_soup_from_url(third_page_url)
 
     first_article_paths = get_valid_article_paths(
         blog_url, first_page_soup)
@@ -221,16 +114,17 @@ def get_article_selectors(blog_url):
 def get_article_urls(article_paths, blog_url, page):
     page_url = blog_url
     if page > 1:
-        page_counter_url = get_page_counter_url(blog_url)
+        page_counter_url = html_utils.get_page_counter_url(blog_url)
         page_url = page_counter_url.replace("{page-counter}", str(page))
 
-    soup = get_soup_from_url(page_url)
+    soup = html_utils.get_soup_from_url(page_url)
 
     urls = []
     for article_path in article_paths:
-        links = soup.select(selector_path_to_string(article_path), href=True)
+        links = soup.select(
+            html_utils.selector_path_to_string(article_path), href=True)
         for link in links:
-            href = get_href_from_link(blog_url, link)
+            href = html_utils.get_href_from_link(blog_url, link)
             if href not in urls:
                 urls += [href]
 
@@ -238,7 +132,7 @@ def get_article_urls(article_paths, blog_url, page):
 
 
 def get_valid_article_paths(url, soup):
-    link_paths = [get_css_path(
+    link_paths = [html_utils.get_css_path(
         link) for link in soup.select('a', href=True)]
 
     class Node(object):
@@ -313,32 +207,17 @@ def get_valid_article_paths(url, soup):
 
     valid_article_paths = []
     for article_path in article_paths:
-        links = soup.select(selector_path_to_string(article_path), href=True)
+        links = soup.select(
+            html_utils.selector_path_to_string(article_path), href=True)
         if links and len(links) > 0:
             firstLink = links[0]
             if firstLink.has_attr("href"):
-                href = get_href_from_link(url, firstLink)
+                href = html_utils.get_href_from_link(url, firstLink)
                 article = download_article(href)
                 if article and article.publish_date:
                     valid_article_paths += [article_path]
 
     return valid_article_paths
-
-
-def get_domain(url):
-    _, td, tsu = tldextract.extract(url)
-    domain = td + '.' + tsu
-    return domain
-
-
-def get_root_url(url):
-    url_parts = urlsplit(url)
-    root_url = url_parts.scheme + "://" + url_parts.netloc
-    return root_url
-
-
-def selector_path_to_string(path):
-    return ' > '.join(path)
 
 
 def find_selector_path(first_path, second_path):
@@ -387,14 +266,21 @@ def validate_date(publish_date):
 
 def download_article(url):
     try:
-        article = Article(url, keep_article_html=True)
-        article.download()
+        headers = {'User-Agent': 'Mozilla/5.0'}
+        html_doc = requests.get(url, headers=headers).text
+        #cleaned_html_doc = bs_preprocess(html_doc)
+
+        article = Article('', keep_article_html=True)
+        article.set_html(html_doc)
+        #article = Article(url, keep_article_html=True)
+        # article.download()
         article.parse()
         article.nlp()
 
+        g = Goose()
+        goose_article = g.extract(raw_html=html_doc)
+
         if not article.publish_date or not article.authors:
-            g = Goose()
-            goose_article = g.extract(url=url)
 
             if len(article.authors) == 0 and len(goose_article.authors) > 0:
                 article.authors = goose_article.authors
@@ -404,7 +290,43 @@ def download_article(url):
 
             article.publish_date = validate_date(article.publish_date)
 
+        # try:
+        #     document = trafilatura.bare_extraction(
+        #         html_doc, include_comments=False, include_tables=True, include_images=True, include_links=True, include_formatting=True, as_dict=False, output_format=None)
+        #     #article.author = document.author
+        #     asd = ElementTree.tostring(document.body, encoding='unicode')
+        #     article.summary = document.description
+        #     article.text = asd
+        #     article.article_html = asd
+        # except:
+        #     logging.info(
+        #         'Could not extract Article from trafilatura', exc_info=True)
+
+        if article.text == goose_article.cleaned_text and len(article.text) > 0:
+            doc = Document(html_doc)
+            html_doc = doc.summary()
+
+            article = Article('', keep_article_html=True)
+            article.set_html(html_doc)
+            #article = Article(url, keep_article_html=True)
+            # article.download()
+            article.parse()
+            article.nlp()
+
+            g = Goose()
+            goose_article = g.extract(raw_html=html_doc)
+
+            if not article.publish_date or not article.authors:
+
+                if len(article.authors) == 0 and len(goose_article.authors) > 0:
+                    article.authors = goose_article.authors
+
+                if not article.publish_date:
+                    article.publish_date = goose_article.publish_date
+
+                article.publish_date = validate_date(article.publish_date)
+
         return article
-    except:
+    except Exception as e:
         logging.info('Could not download Article', exc_info=True)
         return None
