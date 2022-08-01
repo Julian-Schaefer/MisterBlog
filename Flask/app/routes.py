@@ -1,3 +1,4 @@
+from typing import List
 from flask import Blueprint, request, jsonify
 from flask import request, jsonify
 from multiprocessing.dummy import Pool as ThreadPool
@@ -6,7 +7,7 @@ import json
 from app.articleselector import get_article_selectors, get_articles, download_article
 from app.blog_selection import BlogSelection
 from app.database import db
-from app.rss_selector import get_rss_url
+import app.rss_selector as rss_selector
 
 bp = Blueprint('routes', __name__)
 
@@ -40,7 +41,7 @@ def addBlogSelection():
         if blog_selection_exists:
             return {"error": "The specified Blog URL has already been added for this User."}, 409
 
-        rss_url_result = get_rss_url(blog_url)
+        rss_url_result = rss_selector.get_rss_url(blog_url)
         if rss_url_result and rss_url_result[1]:
             new_blog_selection = BlogSelection(
                 blog_url=blog_url,
@@ -99,39 +100,52 @@ def handleSelectedBlogs():
     return jsonify(results)
 
 
+def _get_html_articles(page: int, blog_selections: List[BlogSelection]):
+    articles = []
+    pool = ThreadPool(blog_selections.count())
+    article_urls = pool.starmap(
+        get_articles, [(page, blog_selection) for blog_selection in blog_selections if blog_selection.article_selectors])
+    pool.close()
+    pool.join()
+
+    if len(article_urls) > 0:
+        pool = ThreadPool(len(article_urls))
+        for (blog_selection, urls) in article_urls:
+            blog_articles = pool.map(download_article, urls)
+            for article in blog_articles:
+                article.blog_url = blog_selection.blog_url
+                articles.append(article)
+
+        pool.close()
+        pool.join()
+
+    return articles
+
+
 @ bp.route("/blog-selection", methods=["GET"])
 def getBlogPosts():
     user_id = request.user['user_id']
     page = int(request.args.get('page'))
 
-    blog_selections = db.session.query(
+    blog_selections: List[BlogSelection] = db.session.query(
         BlogSelection).filter_by(user_id=user_id, is_selected=True)
+
     articles = []
 
     if blog_selections.count() > 0:
-        blog_selection_arguments = []
         for blog_selection in blog_selections:
-            if blog_selection.article_selectors:
+            if blog_selection.rss_url:
+                articles += rss_selector.get_articles_from_rss_url(
+                    blog_selection, page)
+            elif blog_selection.article_selectors:
                 blog_selection.article_selectors = json.loads(
                     blog_selection.article_selectors)
-            blog_selection_arguments.append((page, blog_selection))
 
-        pool = ThreadPool(len(blog_selection_arguments))
-        article_urls = pool.starmap(get_articles, blog_selection_arguments)
-        pool.close()
-        pool.join()
-
-        for (blog_selection, urls) in article_urls:
-            pool = ThreadPool(len(article_urls))
-            blog_articles = pool.map(download_article, urls)
-            for article in blog_articles:
-                articles.append((blog_selection.blog_url, article))
-            pool.close()
-            pool.join()
+        articles += _get_html_articles(page, blog_selections)
 
     cleaned_articles = []
     for article in articles:
-        if article[1] and article[1].publish_date:
+        if article and article.publish_date:
             cleaned_articles += [article]
 
     # cleaned_articles.sort(
@@ -143,9 +157,9 @@ def getBlogPosts():
         "authors": article.authors,
         "summary": article.summary,
         "content": article.article_html,
-        "blogUrl": blog_url,
+        "blogUrl": article.blog_url,
         "postUrl": article.url
-    } for (blog_url, article) in cleaned_articles])
+    } for article in cleaned_articles])
 
 
 @ bp.route("/blog-selection/post", methods=["GET"])
