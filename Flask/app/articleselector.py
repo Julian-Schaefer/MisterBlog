@@ -8,13 +8,10 @@ import pytz
 from urllib.parse import urldefrag
 from readability import Document
 import app.html_utils as html_utils
-from app.rss_selector import get_links_from_feed
 
 
 def get_articles(page, blog_selection):
-    if blog_selection.rss_url:
-        article_urls = get_links_from_feed(blog_selection.rss_url, page)
-    else:
+    if not blog_selection.rss_url:
         article_selectors = blog_selection.article_selectors
         page_counter_url = blog_selection.page_counter_url
 
@@ -38,7 +35,7 @@ def get_articles(page, blog_selection):
                 if href not in article_urls:
                     article_urls += [href]
 
-    return (blog_selection, article_urls)
+        return (blog_selection, article_urls)
 
 
 def get_invalid_article_paths(blog_url, article_paths, page_soup, compare_soup):
