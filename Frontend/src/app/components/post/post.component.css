@@ -73,6 +73,11 @@ div#content img {
     max-width: 100%;
 }
 
+div#content p>img {
+    vertical-align: middle;
+    display: inline;
+}
+
 div#content * {
     max-width: 840px;
 }

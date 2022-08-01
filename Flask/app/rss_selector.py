@@ -5,6 +5,7 @@ from newspaper import Article
 from datetime import datetime
 from time import mktime
 from app.blog_selection import BlogSelection
+from bs4 import BeautifulSoup
 
 
 def get_articles_from_rss_url(blog_selection: BlogSelection, page: int) -> List[Article]:
@@ -17,7 +18,7 @@ def get_articles_from_rss_url(blog_selection: BlogSelection, page: int) -> List[
         article.publish_date = datetime.fromtimestamp(
             mktime(entry['published_parsed']))
         article.authors = [author['name'] for author in entry['authors']]
-        article.summary = entry['summary']
+        article.summary = BeautifulSoup(entry['summary'], "lxml").text
         for content_entry in entry['content']:
             if content_entry['type'] == "text/html":
                 article.article_html = content_entry['value']
