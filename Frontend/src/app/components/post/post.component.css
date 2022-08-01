@@ -73,7 +73,9 @@ div#content img {
     max-width: 100%;
 }
 
-div#content p>img {
+div#content p>img,
+div#content ul>li>img,
+.wp-smiley {
     vertical-align: middle;
     display: inline;
 }
