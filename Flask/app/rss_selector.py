@@ -6,6 +6,7 @@ from datetime import datetime
 from time import mktime
 from app.blog_selection import BlogSelection
 from bs4 import BeautifulSoup
+import unicodedata
 
 
 def get_articles_from_rss_url(blog_selection: BlogSelection, page: int) -> List[Article]:
@@ -32,6 +33,8 @@ def get_articles_from_rss_url(blog_selection: BlogSelection, page: int) -> List[
 
 def get_rss_url(blog_url: str) -> Tuple[str, bool]:
     page_soup = html_utils.get_soup_from_url(blog_url)
+    html_content = str(page_soup)
+    normalized_html_content = unicodedata.normalize("NFKD", html_content)
     rss_urls = [rss_link['href'] for rss_link in page_soup.find_all(
         'link', {'type': 'application/rss+xml'})]
 
@@ -43,7 +46,9 @@ def get_rss_url(blog_url: str) -> Tuple[str, bool]:
     for rss_url in rss_urls:
         rss_feed = feedparser.parse(f'{rss_url}?paged=1')
         if rss_feed and rss_feed['entries'] and len(rss_feed['entries']) > 0:
-            if page_soup.findAll(text=rss_feed['entries'][0]['title']):
+            number_of_contained_entries = [
+                entry for entry in rss_feed['entries'] if entry['title'] in normalized_html_content]
+            if len(number_of_contained_entries) > 1:
                 valid_rss_url = rss_url
 
     if not valid_rss_url:

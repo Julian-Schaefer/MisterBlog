@@ -270,11 +270,10 @@ def download_article(url):
     try:
         headers = {'User-Agent': 'Mozilla/5.0'}
         html_doc = requests.get(url, headers=headers).text
-        #cleaned_html_doc = bs_preprocess(html_doc)
+        html_doc = html_utils.bs_preprocess(html_doc)
 
-        article = Article('', keep_article_html=True)
+        article = Article(url, keep_article_html=True)
         article.set_html(html_doc)
-        #article = Article(url, keep_article_html=True)
         # article.download()
         article.parse()
         article.nlp()

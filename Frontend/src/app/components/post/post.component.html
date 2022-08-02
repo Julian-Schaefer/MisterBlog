@@ -39,9 +39,8 @@
             <div style="height: 12px;"></div>
             <mat-divider></mat-divider>
 
-            <button id="original-post-button" mat-raised-button color="primary">
-                <a id="original-post-link" target="_blank" rel="noopener noreferrer" href="{{blogPost.postUrl}}">{{
-                    "postDetails.go-to-original-post" | translate }}</a></button>
+            <button id="original-post-button" mat-raised-button color="primary" (click)="goToOriginalBlogPost()">{{
+                "postDetails.go-to-original-post" | translate }}</button>
         </mat-card>
     </div>
 </ion-content>
