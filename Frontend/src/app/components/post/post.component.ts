@@ -30,6 +30,10 @@ export class PostComponent {
     }
   }
 
+  goToOriginalBlogPost() {
+    window.open(this.blogPost.postUrl, "_blank");
+  }
+
   private setBlogPost(blogPost: BlogPost) {
     this.blogPost = blogPost;
 
