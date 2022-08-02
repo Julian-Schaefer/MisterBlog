@@ -19,6 +19,10 @@ flask-cors = "*"
 dateparser = "*"
 goose3 = "*"
 "google.cloud.logging" = "*"
+trafilatura = "*"
+feedparser = "*"
+readabilipy = "*"
+lxml = "*"
 
 [dev-packages]
 autopep8 = "*"

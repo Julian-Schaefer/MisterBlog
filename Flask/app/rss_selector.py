@@ -1,34 +1,39 @@
 from typing import List, Tuple
 import feedparser
 import app.html_utils as html_utils
-from newspaper import Article
 from datetime import datetime
 from time import mktime
 from app.blog_selection import BlogSelection
 from bs4 import BeautifulSoup
 import unicodedata
 
+from app.models import BlogPost
 
-def get_articles_from_rss_url(blog_selection: BlogSelection, page: int) -> List[Article]:
-    articles = []
+
+def get_blog_posts_from_rss_url(blog_selection: BlogSelection, page: int) -> List[BlogPost]:
+    blog_posts = []
     rss_feed = feedparser.parse(f'{blog_selection.rss_url}?paged={page}')
 
     for entry in rss_feed['entries']:
-        article = Article(entry['link'], title=entry['title'])
-        article.blog_url = blog_selection.blog_url
-        article.publish_date = datetime.fromtimestamp(
-            mktime(entry['published_parsed']))
-        article.authors = [author['name'] for author in entry['authors']]
-        article.summary = BeautifulSoup(entry['summary'], "lxml").text
+        blog_post = BlogPost(
+            title=entry['title'],
+            date=datetime.fromtimestamp(
+                mktime(entry['published_parsed'])),
+            authors=[author['name'] for author in entry['authors']],
+            summary=BeautifulSoup(entry['summary'], "lxml").text,
+            content=None,
+            blogUrl=blog_selection.blog_url,
+            postUrl=entry['link'])
+
         for content_entry in entry['content']:
             if content_entry['type'] == "text/html":
-                article.article_html = content_entry['value']
+                blog_post.content = content_entry['value']
             else:
-                article.article_html = 'No HTML content was found :('
+                blog_post.content = 'No HTML content was found :('
 
-        articles.append(article)
+        blog_posts.append(blog_post)
 
-    return articles
+    return blog_posts
 
 
 def get_rss_url(blog_url: str) -> Tuple[str, bool]:
