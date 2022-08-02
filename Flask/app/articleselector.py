@@ -1,13 +1,19 @@
 from datetime import datetime
 import logging
+from readabilipy import simple_json_from_html_string
 import requests
 from newspaper import Article
 from goose3 import Goose
 import dateparser
 import pytz
 from urllib.parse import urldefrag
-from readability import Document
 import app.html_utils as html_utils
+import trafilatura
+from trafilatura.utils import load_html
+from trafilatura.htmlprocessing import tree_cleaning
+from lxml import etree
+
+from app.models import BlogPost
 
 
 def get_articles(page, blog_selection):
@@ -266,10 +272,39 @@ def validate_date(publish_date):
     return publish_date_datetime.replace(tzinfo=pytz.utc)
 
 
-def download_article(url):
+def download_article(url: str) -> BlogPost:
     try:
         headers = {'User-Agent': 'Mozilla/5.0'}
         html_doc = requests.get(url, headers=headers).text
+
+        simple_article = simple_json_from_html_string(
+            html_doc, use_readability=True)
+
+        blogPost = BlogPost(
+            title=simple_article['title'],
+            date=simple_article['date'],
+            summary=None,
+            content=simple_article['plain_content'],
+            authors=None,
+            blogUrl=None,
+            postUrl=url
+        )
+
+        trafilatura_doc = trafilatura.bare_extraction(html_doc, include_formatting=True, output_format='xml',
+                                                      include_images=True, include_links=True, include_tables=True, include_comments=False)
+        if not blogPost.date and trafilatura_doc['date']:
+            blogPost.date = datetime.strptime(
+                trafilatura_doc['date'], '%Y-%m-%d')
+
+        blogPost.summary = trafilatura_doc['description']
+        blogPost.authors = trafilatura_doc['author'].split("; ")
+
+        if (len(simple_article['plain_text']) == 0
+            or (len(simple_article['plain_text'][0]['text']) > 1
+                and trafilatura_doc['raw_text'].startswith(simple_article['plain_text'][0]['text']))):
+            blogPost.content = trafilatura_doc['raw_text']
+
+        return blogPost
 
         article = Article(url, keep_article_html=True)
         article.set_html(html_doc)
@@ -289,42 +324,6 @@ def download_article(url):
                 article.publish_date = goose_article.publish_date
 
             article.publish_date = validate_date(article.publish_date)
-
-        # try:
-        #     document = trafilatura.bare_extraction(
-        #         html_doc, include_comments=False, include_tables=True, include_images=True, include_links=True, include_formatting=True, as_dict=False, output_format=None)
-        #     #article.author = document.author
-        #     asd = ElementTree.tostring(document.body, encoding='unicode')
-        #     article.summary = document.description
-        #     article.text = asd
-        #     article.article_html = asd
-        # except:
-        #     logging.info(
-        #         'Could not extract Article from trafilatura', exc_info=True)
-
-        if article.text == goose_article.cleaned_text and len(article.text) > 0:
-            doc = Document(html_doc)
-            html_doc = doc.summary()
-
-            article = Article('', keep_article_html=True)
-            article.set_html(html_doc)
-            #article = Article(url, keep_article_html=True)
-            # article.download()
-            article.parse()
-            article.nlp()
-
-            g = Goose()
-            goose_article = g.extract(raw_html=html_doc)
-
-            if not article.publish_date or not article.authors:
-
-                if len(article.authors) == 0 and len(goose_article.authors) > 0:
-                    article.authors = goose_article.authors
-
-                if not article.publish_date:
-                    article.publish_date = goose_article.publish_date
-
-                article.publish_date = validate_date(article.publish_date)
 
         return article
     except Exception as e:

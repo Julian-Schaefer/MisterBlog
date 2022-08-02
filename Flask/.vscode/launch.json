@@ -9,7 +9,8 @@
             "type": "python",
             "request": "launch",
             "program": "${file}",
-            "console": "integratedTerminal"
+            "console": "integratedTerminal",
+            "justMyCode": false
         },
         {
             "name": "Python: Flask",
@@ -17,7 +18,7 @@
             "request": "launch",
             "module": "flask",
             "env": {
-                "FLASK_ENV": "development"
+                "FLASK_DEBUG": "1"
             },
             "args": [
                 "run",
