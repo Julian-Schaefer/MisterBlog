@@ -299,33 +299,12 @@ def download_article(url: str) -> BlogPost:
         blogPost.summary = trafilatura_doc['description']
         blogPost.authors = trafilatura_doc['author'].split("; ")
 
-        if (len(simple_article['plain_text']) == 0
-            or (len(simple_article['plain_text'][0]['text']) > 1
-                and trafilatura_doc['raw_text'].startswith(simple_article['plain_text'][0]['text']))):
+        if not simple_article['plain_text'] or len(simple_article['plain_text']) == 0:
+            # or (len(simple_article['plain_text'][0]['text']) > 1
+            #    and trafilatura_doc['raw_text'].startswith(simple_article['plain_text'][0]['text']))):
             blogPost.content = trafilatura_doc['raw_text']
 
         return blogPost
-
-        article = Article(url, keep_article_html=True)
-        article.set_html(html_doc)
-        # article.download()
-        article.parse()
-        article.nlp()
-
-        g = Goose()
-        goose_article = g.extract(raw_html=html_doc)
-
-        if not article.publish_date or not article.authors:
-
-            if len(article.authors) == 0 and len(goose_article.authors) > 0:
-                article.authors = goose_article.authors
-
-            if not article.publish_date:
-                article.publish_date = goose_article.publish_date
-
-            article.publish_date = validate_date(article.publish_date)
-
-        return article
     except Exception as e:
         logging.info('Could not download Article', exc_info=True)
         return None
