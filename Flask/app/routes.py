@@ -1,10 +1,10 @@
 from typing import List
 from flask import Blueprint, request, jsonify
 from flask import request, jsonify
-from multiprocessing.dummy import Pool as ThreadPool
 import json
 
-from app.articleselector import get_article_selectors, get_articles, download_article
+from app.article_selector import get_article_selectors
+import app.article_downloader as article_downloader
 from app.blog_selection import BlogSelection
 from app.database import db
 from app.models import BlogPost
@@ -101,28 +101,6 @@ def handleSelectedBlogs():
     return jsonify(results)
 
 
-def _get_html_blog_posts(page: int, blog_selections: List[BlogSelection]) -> List[BlogPost]:
-    blog_posts = []
-    pool = ThreadPool(blog_selections.count())
-    blog_post_urls = pool.starmap(
-        get_articles, [(page, blog_selection) for blog_selection in blog_selections if blog_selection.article_selectors])
-    pool.close()
-    pool.join()
-
-    if len(blog_post_urls) > 0:
-        pool = ThreadPool(len(blog_post_urls))
-        for (blog_selection, urls) in blog_post_urls:
-            blog_posts = pool.map(download_article, urls)
-            for blog_posts in blog_posts:
-                blog_posts.blog_url = blog_selection.blog_url
-                blog_posts.append(blog_posts)
-
-        pool.close()
-        pool.join()
-
-    return blog_posts
-
-
 @ bp.route("/blog-selection", methods=["GET"])
 def getBlogPosts():
     user_id = request.user['user_id']
@@ -135,14 +113,12 @@ def getBlogPosts():
 
     if blog_selections.count() > 0:
         for blog_selection in blog_selections:
-            if blog_selection.rss_url:
-                blog_posts += rss_selector.get_blog_posts_from_rss_url(
-                    blog_selection, page)
-            elif blog_selection.article_selectors:
+            if blog_selection.article_selectors:
                 blog_selection.article_selectors = json.loads(
                     blog_selection.article_selectors)
 
-        blog_posts += _get_html_blog_posts(page, blog_selections)
+        blog_posts += article_downloader.download_blog_posts(
+            page, blog_selections)
 
     cleaned_blog_posts: List[BlogPost] = []
     for blog_post in blog_posts:
@@ -159,6 +135,6 @@ def getBlogPosts():
 def getBlogPostFromUrl():
     url = request.args.get('url')
 
-    blog_post = download_article(url)
+    blog_post = article_downloader.download_article(url)
 
     return jsonify(blog_post.toJSON())
