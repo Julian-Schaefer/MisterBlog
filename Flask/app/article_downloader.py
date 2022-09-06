@@ -85,7 +85,7 @@ def download_article(url: str) -> BlogPost:
             date=extract_date(html_doc),
             summary=None,
             content=simple_article['plain_content'],
-            authors="N/A",
+            authors=["N/A"],
             blog_url=None,
             post_url=url
         )
