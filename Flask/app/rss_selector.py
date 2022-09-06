@@ -10,32 +10,6 @@ import unicodedata
 from app.models import BlogPost
 
 
-def get_blog_posts_from_rss_url(blog_selection: BlogSelection, page: int) -> List[BlogPost]:
-    blog_posts = []
-    rss_feed = feedparser.parse(f'{blog_selection.rss_url}?paged={page}')
-
-    for entry in rss_feed['entries']:
-        blog_post = BlogPost(
-            title=entry['title'],
-            date=datetime.fromtimestamp(
-                mktime(entry['published_parsed'])),
-            authors=[author['name'] for author in entry['authors']],
-            summary=BeautifulSoup(entry['summary'], "lxml").text,
-            content=None,
-            blogUrl=blog_selection.blog_url,
-            postUrl=entry['link'])
-
-        for content_entry in entry['content']:
-            if content_entry['type'] == "text/html":
-                blog_post.content = content_entry['value']
-            else:
-                blog_post.content = 'No HTML content was found :('
-
-        blog_posts.append(blog_post)
-
-    return blog_posts
-
-
 def get_rss_url(blog_url: str) -> Tuple[str, bool]:
     page_soup = html_utils.get_soup_from_url(blog_url)
     html_content = str(page_soup)
