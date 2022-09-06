@@ -3,6 +3,7 @@ import logging
 from multiprocessing.pool import ThreadPool
 from typing import List
 from readabilipy import simple_json_from_html_string
+from readabilipy.extractors.extract_date import extract_date
 import requests
 import dateparser
 import pytz
@@ -81,17 +82,16 @@ def download_article(url: str) -> BlogPost:
 
         blogPost = BlogPost(
             title=simple_article['title'],
-            date=None,
+            date=extract_date(html_doc),
             summary=None,
             content=simple_article['plain_content'],
-            authors=None,
+            authors="N/A",
             blog_url=None,
             post_url=url
         )
 
-        if simple_article['date']:
-            blogPost.date = datetime.fromisoformat(
-                simple_article['date'])
+        if blogPost.date:
+            blogPost.date = datetime.fromisoformat(blogPost.date)
 
         trafilatura_doc = trafilatura.bare_extraction(html_doc, include_formatting=False, output_format='xml',
                                                       include_images=False, include_links=False, include_tables=False, include_comments=False)
@@ -100,7 +100,8 @@ def download_article(url: str) -> BlogPost:
                 trafilatura_doc['date'], '%Y-%m-%d')
 
         blogPost.summary = trafilatura_doc['description']
-        blogPost.authors = trafilatura_doc['author'].split("; ")
+        if trafilatura_doc['author']:
+            blogPost.authors = trafilatura_doc['author'].split("; ")
 
         if not simple_article['plain_text'] or len(simple_article['plain_text']) == 0:
             # or (len(simple_article['plain_text'][0]['text']) > 1

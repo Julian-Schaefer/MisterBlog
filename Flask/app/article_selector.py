@@ -36,7 +36,7 @@ def get_invalid_article_paths(blog_url, article_paths, page_soup, compare_soup):
         first_compare_article = download_article(hrefs_on_compare_page[0])
         if ((first_article.summary and len(first_article.summary) > 0 and
              first_article.summary == first_compare_article.summary) or
-                first_article.article_html == first_compare_article.article_html):
+                first_article.content == first_compare_article.content):
             invalid_article_paths += [article_path]
 
     return invalid_article_paths
@@ -180,7 +180,7 @@ def get_valid_article_paths(url, soup):
             if firstLink.has_attr("href"):
                 href = html_utils.get_href_from_link(url, firstLink)
                 article = download_article(href)
-                if article and article.publish_date:
+                if article and article.date:
                     valid_article_paths += [article_path]
 
     return valid_article_paths
