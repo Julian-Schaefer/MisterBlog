@@ -5,8 +5,6 @@ from typing import List
 from readabilipy import simple_json_from_html_string
 from readabilipy.extractors.extract_date import extract_date
 import requests
-import dateparser
-import pytz
 import trafilatura
 from urllib.parse import urldefrag
 import feedparser
@@ -104,29 +102,9 @@ def download_article(url: str) -> BlogPost:
             blogPost.authors = trafilatura_doc['author'].split("; ")
 
         if not simple_article['plain_text'] or len(simple_article['plain_text']) == 0:
-            # or (len(simple_article['plain_text'][0]['text']) > 1
-            #    and trafilatura_doc['raw_text'].startswith(simple_article['plain_text'][0]['text']))):
             blogPost.content = trafilatura_doc['raw_text']
 
         return blogPost
     except Exception as e:
         logging.info('Could not download Article', exc_info=True)
         return None
-
-
-def _validate_date(publish_date):
-    if not publish_date:
-        return None
-
-    if isinstance(publish_date, datetime):
-        publish_date_datetime = publish_date
-    else:
-        try:
-            if len(publish_date) < 6:
-                return None
-            publish_date_datetime = dateparser.parse(publish_date)
-        except ValueError:
-            logging.info('Could not validate date', exc_info=True)
-            return None
-
-    return publish_date_datetime.replace(tzinfo=pytz.utc)
