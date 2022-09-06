@@ -81,7 +81,7 @@ def download_article(url: str) -> BlogPost:
 
         blogPost = BlogPost(
             title=simple_article['title'],
-            date=simple_article['date'],
+            date=None,
             summary=None,
             content=simple_article['plain_content'],
             authors=None,
@@ -89,8 +89,12 @@ def download_article(url: str) -> BlogPost:
             post_url=url
         )
 
-        trafilatura_doc = trafilatura.bare_extraction(html_doc, include_formatting=True, output_format='xml',
-                                                      include_images=True, include_links=True, include_tables=True, include_comments=False)
+        if simple_article['date']:
+            blogPost.date = datetime.fromisoformat(
+                simple_article['date'])
+
+        trafilatura_doc = trafilatura.bare_extraction(html_doc, include_formatting=False, output_format='xml',
+                                                      include_images=False, include_links=False, include_tables=False, include_comments=False)
         if not blogPost.date and trafilatura_doc['date']:
             blogPost.date = datetime.strptime(
                 trafilatura_doc['date'], '%Y-%m-%d')
