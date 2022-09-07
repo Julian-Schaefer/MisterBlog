@@ -16,23 +16,24 @@ from app.blog_selection import BlogSelection
 
 def download_blog_posts(page: int, blog_selections: List[BlogSelection]) -> List[BlogPost]:
     blog_posts: List[BlogPost] = []
-    pool = ThreadPool(blog_selections.count())
-    blog_post_urls = pool.starmap(
-        get_article_urls, [(page, blog_selection) for blog_selection in blog_selections])
-    pool.close()
-    pool.join()
+    if blog_selections.count() > 0:
+        urlPool = ThreadPool(blog_selections.count())
+        blog_post_urls = urlPool.starmap(
+            get_article_urls, [(page, blog_selection) for blog_selection in blog_selections])
+        urlPool.close()
+        urlPool.join()
 
-    if len(blog_post_urls) > 0:
-        pool = ThreadPool(len(blog_post_urls))
-        for (blog_selection, urls) in blog_post_urls:
-            current_blog_posts: List[BlogPost] = pool.map(
-                download_article, urls)
-            for blog_post in current_blog_posts:
-                blog_post.blog_url = blog_selection.blog_url
-                blog_posts.append(blog_post)
+        if len(blog_post_urls) > 0:
+            downloadPool = ThreadPool(len(blog_post_urls))
+            for (blog_selection, urls) in blog_post_urls:
+                current_blog_posts: List[BlogPost] = downloadPool.map(
+                    download_article, urls)
+                for blog_post in current_blog_posts:
+                    blog_post.blog_url = blog_selection.blog_url
+                    blog_posts.append(blog_post)
 
-        pool.close()
-        pool.join()
+            downloadPool.close()
+            downloadPool.join()
 
     return blog_posts
 
