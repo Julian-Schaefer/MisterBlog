@@ -71,7 +71,7 @@ def addBlogSelection():
         return {"error": "The request payload is not in JSON format."}, 400
 
 
-@ bp.route('/blog-selection/selected', methods=['POST', 'GET'])
+@bp.route('/blog-selection/selected', methods=['POST', 'GET'])
 def handleSelectedBlogs():
     user_id = request.user['user_id']
     if request.method == 'POST':
@@ -88,7 +88,7 @@ def handleSelectedBlogs():
             return {"error": "The request payload is not in JSON format"}
 
     blog_selections = db.session.query(
-        BlogSelection).filter_by(user_id=user_id)
+        BlogSelection).filter_by(user_id=user_id).all()
 
     results = [
         {
@@ -101,17 +101,17 @@ def handleSelectedBlogs():
     return jsonify(results)
 
 
-@ bp.route("/blog-selection", methods=["GET"])
+@bp.route("/blog-selection", methods=["GET"])
 def getBlogPosts():
     user_id = request.user['user_id']
     page = int(request.args.get('page'))
 
     blog_selections: List[BlogSelection] = db.session.query(
-        BlogSelection).filter_by(user_id=user_id, is_selected=True)
+        BlogSelection).filter_by(user_id=user_id, is_selected=True).all()
 
     blog_posts: List[BlogPost] = []
 
-    if blog_selections.count() > 0:
+    if len(blog_selections) > 0:
         for blog_selection in blog_selections:
             if blog_selection.article_selectors:
                 blog_selection.article_selectors = json.loads(
@@ -131,7 +131,7 @@ def getBlogPosts():
     return jsonify([blog_post.toJSON() for blog_post in cleaned_blog_posts])
 
 
-@ bp.route("/blog-selection/post", methods=["GET"])
+@bp.route("/blog-selection/post", methods=["GET"])
 def getBlogPostFromUrl():
     url = request.args.get('url')
 

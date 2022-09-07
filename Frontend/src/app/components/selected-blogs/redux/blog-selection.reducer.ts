@@ -6,6 +6,7 @@ export interface State {
     selectedBlogs: SelectedBlog[];
     hasChanged: boolean;
     loading: boolean;
+    updating: boolean;
     error: any;
 }
 
@@ -13,6 +14,7 @@ export const initialState: State = {
     selectedBlogs: [],
     hasChanged: false,
     loading: false,
+    updating: false,
     error: null,
 };
 
@@ -25,9 +27,9 @@ export const reducer = createReducer(
     }),
     on(BlogSelectionActions.getBlogSelection, (state, { showLoadingIndicator }) => (({ ...state, loading: showLoadingIndicator, error: null, hasChanged: false }))),
     on(BlogSelectionActions.getBlogSelectionSuccess, (state, { blogSelections, hasChanged }) => {
-        return ({ ...state, loading: false, selectedBlogs: blogSelections, hasChanged })
+        return ({ ...state, loading: false, updating: false, selectedBlogs: blogSelections, hasChanged })
     }),
-    on(BlogSelectionActions.getBlogSelectionFailed, (state, { error }) => ({ ...state, loading: false, error: error, hasChanged: false })),
+    on(BlogSelectionActions.getBlogSelectionFailed, (state, { error }) => ({ ...state, loading: false, updating: false, error: error, hasChanged: false })),
     on(BlogSelectionActions.toggleBlogSelection, (state, { toggledBlogSelection }) => {
         const newSelectedBlogs: SelectedBlog[] = [];
 
@@ -39,8 +41,9 @@ export const reducer = createReducer(
             }
         }
 
-        return ({ ...state, selectedBlogs: newSelectedBlogs, hasChanged: false })
+        return ({ ...state, selectedBlogs: newSelectedBlogs, hasChanged: false, updating: true })
     }),
+    on(BlogSelectionActions.deleteBlogSelection, (state) => ({ ...state, updating: true }))
 );
 
 export const selectBlogSelectionState = (state: any): State => {
