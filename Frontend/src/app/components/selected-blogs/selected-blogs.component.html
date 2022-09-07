@@ -13,9 +13,13 @@
         <h2>{{
             'postList.yourBlogs'
             | translate }}</h2>
+
+        <mat-divider></mat-divider>
+        <div style="height: 1px;"></div>
+
         <div *ngIf="!state.error">
             <div *ngIf="!state.selectedBlogs || state.selectedBlogs.length === 0"
-                style="text-align: center; margin-bottom: 10px;">
+                style="text-align: center; margin-top: 12px; margin-bottom: 12px;">
                 <p>{{
                     'postList.nothingHere'
                     | translate }}</p>
@@ -36,6 +40,9 @@
                     </div>
                 </li>
             </ul>
+
+            <mat-divider></mat-divider>
+            <div style="height: 20px;"></div>
 
             <button mat-raised-button color="primary" (click)="openDialog()">{{
                 'postList.addBlog'
