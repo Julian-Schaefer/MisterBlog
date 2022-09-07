@@ -37,7 +37,7 @@ export class BlogService {
 
       this.http.get<BlogPost[]>(this.baseUrl + relativeUrl).subscribe({
         next: blogPosts => {
-          if (page > 0) {
+          if (page > 1) {
             let previousBlogPosts = this.getBlogPostsFromLocalStorage();
             blogPosts = previousBlogPosts.concat(blogPosts);
           }
