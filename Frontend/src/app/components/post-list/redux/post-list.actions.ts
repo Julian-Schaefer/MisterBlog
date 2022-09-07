@@ -18,12 +18,22 @@ export const loadMorePostList = createAction(
     '[Post List] Load More'
 );
 
-export const getPostListSuccess = createAction(
-    '[Post List] Get Success',
+export const refreshPostListSuccess = createAction(
+    '[Post List] Refresh Success',
     props<{ blogPosts: BlogPost[] }>()
 );
 
-export const getPostListFailed = createAction(
-    '[Post List] Get Failed',
+export const refreshPostListFailed = createAction(
+    '[Post List] Refresh Failed',
+    props<{ error: string }>()
+);
+
+export const loadMorePostListSuccess = createAction(
+    '[Post List] Load More Success',
+    props<{ blogPosts: BlogPost[] }>()
+);
+
+export const loadMorePostListFailed = createAction(
+    '[Post List] Load More Failed',
     props<{ error: string }>()
 );

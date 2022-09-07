@@ -9,9 +9,9 @@
                     <button mat-raised-button color="primary" (click)="onSelectedBlogsClick()">Filter</button>
                 </div>
 
-                <app-loading-spinner *ngIf="state.loading" style="margin-bottom: 20px;"></app-loading-spinner>
+                <app-loading-spinner *ngIf="state.refreshing" style="margin-bottom: 20px;"></app-loading-spinner>
 
-                <div *ngIf="!state.loading && (!state.blogPosts || state.blogPosts.length === 0)"
+                <div *ngIf="!state.refreshing && (!state.blogPosts || state.blogPosts.length === 0)"
                     style="text-align: center; margin-top: 20px;">
                     <img src="./assets/svg/illustrations/empty.svg" width="200px" draggable="false"
                         style="margin: auto;" />
