@@ -13,7 +13,7 @@ export interface PostListState {
 export const initialState: PostListState = {
     refreshing: false,
     loadingMore: false,
-    currentPage: 0,
+    currentPage: 1,
     blogPosts: [],
     error: null
 };
@@ -21,7 +21,7 @@ export const initialState: PostListState = {
 export const reducer = createReducer(
     initialState,
     on(PostListActions.initializePostListSuccess, (state: PostListState, { blogPosts }): PostListState => ({ ...state, blogPosts })),
-    on(PostListActions.refreshPostList, (state: PostListState): PostListState => ({ ...state, refreshing: true, loadingMore: false, currentPage: 0 })),
+    on(PostListActions.refreshPostList, (state: PostListState): PostListState => ({ ...state, refreshing: true, loadingMore: false, currentPage: 1 })),
     on(PostListActions.refreshPostListSuccess, (state: PostListState, { blogPosts }): PostListState => ({ ...state, blogPosts, refreshing: false, loadingMore: false })),
     on(PostListActions.refreshPostListFailed, (state: PostListState, { error }): PostListState => ({ ...state, blogPosts: [], refreshing: false, loadingMore: false, error })),
     on(PostListActions.loadMorePostList, (state: PostListState): PostListState => {
