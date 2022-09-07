@@ -16,8 +16,8 @@ from app.blog_selection import BlogSelection
 
 def download_blog_posts(page: int, blog_selections: List[BlogSelection]) -> List[BlogPost]:
     blog_posts: List[BlogPost] = []
-    if blog_selections.count() > 0:
-        urlPool = ThreadPool(blog_selections.count())
+    if len(blog_selections) > 0:
+        urlPool = ThreadPool(len(blog_selections))
         blog_post_urls = urlPool.starmap(
             get_article_urls, [(page, blog_selection) for blog_selection in blog_selections])
         urlPool.close()

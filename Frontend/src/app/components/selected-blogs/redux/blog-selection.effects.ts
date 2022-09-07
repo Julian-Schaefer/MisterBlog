@@ -56,7 +56,7 @@ export class BlogSelectionEffects {
             ofType(BlogSelectionActions.deleteBlogSelection),
             mergeMap((action) => this.blogService.deleteSelectedBlog(action.blogSelection)
                 .pipe(
-                    map(_ => BlogSelectionActions.getBlogSelection({ showLoadingIndicator: true })),
+                    map(_ => BlogSelectionActions.getBlogSelection({ showLoadingIndicator: false })),
                     catchError(error => of(BlogSelectionActions.getBlogSelectionFailed({ error })))
                 )
             )
