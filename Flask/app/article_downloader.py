@@ -71,10 +71,21 @@ def get_article_urls(page, blog_selection):
     return (blog_selection, article_urls)
 
 
+def _download_article_html(url: str) -> str:
+    soup = html_utils.get_soup_from_url(url)
+    img_tags = soup.find_all('img')
+    for img in img_tags:
+        sources = ["src", "srcset", "data-lazy-src"]
+        for source in sources:
+            if img.has_attr(source) and "base64" in img[source]:
+                img[source] = None
+
+    return str(soup)
+
+
 def download_article(url: str) -> BlogPost:
     try:
-        headers = {'User-Agent': 'Mozilla/5.0'}
-        html_doc = requests.get(url, headers=headers).text
+        html_doc = _download_article_html(url)
 
         simple_article = simple_json_from_html_string(
             html_doc, use_readability=True)
