@@ -18,6 +18,7 @@ def bs_preprocess(html):
     html = re.sub('>[\s]+', '>', html)
     # remove comments
     html = re.sub("(<!--.*?-->)", "", html, flags=re.DOTALL)
+
     return html
 
 
