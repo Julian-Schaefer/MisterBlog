@@ -29,6 +29,7 @@ export class PostListEffects {
                 return this.blogService.getBlogPosts(state.currentPage)
                     .pipe(
                         map(blogPosts => {
+                            this.blogService.saveBlogPostsToLocalStorage(blogPosts);
                             return PostListActions.refreshPostListSuccess({ blogPosts })
                         }),
                         catchError(error => of(PostListActions.refreshPostListFailed({ error })))
@@ -46,6 +47,8 @@ export class PostListEffects {
                 return this.blogService.getBlogPosts(state.currentPage)
                     .pipe(
                         map(blogPosts => {
+                            blogPosts = state.blogPosts.concat(blogPosts);
+                            this.blogService.saveBlogPostsToLocalStorage(blogPosts);
                             return PostListActions.loadMorePostListSuccess({ blogPosts })
                         }),
                         catchError(error => of(PostListActions.loadMorePostListFailed({ error })))

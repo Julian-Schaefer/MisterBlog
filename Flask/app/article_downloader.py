@@ -71,7 +71,11 @@ def get_article_urls(page, blog_selection):
                 if href not in article_urls:
                     article_urls += [href]
     else:
-        rss_feed = feedparser.parse(f'{blog_selection.rss_url}?paged={page}')
+        if page > 1:
+            rss_feed = feedparser.parse(
+                f'{blog_selection.rss_url}?paged={page}')
+        else:
+            rss_feed = feedparser.parse(f'{blog_selection.rss_url}')
 
         for entry in rss_feed['entries']:
             article_urls += [entry['link']]
