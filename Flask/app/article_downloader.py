@@ -35,7 +35,15 @@ def download_blog_posts(page: int, blog_selections: List[BlogSelection]) -> List
             downloadPool.close()
             downloadPool.join()
 
-    return blog_posts
+    cleaned_blog_posts: List[BlogPost] = []
+    for blog_post in blog_posts:
+        if blog_post and blog_post.date:
+            cleaned_blog_posts += [blog_post]
+
+    cleaned_blog_posts.sort(
+        key=lambda blog_post: blog_post.date, reverse=True)
+
+    return cleaned_blog_posts
 
 
 def get_article_urls(page, blog_selection):

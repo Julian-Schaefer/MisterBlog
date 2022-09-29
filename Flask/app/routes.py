@@ -117,18 +117,10 @@ def getBlogPosts():
                 blog_selection.article_selectors = json.loads(
                     blog_selection.article_selectors)
 
-        blog_posts += article_downloader.download_blog_posts(
+        blog_posts = article_downloader.download_blog_posts(
             page, blog_selections)
 
-    cleaned_blog_posts: List[BlogPost] = []
-    for blog_post in blog_posts:
-        if blog_post and blog_post.date:
-            cleaned_blog_posts += [blog_post]
-
-    # cleaned_blog_posts.sort(
-    #    key=lambda article: article[1].publish_date, reverse=True)
-
-    return jsonify([blog_post.toJSON() for blog_post in cleaned_blog_posts])
+    return jsonify([blog_post.toJSON() for blog_post in blog_posts])
 
 
 @bp.route("/blog-selection/post", methods=["GET"])
