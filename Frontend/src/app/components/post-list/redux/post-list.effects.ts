@@ -26,7 +26,7 @@ export class PostListEffects {
             ofType(PostListActions.refreshPostList),
             withLatestFrom(this.store.select(selectPostListState)),
             switchMap(([_, state]) => {
-                return this.blogService.getBlogPosts(state.currentPage)
+                return this.blogService.getBlogPosts(state.latestDate)
                     .pipe(
                         map(blogPosts => {
                             this.blogService.saveBlogPostsToLocalStorage(blogPosts);
@@ -44,7 +44,7 @@ export class PostListEffects {
             withLatestFrom(this.store.select(selectPostListState)),
             filter(([_, state]) => !state.refreshing),
             exhaustMap(([_, state]) => {
-                return this.blogService.getBlogPosts(state.currentPage)
+                return this.blogService.getBlogPosts(state.latestDate)
                     .pipe(
                         map(blogPosts => {
                             blogPosts = state.blogPosts.concat(blogPosts);

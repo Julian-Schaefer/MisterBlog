@@ -2,6 +2,7 @@ from typing import List
 from flask import Blueprint, request, jsonify
 from flask import request, jsonify
 import json
+from datetime import datetime
 
 from app.article_selector import get_article_selectors
 import app.article_downloader as article_downloader
@@ -104,7 +105,10 @@ def handleSelectedBlogs():
 @bp.route("/blog-selection", methods=["GET"])
 def getBlogPosts():
     user_id = request.user['user_id']
-    page = int(request.args.get('page'))
+
+    latest_date: datetime = request.args.get('latestDate')
+    if latest_date:
+        latest_date = datetime.fromisoformat(latest_date[:-1])
 
     blog_selections: List[BlogSelection] = db.session.query(
         BlogSelection).filter_by(user_id=user_id, is_selected=True).all()
@@ -118,7 +122,7 @@ def getBlogPosts():
                     blog_selection.article_selectors)
 
         blog_posts = article_downloader.download_blog_posts(
-            page, blog_selections)
+            latest_date, blog_selections)
 
     return jsonify([blog_post.toJSON() for blog_post in blog_posts])
 

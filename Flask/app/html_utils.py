@@ -3,7 +3,7 @@ import re
 from bs4 import BeautifulSoup
 import requests
 import tldextract
-from urllib.parse import urlsplit
+from urllib.parse import urlsplit, urldefrag
 
 
 def bs_preprocess(html):
@@ -110,6 +110,7 @@ def get_href_from_link(blog_url, link):
     if href.startswith("/"):
         return root_url + href
 
+    href = urldefrag(href)[0]
     return href
 
 
