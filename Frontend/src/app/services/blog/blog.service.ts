@@ -33,8 +33,12 @@ export class BlogService {
     this.localStorageService.setItem(this.BLOG_POSTS_KEY, JSON.stringify(blogPosts));
   }
 
-  getBlogPosts(page: number): Observable<BlogPost[]> {
-    return this.http.get<BlogPost[]>(this.baseUrl + `/blog-selection?page=${page}`);
+  getBlogPosts(latestDate?: Date): Observable<BlogPost[]> {
+    if (latestDate) {
+      return this.http.get<BlogPost[]>(this.baseUrl + `/blog-selection?latestDate=${latestDate.toISOString()}`);
+    }
+
+    return this.http.get<BlogPost[]>(this.baseUrl + `/blog-selection`);
   }
 
   getBlogPostFromUrl(url: string): Observable<BlogPost> {

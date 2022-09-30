@@ -1,12 +1,10 @@
 from datetime import datetime
 import logging
 from multiprocessing.pool import ThreadPool
-from typing import List
+from typing import List, Tuple
 from readabilipy import simple_json_from_html_string
 from readabilipy.extractors.extract_date import extract_date
-import requests
 import trafilatura
-from urllib.parse import urldefrag
 import feedparser
 
 import app.html_utils as html_utils
@@ -14,40 +12,54 @@ from app.models import BlogPost
 from app.blog_selection import BlogSelection
 
 
-def download_blog_posts(page: int, blog_selections: List[BlogSelection]) -> List[BlogPost]:
+def download_blog_posts(latest_date: datetime, blog_selections: List[BlogSelection]) -> List[BlogPost]:
     blog_posts: List[BlogPost] = []
     if len(blog_selections) > 0:
-        urlPool = ThreadPool(len(blog_selections))
-        blog_post_urls = urlPool.starmap(
-            get_article_urls, [(page, blog_selection) for blog_selection in blog_selections])
-        urlPool.close()
-        urlPool.join()
+        page = 1
 
-        if len(blog_post_urls) > 0:
-            downloadPool = ThreadPool(len(blog_post_urls))
-            for (blog_selection, urls) in blog_post_urls:
-                current_blog_posts: List[BlogPost] = downloadPool.map(
-                    download_article, urls)
-                for blog_post in current_blog_posts:
-                    blog_post.blog_url = blog_selection.blog_url
-                    blog_posts.append(blog_post)
+        while True:
+            urlPool = ThreadPool(len(blog_selections))
+            candidate_blog_post_urls: List[Tuple[BlogSelection, List[str]]] = urlPool.starmap(
+                get_article_urls, [(page, blog_selection) for blog_selection in blog_selections])
+            urlPool.close()
+            urlPool.join()
 
-            downloadPool.close()
-            downloadPool.join()
+            blog_post_urls: List[Tuple[BlogSelection, List[str]]] = []
 
-    cleaned_blog_posts: List[BlogPost] = []
-    for blog_post in blog_posts:
-        if blog_post and blog_post.date:
-            cleaned_blog_posts += [blog_post]
+            for (blog_selection, urls) in candidate_blog_post_urls:
+                last_blog_post = download_article(urls[-1])
+                if last_blog_post and last_blog_post.date and (not latest_date or last_blog_post.date < latest_date):
+                    blog_post_urls += [(blog_selection, urls)]
 
-    cleaned_blog_posts.sort(
-        key=lambda blog_post: blog_post.date, reverse=True)
+            if len(blog_post_urls) > 0:
+                downloadPool = ThreadPool(len(blog_post_urls))
 
-    return cleaned_blog_posts
+                for (blog_selection, urls) in blog_post_urls:
+                    current_blog_posts: List[BlogPost] = downloadPool.map(
+                        download_article, urls)
+
+                    for blog_post in current_blog_posts:
+                        if blog_post and blog_post.date and (not latest_date or blog_post.date < latest_date):
+                            blog_post.blog_url = blog_selection.blog_url
+                            blog_posts += [blog_post]
+
+                downloadPool.close()
+                downloadPool.join()
+
+            if len(blog_posts) > 10:
+                blog_posts.sort(
+                    key=lambda blog_post: blog_post.date, reverse=True)
+                blog_posts = blog_posts[:10]
+                break
+            else:
+                page += 1
+
+    return blog_posts
 
 
 def get_article_urls(page, blog_selection):
     article_urls = []
+
     if not blog_selection.rss_url:
         article_selectors = blog_selection.article_selectors
         page_counter_url = blog_selection.page_counter_url
@@ -67,7 +79,6 @@ def get_article_urls(page, blog_selection):
             for link_on_page in links_on_page:
                 href = html_utils.get_href_from_link(
                     blog_selection.blog_url, link_on_page)
-                href = urldefrag(href)[0]
                 if href not in article_urls:
                     article_urls += [href]
     else:
