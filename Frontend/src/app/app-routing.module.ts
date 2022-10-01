@@ -26,7 +26,7 @@ const routes: Routes = [
     scrollPositionRestoration: 'enabled',
     relativeLinkResolution: 'legacy',
     onSameUrlNavigation: 'reload',
-    initialNavigation: 'enabled'
+    initialNavigation: 'enabledBlocking'
   })],
   exports: [RouterModule]
 })
