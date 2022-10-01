@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { EMPTY, of } from 'rxjs';
-import { map, catchError, withLatestFrom, switchMap, exhaustMap, filter } from 'rxjs/operators';
+import { TypedAction } from '@ngrx/store/src/models';
+import { EMPTY, Observable, of } from 'rxjs';
+import { map, catchError, withLatestFrom, switchMap, exhaustMap, filter, take } from 'rxjs/operators';
 import { BlogService } from 'src/app/services/blog/blog.service';
 import * as PostListActions from './post-list.actions';
 import { selectPostListState } from './post-list.reducer';
@@ -51,8 +52,9 @@ export class PostListEffects {
                             this.blogService.saveBlogPostsToLocalStorage(blogPosts);
                             return PostListActions.loadMorePostListSuccess({ blogPosts })
                         }),
+                        take(1),
                         catchError(error => of(PostListActions.loadMorePostListFailed({ error })))
-                    )
+                    );
             })
         )
     );
