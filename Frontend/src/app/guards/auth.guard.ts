@@ -19,19 +19,19 @@ export class AuthGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     if (isPlatformBrowser(this.platformId)) {
-      if (this.authService.isLoggedIn) {
-        return true;
-      } else {
-        this.router.navigate(['']);
-        return false;
-      }
-    }
-
-    if (isPlatformServer(this.platformId)) {
+      this.authService.isLoggedIn.subscribe(loggedIn => {
+        if (loggedIn) {
+          return true;
+        } else {
+          this.router.navigate(['']);
+          return false;
+        }
+      });
+    } else if (isPlatformServer(this.platformId)) {
       return of(true);
+    } else {
+      return false;
     }
-
-    return false;
   }
 
 }

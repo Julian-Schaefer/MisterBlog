@@ -1,11 +1,22 @@
 import { Inject, Injectable, NgZone, PLATFORM_ID } from '@angular/core';
-import { User } from "../user";
-import firebaseApp from 'firebase/compat/app';
-import { AngularFireAuth } from "@angular/fire/compat/auth";
+import {
+    onAuthStateChanged,
+    createUserWithEmailAndPassword,
+    sendEmailVerification,
+    sendPasswordResetEmail,
+    signInWithPopup,
+    signInWithEmailAndPassword,
+    UserCredential,
+    AuthProvider as FireBaseAuthProvider,
+    GoogleAuthProvider,
+    FacebookAuthProvider,
+    TwitterAuthProvider,
+    Auth,
+    User,
+} from "@angular/fire/auth";
 import { Router } from "@angular/router";
-import { EMPTY, from, Observable, of } from 'rxjs';
+import { EMPTY, from, map, Observable, of, Subject } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
-import { LocalStorageService } from '../local-storage-service/local-storage.service';
 import { AuthProvider } from 'src/app/components/authentication/redux/AuthProvider';
 
 @Injectable(
@@ -14,18 +25,20 @@ import { AuthProvider } from 'src/app/components/authentication/redux/AuthProvid
 export class AuthService {
 
     public user: User;
+
     private isBrowser: boolean;
+    private isInitialized = false;
+    private onInitialized = new Subject<void>;
 
     constructor(
-        public auth: AngularFireAuth,
         public router: Router,
         public ngZone: NgZone,
-        private localStorageService: LocalStorageService,
+        private auth: Auth,
         @Inject(PLATFORM_ID) platformId: Object
     ) {
         this.isBrowser = isPlatformBrowser(platformId);
         if (this.isBrowser) {
-            this.auth.authState.subscribe(user => {
+            onAuthStateChanged(this.auth, user => {
                 this.handleAuthentication(user, false);
             });
         }
@@ -35,7 +48,7 @@ export class AuthService {
         if (!this.isBrowser)
             return;
 
-        return from(this.auth.createUserWithEmailAndPassword(email, password)
+        return from(createUserWithEmailAndPassword(this.auth, email, password)
             .then((_) => {
                 this.sendVerificationEmail();
             })
@@ -46,64 +59,94 @@ export class AuthService {
         if (!this.isBrowser)
             return;
 
-        return from(this.auth.currentUser.then(user => {
-            return user.sendEmailVerification();
-        }));
+        return from(sendEmailVerification(this.auth.currentUser));
     }
 
     resetPassword(email: string): Observable<void> {
         if (!this.isBrowser)
             return EMPTY;
 
-        return from(this.auth.sendPasswordResetEmail(email));
+        return from(sendPasswordResetEmail(this.auth, email));
     }
 
-    get isLoggedIn(): boolean {
+    get isLoggedIn(): Observable<boolean> {
         if (!this.isBrowser)
-            return false;
+            return of(false);
 
-        const user = JSON.parse(this.localStorageService.getItem('user'));
+        if (this.isInitialized) {
+            const user = this.auth.currentUser;
 
-        if (!user) return false;
+            if (!user) return of(false);
 
-        if (user.providerId !== "password") {
-            return user != null && user.uid != null;
+            if (user.providerId !== "password") {
+                return of(user != null && user.uid != null);
+            } else {
+                return of(user != null && user.uid != null && user.emailVerified != false);
+            }
         } else {
-            return user != null && user.uid != null && user.emailVerified != false;
+            return this.onInitialized.pipe(map(() => {
+                const user = this.auth.currentUser;
+
+                if (!user) return false;
+
+                if (user.providerId !== "password") {
+                    return user != null && user.uid != null;
+                } else {
+                    return user != null && user.uid != null && user.emailVerified != false;
+                }
+            }));
         }
     }
 
-    getIdToken(): Observable<string | null> {
+    getIdToken(): Observable<string> {
         if (!this.isBrowser) {
             return of(null);
         }
 
-        return this.auth.idToken;
+        if (this.isInitialized) {
+            if (!this.auth.currentUser) {
+                return of(null);
+            }
+
+            return from(this.auth.currentUser.getIdToken());
+        } else {
+            return new Observable(subscriber => {
+                this.onInitialized.subscribe(() => {
+                    if (!this.auth.currentUser) {
+                        subscriber.next(null);
+                    } else {
+                        this.auth.currentUser.getIdToken().then(idToken => {
+                            subscriber.next(idToken);
+                        });
+                    }
+                });
+            });
+        }
     }
 
-    signInWithEmail(email: string, password: string): Observable<firebaseApp.auth.UserCredential> {
+    signInWithEmail(email: string, password: string): Observable<UserCredential> {
         if (!this.isBrowser)
             return;
 
-        return from(this.auth.signInWithEmailAndPassword(email, password).then((credential) => {
+        return from(signInWithEmailAndPassword(this.auth, email, password).then((credential) => {
             this.handleAuthentication(credential.user, true);
             return credential;
         }));
     }
 
-    signInWithProvider(provider: AuthProvider): Observable<firebaseApp.auth.UserCredential> {
+    signInWithProvider(provider: AuthProvider): Observable<UserCredential> {
         if (!this.isBrowser)
             return;
 
-        let authProvider: firebaseApp.auth.AuthProvider;
+        let authProvider: FireBaseAuthProvider;
         switch (provider) {
-            case AuthProvider.GOOGLE: authProvider = new firebaseApp.auth.GoogleAuthProvider(); break;
-            case AuthProvider.FACEBOOK: authProvider = new firebaseApp.auth.FacebookAuthProvider(); break;
-            case AuthProvider.TWITTER: authProvider = new firebaseApp.auth.TwitterAuthProvider(); break;
-            case AuthProvider.APPLE: authProvider = new firebaseApp.auth.GoogleAuthProvider(); break;
+            case AuthProvider.GOOGLE: authProvider = new GoogleAuthProvider(); break;
+            case AuthProvider.FACEBOOK: authProvider = new FacebookAuthProvider(); break;
+            case AuthProvider.TWITTER: authProvider = new TwitterAuthProvider(); break;
+            case AuthProvider.APPLE: authProvider = new GoogleAuthProvider(); break;
         }
 
-        return from(this.auth.signInWithPopup(authProvider).then((credential) => {
+        return from(signInWithPopup(this.auth, authProvider).then((credential) => {
             this.handleAuthentication(credential.user, true);
             return credential;
         }));
@@ -119,15 +162,16 @@ export class AuthService {
     }
 
     handleAuthentication(user: User, shouldNavigate: boolean) {
+        this.isInitialized = true;
+        this.onInitialized.next();
+
         if (user) {
             this.user = user;
-            this.localStorageService.setItem('user', JSON.stringify(this.user));
             if (shouldNavigate) {
                 this.router.navigate(['posts']);
             }
         } else {
             this.user = null;
-            this.localStorageService.removeItem('user');
             if (shouldNavigate) {
                 this.router.navigate(['']);
             }
