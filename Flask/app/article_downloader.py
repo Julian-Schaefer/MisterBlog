@@ -110,25 +110,9 @@ def _download_article_html(url: str) -> str:
     return str(soup)
 
 
-def download_article(url: str) -> BlogPost:
+def download_article(url: str, download_content: bool = False) -> BlogPost:
     try:
         html_doc = _download_article_html(url)
-
-        simple_article = simple_json_from_html_string(
-            html_doc, use_readability=True)
-
-        blogPost = BlogPost(
-            title=simple_article['title'],
-            date=extract_date(html_doc),
-            summary=None,
-            content=simple_article['plain_content'],
-            authors=["N/A"],
-            blog_url=None,
-            post_url=url
-        )
-
-        if blogPost.date:
-            blogPost.date = datetime.fromisoformat(blogPost.date)
 
         # article = Article(url)
         # article.set_html(html_doc)
@@ -145,6 +129,20 @@ def download_article(url: str) -> BlogPost:
         #metadata = extract_metadata(html_doc)
         trafilatura_doc = trafilatura.bare_extraction(html_doc, include_formatting=False, output_format='xml',
                                                       include_images=False, include_links=False, include_tables=False, include_comments=False)
+
+        blogPost = BlogPost(
+            title=trafilatura_doc['title'],
+            date=extract_date(html_doc),
+            summary=None,
+            content=None,
+            authors=["N/A"],
+            blog_url=None,
+            post_url=url
+        )
+
+        if blogPost.date:
+            blogPost.date = datetime.fromisoformat(blogPost.date)
+
         if not blogPost.date and trafilatura_doc['date']:
             blogPost.date = datetime.strptime(
                 trafilatura_doc['date'], '%Y-%m-%d')
@@ -155,8 +153,13 @@ def download_article(url: str) -> BlogPost:
         if trafilatura_doc['author']:
             blogPost.authors = trafilatura_doc['author'].split("; ")
 
-        if not simple_article['plain_text'] or len(simple_article['plain_text']) == 0:
-            blogPost.content = trafilatura_doc['raw_text']
+        if download_content:
+            simple_article = simple_json_from_html_string(
+                html_doc, use_readability=True)
+            blogPost.content = simple_article['plain_content']
+
+            if not simple_article['plain_text'] or len(simple_article['plain_text']) == 0:
+                blogPost.content = trafilatura_doc['raw_text']
 
         return blogPost
     except Exception as e:

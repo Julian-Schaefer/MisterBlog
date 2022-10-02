@@ -18,20 +18,26 @@ export class PostComponent {
 
   ionViewWillEnter() {
     const blogPost = history.state.data as BlogPost;
+
     if (blogPost) {
       this.setBlogPost(blogPost);
+      this.getBlogPost(blogPost.postUrl)
     } else {
       this.blogPost = null;
       this.blogUrl = null;
 
-      this.blogService.getBlogPostFromUrl(this.activatedRoute.snapshot.queryParamMap.get('url')).subscribe(data => {
-        this.setBlogPost(data);
-      });
+      this.getBlogPost(this.activatedRoute.snapshot.queryParamMap.get('url'))
     }
   }
 
   goToOriginalBlogPost() {
     window.open(this.blogPost.postUrl, "_blank");
+  }
+
+  private getBlogPost(url: string) {
+    this.blogService.getBlogPostFromUrl(url).subscribe(data => {
+      this.setBlogPost(data);
+    });
   }
 
   private setBlogPost(blogPost: BlogPost) {

@@ -131,6 +131,6 @@ def getBlogPosts():
 def getBlogPostFromUrl():
     url = request.args.get('url')
 
-    blog_post = article_downloader.download_article(url)
+    blog_post = article_downloader.download_article(url, download_content=True)
 
     return jsonify(blog_post.toJSON())
