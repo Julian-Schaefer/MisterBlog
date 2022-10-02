@@ -5,7 +5,11 @@ from typing import List, Tuple
 from readabilipy import simple_json_from_html_string
 from readabilipy.extractors.extract_date import extract_date
 import trafilatura
+#from trafilatura.metadata import extract_metadata
 import feedparser
+#from newspaper import Article
+#from newspaper.extractors import ContentExtractor
+#from newspaper.configuration import Configuration
 
 import app.html_utils as html_utils
 from app.models import BlogPost
@@ -126,13 +130,28 @@ def download_article(url: str) -> BlogPost:
         if blogPost.date:
             blogPost.date = datetime.fromisoformat(blogPost.date)
 
+        # article = Article(url)
+        # article.set_html(html_doc)
+        # article.parse()
+
+        # article = Article(url, language=article.meta_lang)
+        # article.set_html(blogPost.content)
+        # article.set_title(blogPost.title)
+        # article.parse()
+        # article.nlp()
+
+        # blogPost.summary = article.summary
+
+        #metadata = extract_metadata(html_doc)
         trafilatura_doc = trafilatura.bare_extraction(html_doc, include_formatting=False, output_format='xml',
                                                       include_images=False, include_links=False, include_tables=False, include_comments=False)
         if not blogPost.date and trafilatura_doc['date']:
             blogPost.date = datetime.strptime(
                 trafilatura_doc['date'], '%Y-%m-%d')
 
-        blogPost.summary = trafilatura_doc['description']
+        blogPost.summary = " ".join(
+            trafilatura_doc['raw_text'].split(" ")[:100]) + "..."
+
         if trafilatura_doc['author']:
             blogPost.authors = trafilatura_doc['author'].split("; ")
 
