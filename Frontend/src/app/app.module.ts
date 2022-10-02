@@ -2,8 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AngularFireModule } from '@angular/fire/compat';
-import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { initializeApp, provideFirebaseApp, getApp } from '@angular/fire/app';
+import { provideAuth, initializeAuth, browserLocalPersistence, browserPopupRedirectResolver } from '@angular/fire/auth';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -53,7 +53,6 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from 'src/environments/environment';
 import { AboutComponent } from './components/about/about.component';
 import { LoadingSpinnerComponent } from './util/components/loading-spinner/loading-spinner.component';
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { HeaderComponent } from './components/header/header.component';
 import { AuthenticatorComponent } from './components/authentication/authenticator/authenticator.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
@@ -61,6 +60,7 @@ import { LoggerModule, NgxLoggerLevel } from "ngx-logger";
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { RouteReuseStrategy } from '@angular/router';
+import { AccountComponent } from './components/account/account.component';
 
 export const interceptorProviders =
     [
@@ -90,7 +90,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         AboutComponent,
         SocialSignInComponent,
         LoadingSpinnerComponent,
-        HeaderComponent
+        HeaderComponent,
+        AccountComponent
     ],
     imports: [
         BrowserModule.withServerTransition({ appId: 'serverApp' }),
@@ -101,8 +102,11 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         ReactiveFormsModule,
         BrowserAnimationsModule,
         provideFirebaseApp(() => initializeApp(environment.firebase)),
-        AngularFireModule.initializeApp(environment.firebase),
-        AngularFireAuthModule,
+        provideAuth(() =>
+            initializeAuth(getApp(), {
+                persistence: browserLocalPersistence,
+                popupRedirectResolver: browserPopupRedirectResolver
+            })),
         LoggerModule.forRoot({
             level: NgxLoggerLevel.INFO
         }),
