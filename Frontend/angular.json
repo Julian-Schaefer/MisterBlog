@@ -34,6 +34,9 @@
               "src/styles.scss",
               "src/theme/variables.css"
             ],
+            "allowedCommonJsDependencies": [
+              "moment"
+            ],
             "scripts": [],
             "serviceWorker": true,
             "ngswConfigPath": "ngsw-config.json"
@@ -222,6 +225,5 @@
     "@schematics/angular:component": {
       "style": "scss"
     }
-  },
-  "defaultProject": "Mister-Blog"
+  }
 }
