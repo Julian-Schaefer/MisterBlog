@@ -20,7 +20,11 @@
             <mat-divider></mat-divider>
             <div style="height: 12px;"></div>
 
-            <div id="content" [innerHTML]="blogPost.content | safeHtml"></div>
+            <div *ngIf="!blogPost.content" style="margin-top: 20px;">
+                <ngx-skeleton-loader count="6" appearance="line" animation="progress-dark">
+                </ngx-skeleton-loader>
+            </div>
+            <div *ngIf="blogPost.content" id="content" [innerHTML]="blogPost.content | safeHtml"></div>
 
 
             <div fxLayout="row wrap" *ngIf="blogPost.authors && blogPost.authors.length > 0">
