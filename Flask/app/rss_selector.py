@@ -23,7 +23,7 @@ def get_rss_url(blog_url: str) -> Tuple[str, bool]:
 
     valid_rss_url: str = None
     for rss_url in rss_urls:
-        rss_feed = feedparser.parse(f'{rss_url}?paged=1')
+        rss_feed = feedparser.parse(rss_url)
         if rss_feed and rss_feed['entries'] and len(rss_feed['entries']) > 0:
             number_of_contained_entries = [
                 entry for entry in rss_feed['entries'] if entry['title'] in normalized_html_content]
@@ -33,23 +33,27 @@ def get_rss_url(blog_url: str) -> Tuple[str, bool]:
     if not valid_rss_url:
         return None
 
-    first_page = feedparser.parse(f'{valid_rss_url}?paged=1')
+    pages = ["paged", "page"]
 
-    if not first_page or not first_page['entries'] or len(first_page['entries']) == 0:
-        # Methode 1: Find Article Selector aufwändig in HTML
-        return None
+    for page in pages:
+        first_page = feedparser.parse(f'{valid_rss_url}?{page}=1')
 
-    second_page = feedparser.parse(f'{valid_rss_url}?paged=2')
+        if not first_page or not first_page['entries'] or len(first_page['entries']) == 0:
+            break
 
-    if not second_page or not second_page['entries'] or len(second_page['entries']) == 0:
-        # Methode 1: Find Article Selector aufwändig in HTML
-        return None
+        second_page = feedparser.parse(f'{valid_rss_url}?{page}=2')
 
-    if first_page['entries'][0]['title'] != second_page['entries'][0]['title']:
-        # Methode 2: Only RSS can be used, fuck yeah!!!! --> schreibe "rss_url" in DB und benutze zum holen von Articles
-        paginated = True
-    else:
-        # Methode 3: Find Article Selector nicht so aufwändig in HTML using titles of first RSS Page
-        paginated = False
+        if not second_page or not second_page['entries'] or len(second_page['entries']) == 0:
+            break
 
-    return (valid_rss_url, paginated)
+        if first_page['entries'][0]['title'] != second_page['entries'][0]['title']:
+            # Methode 2: Only RSS can be used, fuck yeah!!!! --> schreibe "rss_url" in DB und benutze zum holen von Articles
+            paginated = True
+            return (valid_rss_url, paginated)
+        else:
+            # Methode 3: Find Article Selector nicht so aufwändig in HTML using titles of first RSS Page
+            paginated = False
+            return (valid_rss_url, paginated)
+
+    # Methode 1: Find Article Selector aufwändig in HTML
+    return None
