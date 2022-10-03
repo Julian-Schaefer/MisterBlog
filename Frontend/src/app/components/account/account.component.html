@@ -1,34 +1,64 @@
-<h2>Account Settings</h2>
+<h2 mat-dialog-title>{{ 'account.your-account' | translate }}</h2>
 
 <mat-divider></mat-divider>
 
-<h3>Ausloggen</h3>
-<p>account works!</p>
+<mat-dialog-content>
+    <div class="section">
+        <h3>{{ 'account.change-language' | translate }}</h3>
 
-<button mat-raised-button color="primary" (click)="signOut()">{{
-    'authentication.sign-out'
-    |
-    translate
-    }}</button>
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <p>{{ 'account.change-language-desc' | translate }}</p>
 
-<mat-divider></mat-divider>
+            <mat-form-field appearance="fill" controlType="select">
+                <mat-select [(value)]="language" (selectionChange)="onLanguageChanged()">
+                    <mat-option value="de">{{ 'languages.de' | translate }}</mat-option>
+                    <mat-option value="en">{{ 'languages.en' | translate }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
 
-<h3>Account löschen</h3>
-<p>account works!</p>
+    <mat-divider></mat-divider>
 
-<button mat-raised-button color="primary" (click)="signOut()">{{
-    'authentication.sign-out'
-    |
-    translate
-    }}</button>
+    <div class="section">
+        <h3>{{ 'authentication.sign-out' | translate }}</h3>
 
-<mat-divider></mat-divider>
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <p>{{ 'account.sign-out-desc' | translate }}</p>
 
-<h3>Passwort ändern</h3>
-<p>account works!</p>
+            <button mat-raised-button color="primary" (click)="signOut()">{{
+                'authentication.sign-out'
+                |
+                translate
+                }}</button>
+        </div>
+    </div>
 
-<button mat-raised-button color="primary" (click)="signOut()">{{
-    'authentication.sign-out'
-    |
-    translate
-    }}</button>
+    <mat-divider></mat-divider>
+
+    <div class="section">
+        <h3>{{ 'account.delete' | translate }}</h3>
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <p>{{ 'account.delete-desc' | translate }}</p>
+
+            <button mat-raised-button color="primary" (click)="deleteAccount()">{{
+                'account.delete'
+                |
+                translate
+                }}</button>
+        </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="section">
+        <h3>{{ 'account.change-password' | translate }}</h3>
+    </div>
+</mat-dialog-content>
+
+
+<mat-dialog-actions align="center">
+    <button mat-raised-button (click)="closeDialog()">{{
+        'general.close'
+        | translate }}</button>
+</mat-dialog-actions>

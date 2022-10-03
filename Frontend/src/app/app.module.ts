@@ -12,11 +12,12 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatStepperModule } from '@angular/material/stepper';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
 import { NgxSpinnerModule } from "ngx-spinner";
 import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -61,6 +62,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { RouteReuseStrategy } from '@angular/router';
 import { AccountComponent } from './components/account/account.component';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 
 export const interceptorProviders =
     [
@@ -91,7 +93,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         SocialSignInComponent,
         LoadingSpinnerComponent,
         HeaderComponent,
-        AccountComponent
+        AccountComponent,
+        ConfirmDialogComponent
     ],
     imports: [
         BrowserModule.withServerTransition({ appId: 'serverApp' }),
@@ -133,11 +136,12 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         MatGridListModule,
         MatCardModule,
         MatProgressSpinnerModule,
-        MatStepperModule,
         MatCheckboxModule,
         MatDividerModule,
         MatIconModule,
+        MatSnackBarModule,
         NgxSpinnerModule,
+        MatSelectModule,
         StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
         ServiceWorkerModule.register('ngsw-worker.js', {
             enabled: environment.production,

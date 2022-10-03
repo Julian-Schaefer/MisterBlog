@@ -11,6 +11,7 @@ import { NGXLogger } from "ngx-logger";
 export class AuthenticationEffects {
 
     private async getErrorMessageFromError(error: any): Promise<string> {
+        this.logger.log(error);
         let errorMessage = await lastValueFrom(this.translateService.get("error.unknown-error"));
 
         if (error.name && error.name === "FirebaseError") {

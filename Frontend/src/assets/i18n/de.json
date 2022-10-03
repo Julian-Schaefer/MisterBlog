@@ -5,7 +5,22 @@
         "required": "benötigt",
         "hello": "Hallo",
         "or": "oder",
-        "by": "Von"
+        "by": "Von",
+        "close": "Schließen",
+        "delete": "Löschen",
+        "ok": "OK"
+    },
+    "account": {
+        "your-account": "Dein Konto",
+        "delete": "Konto löschen",
+        "delete-desc": "Hier kannst du dein Konto inklusive sämtlicher dazugehöriger Daten löschen:",
+        "delete-confirm": "Bist du sicher, dass du dein Konto und alle dazugehörigen Daten löschen möchtest?",
+        "delete-success": "Dein Account und alle dazugehörigen Daten wurden erfolgreich gelöscht!",
+        "delete-error": "Dein Account konnte nicht gelöscht werden. Bitte versuche es später erneut.",
+        "change-language": "Sprache ändern",
+        "change-language-desc": "Bitte wähle deine bevorzugte Sprache aus:",
+        "sign-out-desc": "Aus deinem Account ausloggen:",
+        "change-password": "Passwort ändern"
     },
     "postList": {
         "continueReading": "Weiterlesen",
@@ -25,6 +40,10 @@
         "pleaseEnterValidUrl": "Bitte gib eine valide URL ein",
         "blogUrlNotSupported": "Diese Blog URL wird nicht unterstützt. Bitte kontaktiere den Support für Hilfe",
         "blogAlreadyAdded": "Du hast diesen Blog bereits hinzugefügt. Bitte überprüfe deine Blogs."
+    },
+    "languages": {
+        "de": "Deutsch",
+        "en": "Englisch"
     },
     "date": {
         "dateFormatPattern": "MMM d, y, h:mm"

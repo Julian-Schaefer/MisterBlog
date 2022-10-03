@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from './services/auth/auth.service';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { Capacitor } from '@capacitor/core';
+import { AccountService } from './services/account/account.service';
 
 
 @Component({
@@ -16,17 +17,13 @@ import { Capacitor } from '@capacitor/core';
 export class AppComponent implements OnInit {
   private platformId: Object;
 
-  constructor(public authService: AuthService, private translateService: TranslateService,
+  constructor(public authService: AuthService, private accountService: AccountService,
     private domSanitizer: DomSanitizer,
     private matIconRegistry: MatIconRegistry,
     @Inject(PLATFORM_ID) platformId: Object) {
     this.platformId = platformId;
 
-    translateService.addLangs(['de', 'en']);
-    const defaultLang = this.translateService.getBrowserLang();
-
-    this.translateService.setDefaultLang(defaultLang);
-    this.translateService.use(defaultLang);
+    this.accountService.initializeLanguage();
 
     this.registerIcon("google_signin", './assets/svg/google_signin.svg');
     this.registerIcon("twitter", './assets/svg/twitter.svg');

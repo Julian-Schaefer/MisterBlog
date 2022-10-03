@@ -6,6 +6,7 @@ import {
     sendPasswordResetEmail,
     signInWithPopup,
     signInWithEmailAndPassword,
+    updatePassword,
     UserCredential,
     AuthProvider as FireBaseAuthProvider,
     GoogleAuthProvider,
@@ -159,6 +160,10 @@ export class AuthService {
         return from(this.auth.signOut().then((_) => {
             this.handleAuthentication(null, true);
         }));
+    }
+
+    updatePassword(newPassword: string): Observable<void> {
+        return from(updatePassword(this.auth.currentUser, newPassword));
     }
 
     handleAuthentication(user: User, shouldNavigate: boolean) {

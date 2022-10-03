@@ -17,6 +17,10 @@ def setUpFirebase():
     firebase_admin.initialize_app(cred)
 
 
+def delete_user(user_id: str):
+    auth.delete_user(user_id)
+
+
 class FirebaseTokenVerifier:
     def verify(self, token):
         return auth.verify_id_token(token)
