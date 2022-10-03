@@ -15,11 +15,14 @@
                         ""}}{{user.displayName}}!
                     </p>
                     <div>
-                        <button mat-raised-button color="primary" (click)="showAccountPopup()">{{
-                            'authentication.sign-out'
+                        <button mat-raised-button color="primary" (click)="showAccountPopup()">
+                            <mat-icon>account_circle</mat-icon>
+                            {{
+                            'account.your-account'
                             |
                             translate
-                            }}</button>
+                            }}
+                        </button>
                     </div>
                 </div>
 

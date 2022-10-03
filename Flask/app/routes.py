@@ -10,6 +10,7 @@ from app.blog_selection import BlogSelection
 from app.database import db
 from app.models import BlogPost
 import app.rss_selector as rss_selector
+from app.firebase import delete_user
 
 bp = Blueprint('routes', __name__)
 
@@ -134,3 +135,13 @@ def getBlogPostFromUrl():
     blog_post = article_downloader.download_article(url, download_content=True)
 
     return jsonify(blog_post.toJSON())
+
+
+@bp.route("/account", methods=["DELETE"])
+def deleteAccount():
+    user_id = request.user['user_id']
+    delete_user(user_id)
+
+    db.session.query(BlogSelection).filter_by(user_id=user_id).delete()
+
+    return jsonify({"message": "Account has been successfully deleted."}), 200

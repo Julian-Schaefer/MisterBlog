@@ -5,7 +5,22 @@
         "required": "required",
         "hello": "Hello",
         "or": "or",
-        "by": "By"
+        "by": "By",
+        "close": "Close",
+        "delete": "Delete",
+        "ok": "OK"
+    },
+    "account": {
+        "your-account": "Your Account",
+        "delete": "Delete Account",
+        "delete-desc": "Here you can delete your account including all associated data:",
+        "delete-confirm": "Are you sure, that you want to delete your account including all associated data?",
+        "delete-success": "Your Account and all associated data has been deleted successfully!",
+        "delete-error": "Your Account could not be deleted. Please try again later.",
+        "change-language": "Change Language",
+        "change-language-desc": "Please select your preferred language:",
+        "sign-out-desc": "Sign out of your account:",
+        "change-password": "Change Password"
     },
     "postList": {
         "continueReading": "Continue reading",
@@ -50,6 +65,10 @@
         "confirmation-email-resent": "Success! Confirmation Email has been resend.",
         "nothing-here": "Hmm, there is nothing for you to see here.",
         "not-found": "Not found"
+    },
+    "languages": {
+        "de": "German",
+        "en": "English"
     },
     "date": {
         "dateFormatPattern": "MMM d, y, h:mm a"
