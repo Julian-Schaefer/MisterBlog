@@ -10,7 +10,7 @@
                 <form [formGroup]="authenticationForm">
                     <mat-form-field>
                         <mat-label>{{ 'authentication.email' | translate }}</mat-label>
-                        <input matInput type="email" #userEmail formControlName="email">
+                        <input matInput type="email" #userEmail formControlName="email" autocomplete="username">
                     </mat-form-field>
 
                     <br>
@@ -18,7 +18,7 @@
                     <mat-form-field>
                         <mat-label>{{ 'authentication.enter-password' | translate }}</mat-label>
                         <input matInput [type]="hidePassword ? 'password' : 'text'" #userPassword
-                            formControlName="password">
+                            formControlName="password" autocomplete="current-password">
                         <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
                             [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
                             <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
@@ -27,11 +27,32 @@
 
                     <br>
 
+                    <div *ngIf="isSignUp">
+                        <mat-form-field>
+                            <mat-label>{{ 'authentication.repeat-password' | translate }}</mat-label>
+                            <input matInput [type]="hideRepeatedPassword ? 'password' : 'text'" #repeatedPassword
+                                formControlName="repeatedPassword" autocomplete="new-password"
+                                [errorStateMatcher]="crossFieldErrorMatcher">
+                            <button mat-icon-button matSuffix (click)="hideRepeatedPassword = !hideRepeatedPassword"
+                                [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideRepeatedPassword">
+                                <mat-icon>{{hideRepeatedPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            </button>
+
+                            <mat-error *ngIf="authenticationForm.errors?.['passwordMismatch']">
+                                {{ 'authentication.passwords-do-not-match' | translate }}
+                            </mat-error>
+                        </mat-form-field>
+
+                        <br>
+                    </div>
+
                     <button mat-raised-button color="primary"
                         (click)="signInOrSignUp(userEmail.value, userPassword.value)"
                         [disabled]="authenticationForm.invalid">
-                        <span *ngIf="!state.inProgress && !isSignUp">{{ 'authentication.sign-in' | translate }}</span>
-                        <span *ngIf="!state.inProgress && isSignUp">{{ 'authentication.sign-up' | translate }}</span>
+                        <span *ngIf="!state.inProgress && !isSignUp">{{ 'authentication.sign-in' | translate
+                            }}</span>
+                        <span *ngIf="!state.inProgress && isSignUp">{{ 'authentication.sign-up' | translate
+                            }}</span>
                         <app-loading-spinner *ngIf="state.inProgress" scale="0.25" color="white" style="height: 36px;">
                         </app-loading-spinner>
                     </button>

@@ -47,6 +47,8 @@
         "sign-out": "Sign out",
         "email": "Email",
         "enter-password": "Enter your password",
+        "repeat-password": "Repeat Password",
+        "passwords-do-not-match": "Passwords do not match.",
         "or-sign-in-using": "or sign in using",
         "or-sign-up-using": "or sign up using",
         "trouble-signing-in": "Having trouble signing in?",
@@ -61,7 +63,7 @@
         "verification-email-sent": "We have sent a <b>verification email</b>! Please check your inbox.",
         "thanks-for-sign-up": "Thank you for signing up!",
         "resend-verification-email": "Resend Verification Email",
-        "confirmation-email-sent": "We have sent a confirmation email to <strong>{{email}}</strong>. Please check your email and click on the link to verfiy your email address.",
+        "confirmation-email-sent": "We have sent a confirmation email to <b>{{email}}</b>. Please check your email and click on the link to verfiy your email address.",
         "confirmation-email-resent": "Success! Confirmation Email has been resend.",
         "nothing-here": "Hmm, there is nothing for you to see here.",
         "not-found": "Not found"
