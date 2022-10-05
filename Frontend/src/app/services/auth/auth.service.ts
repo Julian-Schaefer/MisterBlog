@@ -16,7 +16,7 @@ import {
     User,
 } from "@angular/fire/auth";
 import { Router } from "@angular/router";
-import { EMPTY, from, map, Observable, of, Subject } from 'rxjs';
+import { EMPTY, from, map, Observable, of, Subject, switchMap } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 import { AuthProvider } from 'src/app/components/authentication/redux/AuthProvider';
 
@@ -50,7 +50,8 @@ export class AuthService {
             return;
 
         return from(createUserWithEmailAndPassword(this.auth, email, password)
-            .then((_) => {
+            .then((credential) => {
+                this.handleAuthentication(credential.user, true);
                 this.sendVerificationEmail();
             })
         );
@@ -75,28 +76,31 @@ export class AuthService {
             return of(false);
 
         if (this.isInitialized) {
-            const user = this.auth.currentUser;
-
-            if (!user) return of(false);
-
-            if (user.providerId !== "password") {
-                return of(user != null && user.uid != null);
-            } else {
-                return of(user != null && user.uid != null && user.emailVerified != false);
-            }
+            return from(this._checkIsLoggedIn());
         } else {
-            return this.onInitialized.pipe(map(() => {
-                const user = this.auth.currentUser;
-
-                if (!user) return false;
-
-                if (user.providerId !== "password") {
-                    return user != null && user.uid != null;
-                } else {
-                    return user != null && user.uid != null && user.emailVerified != false;
-                }
-            }));
+            return this.onInitialized.pipe(
+                switchMap(() => {
+                    return this._checkIsLoggedIn().pipe(
+                        map((isLoggedIn) => {
+                            return isLoggedIn;
+                        }));
+                })
+            );
         }
+    }
+
+    private _checkIsLoggedIn(): Observable<boolean> {
+        const user = this.auth.currentUser;
+
+        if (!user) return of(false);
+
+        return from(user.getIdTokenResult().then((result) => {
+            if (result.signInProvider !== 'password') {
+                return user != null && user.uid != null;
+            } else {
+                return user != null && user.uid != null && user.emailVerified != false;
+            }
+        }));
     }
 
     getIdToken(): Observable<string> {
@@ -171,10 +175,18 @@ export class AuthService {
         this.onInitialized.next();
 
         if (user) {
-            this.user = user;
-            if (shouldNavigate) {
-                this.router.navigate(['posts']);
-            }
+            user.getIdTokenResult().then((result) => {
+                if (result.signInProvider === 'password' && user.emailVerified === false) {
+                    if (shouldNavigate) {
+                        this.router.navigate(['verify-email'], { state: { email: user.email } });
+                    }
+                } else {
+                    this.user = user;
+                    if (shouldNavigate) {
+                        this.router.navigate(['posts']);
+                    }
+                }
+            });
         } else {
             this.user = null;
             if (shouldNavigate) {

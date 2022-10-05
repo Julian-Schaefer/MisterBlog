@@ -54,6 +54,8 @@
         "sign-out": "Ausloggen",
         "email": "E-Mail",
         "enter-password": "Passwort eingeben",
+        "repeat-password": "Passwort wiederholen",
+        "passwords-do-not-match": "Passwörter stimmen nicht überein.",
         "or-sign-in-using": "oder logge dich ein mit",
         "or-sign-up-using": "oder registriere dich mit",
         "trouble-signing-in": "Probleme beim Einloggen?",
@@ -68,7 +70,7 @@
         "verification-email-sent": "Wir haben eine <b>Verifizierungs-Mail</b> gesendet! Bitte prüfe dein Postfach.",
         "thanks-for-sign-up": "Danke und willkommen!",
         "resend-verification-email": "Verifizierung erneut senden",
-        "confirmation-email-sent": "Wir haben eine Bestätings-Mail an <strong>{{email}}</strong> gesendet. Bitte prüfe dein Postfach und klicke auf den Link um deine E-Mail zu bestätigen.",
+        "confirmation-email-sent": "Wir haben eine Bestätings-Mail an <b>{{email}}</b> gesendet. Bitte prüfe dein Postfach und klicke auf den Link um deine E-Mail zu bestätigen.",
         "confirmation-email-resent": "Erfolg! Die Bestätigungs-Mail wurde erneut gesendet.",
         "nothing-here": "Hmm, hier gibt es nichts zu sehen.",
         "not-found": "Nicht gefunden"

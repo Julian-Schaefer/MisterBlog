@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { Component } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { AuthService } from 'src/app/services/auth/auth.service';
 import { reset, sendVerificationEmail } from '../redux/authentication.actions';
 import { selectAuthenticationState } from '../redux/authentication.reducer';
 
@@ -13,9 +12,16 @@ import { selectAuthenticationState } from '../redux/authentication.reducer';
 export class VerifyEmailComponent {
 
   state$ = this.store.select(selectAuthenticationState);
+  email?: string;
 
-  constructor(public authService: AuthService, private store: Store) {
-    this.store.dispatch(reset());
+  constructor(private store: Store, private route: ActivatedRoute, private router: Router) {
+    this.route.queryParams.subscribe(_ => {
+      const currentNavigation = this.router.getCurrentNavigation();
+      if (currentNavigation && currentNavigation.extras && currentNavigation.extras.state) {
+        this.store.dispatch(reset());
+        this.email = this.router.getCurrentNavigation().extras.state.email;
+      }
+    });
   }
 
   sendVerificationEmail() {
