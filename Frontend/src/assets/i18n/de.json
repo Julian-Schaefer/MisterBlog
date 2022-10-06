@@ -78,8 +78,37 @@
     "error": {
         "unknown-error": "Ein unbekannter Fehler ist aufgetreten.",
         "auth": {
-            "invalid-email": "Die angegebene E-Mail ist falsch formatiert.",
-            "wrong-password": "Das eingegebene Passwort ist falsch."
+            "invalid-email": "Die E-Mail-Adresse ist falsch formatiert.",
+            "wrong-password": "Falsche Kombination aus E-Mail und Passwort.",
+            "too-many-requests": "Der Zugang zu diesem Konto wurde aufgrund ungewöhnlicher Aktivitäten vorübergehend gesperrt. Sie können es sofort wiederherstellen, indem Sie Ihr Passwort zurücksetzen, oder Sie können es später erneut versuchen.",
+            "uid-already-exists": "Die angegebene Benutzerkennung wird bereits von einem bestehenden Benutzer verwendet. Jeder Benutzer muss eine eindeutige Kennung haben.",
+            "invalid-password": "Das angegebene Passwort ist ungültig. Es muss mindestens sechs Zeichen enthalten.",
+            "cors-unsupported": "Dieser Browser wird nicht unterstützt.",
+            "credential-already-in-use": "Diese Anmeldedaten sind bereits mit einem anderen Benutzerkonto verknüpft.",
+            "requires-recent-login": "Dieser Vorgang ist sensibel und erfordert eine aktuelle Authentifizierung. Melden Sie sich erneut an, bevor Sie diese Anfrage erneut versuchen.",
+            "email-change-needs-verification": "Multi-Faktor-Benutzer müssen immer eine verifizierte E-Mail haben.",
+            "email-already-in-use": "Diese E-Mail-Adresse wird bereits von einem anderen Konto verwendet.",
+            "cancelled-popup-request": "Dieser Vorgang wurde abgebrochen, da ein weiteres Popup geöffnet wurde.",
+            "account-exists-with-different-credential": "Es existiert bereits ein Konto mit der gleichen E-Mail-Adresse, aber anderen Anmeldedaten. Melden Sie sich mit einem Anbieter an, der mit dieser E-Mail-Adresse verknüpft ist.",
+            "network-request-failed": "Es ist ein Netzwerkfehler aufgetreten. Bitte versuchen Sie es später noch einmal.",
+            "popup-blocked": "Die Verbindung mit dem Popup kann nicht hergestellt werden. Möglicherweise wurde es vom Browser blockiert.",
+            "popup-closed-by-user": "Das Popup wurde vom Benutzer geschlossen, bevor der Vorgang abgeschlossen wurde.",
+            "provider-already-linked": "Ein Benutzer kann nur mit einer Identität für einen bestimmten Anbieter verknüpft werden.",
+            "redirect-cancelled-by-user": "Der Umleitungsvorgang wurde vom Benutzer vor dem Abschluss abgebrochen.",
+            "redirect-operation-pending": "Eine Umleitungsanmeldung ist bereits im Gange.",
+            "second-factor-already-in-use": "Dieser zweite Faktor ist bereits auf diesem Konto registriert.",
+            "maximum-second-factor-count-exceeded": "Die maximal zulässige Anzahl von Zweitfaktoren für diesen Benutzer wurde überschritten.",
+            "timeout": "Der Vorgang wurde abgebrochen.",
+            "user-token-expired": "Ihre Anmeldedaten sind nicht mehr gültig. Bitte melden Sie sich erneut an.",
+            "unsupported-first-factor": "Das Aktivieren eines zweiten Faktors oder die Anmeldung mit einem Multi-Faktor-Konto erfordert die Anmeldung mit einem unterstützten ersten Faktor.",
+            "unsupported-persistence-type": "Die aktuelle Umgebung unterstützt den angegebenen Persistenztyp nicht.",
+            "unsupported-tenant-operation": "Dieser Vorgang wird in einem Multi-Tenant-Kontext nicht unterstützt.",
+            "unverified-email": "Dieser Vorgang erfordert eine verifizierte E-Mail.",
+            "user-cancelled": "Sie haben dieser Anwendung nicht die angeforderten Berechtigungen erteilt.",
+            "user-not-found": "Es wurde kein Benutzer mit dieser Kennung gefunden. Der Benutzer wurde möglicherweise gelöscht.",
+            "user-disabled": "Ihr Konto wurde von einem Administrator deaktiviert.",
+            "weak-password": "Ihr Passwort muss mindestens 6 Zeichen enthalten.",
+            "web-storage-unsupported": "Dieser Browser wird nicht unterstützt oder Cookies und Daten von Drittanbietern sind deaktiviert."
         }
     }
 }
