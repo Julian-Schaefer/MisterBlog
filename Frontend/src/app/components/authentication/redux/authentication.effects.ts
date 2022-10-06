@@ -21,7 +21,7 @@ export class AuthenticationEffects {
 
                 if (errorMessage === errorCode) {
                     this.logger.warn("No Translation found for error: ", errorCode, error.message);
-                    errorMessage = await lastValueFrom(this.translateService.get("error.auth.unknown-error"));
+                    errorMessage = await lastValueFrom(this.translateService.get("error.unknown-error"));
                 }
             }
         }

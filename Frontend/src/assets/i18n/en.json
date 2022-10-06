@@ -79,8 +79,36 @@
         "unknown-error": "An unknown error has occured.",
         "auth": {
             "invalid-email": "The email address is badly formatted.",
-            "wrong-password": "The password is wrong.",
-            "too-many-requests": "Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later."
+            "wrong-password": "Wrong combination of Email and Password.",
+            "too-many-requests": "Access to this account has been temporarily disabled due to unusual activity. You can immediately restore it by resetting your password or you can try again later.",
+            "uid-already-exists": "The provided user identifier is already in use by an existing user. Each user must have a unique identifier.",
+            "invalid-password": "The provided password is invalid. It has to contain at least six characters.",
+            "cors-unsupported": "This browser is not supported.",
+            "credential-already-in-use": "This credential is already associated with a different user account.",
+            "requires-recent-login": "This operation is sensitive and requires recent authentication. Sign in again before retrying this request.",
+            "email-change-needs-verification": "Multi-factor users must always have a verified email.",
+            "email-already-in-use": "This email address is already in use by another account.",
+            "cancelled-popup-request": "This operation has been cancelled due to another conflicting popup being opened.",
+            "account-exists-with-different-credential": "An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address.",
+            "network-request-failed": "A network error has occurred. Please try again later.",
+            "popup-blocked": "Unable to establish a connection with the popup. It may have been blocked by the browser.",
+            "popup-closed-by-user": "The popup has been closed by the user before finalizing the operation.",
+            "provider-already-linked": "User can only be linked to one identity for the given provider.",
+            "redirect-cancelled-by-user": "The redirect operation has been cancelled by the user before finalizing.",
+            "redirect-operation-pending": "A redirect sign-in operation is already pending.",
+            "second-factor-already-in-use": "The second factor is already enrolled on this account.",
+            "maximum-second-factor-count-exceeded": "The maximum allowed number of second factors on this user has been exceeded.",
+            "timeout": "The operation has timed out.",
+            "user-token-expired": "Your credentials are no longer valid. Please sign in again.",
+            "unsupported-first-factor": "Enrolling a second factor or signing in with a multi-factor account requires sign-in with a supported first factor.",
+            "unsupported-persistence-type": "The current environment does not support the specified persistence type.",
+            "unsupported-tenant-operation": "This operation is not supported in a multi-tenant context.",
+            "unverified-email": "This operation requires a verified email.",
+            "user-cancelled": "You did not grant this app the permissions it requested.",
+            "user-not-found": "There is no user record corresponding to this identifier. The user may have been deleted.",
+            "user-disabled": "Your account has been disabled by an administrator.",
+            "weak-password": "Your password must contain at least 6 characters.",
+            "web-storage-unsupported": "This browser is not supported or 3rd party cookies and data may be disabled."
         }
     }
 }
