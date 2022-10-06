@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { initializeApp, provideFirebaseApp, getApp } from '@angular/fire/app';
-import { provideAuth, initializeAuth, browserLocalPersistence, browserPopupRedirectResolver } from '@angular/fire/auth';
+import { provideAuth, initializeAuth, browserLocalPersistence, browserPopupRedirectResolver, connectAuthEmulator } from '@angular/fire/auth';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -105,11 +105,18 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         ReactiveFormsModule,
         BrowserAnimationsModule,
         provideFirebaseApp(() => initializeApp(environment.firebase)),
-        provideAuth(() =>
-            initializeAuth(getApp(), {
+        provideAuth(() => {
+            const auth = initializeAuth(getApp(), {
                 persistence: browserLocalPersistence,
                 popupRedirectResolver: browserPopupRedirectResolver
-            })),
+            });
+
+            if (!environment.production) {
+                connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: false })
+            }
+
+            return auth;
+        }),
         LoggerModule.forRoot({
             level: NgxLoggerLevel.INFO
         }),
