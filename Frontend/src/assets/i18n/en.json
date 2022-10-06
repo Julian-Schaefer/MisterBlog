@@ -20,7 +20,9 @@
         "change-language": "Change Language",
         "change-language-desc": "Please select your preferred language:",
         "sign-out-desc": "Sign out of your account:",
-        "change-password": "Change Password"
+        "change-password": "Change Password",
+        "change-password-desc": "Here you can change your password:",
+        "change-password-success": "Your Password has been changed successfully!"
     },
     "postList": {
         "continueReading": "Continue reading",
@@ -46,8 +48,10 @@
         "sign-up": "Sign up",
         "sign-out": "Sign out",
         "email": "Email",
-        "enter-password": "Enter your password",
+        "enter-password": "Enter your Password",
         "repeat-password": "Repeat Password",
+        "enter-new-password": "Enter your new Password",
+        "repeat-new-password": "Repeat new Password",
         "passwords-do-not-match": "Passwords do not match.",
         "or-sign-in-using": "or sign in using",
         "or-sign-up-using": "or sign up using",
