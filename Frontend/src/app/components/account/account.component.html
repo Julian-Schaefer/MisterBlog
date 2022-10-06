@@ -49,15 +49,61 @@
         </div>
     </div>
 
-    <mat-divider></mat-divider>
 
-    <div class="section">
-        <h3>{{ 'account.change-password' | translate }}</h3>
+    <div class="section" *ngIf="signInProvider$ | async; let signInProvider">
+        <div *ngIf="signInProvider === 'password'">
+            <mat-divider></mat-divider>
+
+            <h3>{{ 'account.change-password' | translate }}</h3>
+            <p>{{ 'account.change-password-desc' | translate }}</p>
+
+            <form [formGroup]="changePasswordForm">
+                <div fxLayout="row" fxLayoutAlign="space-between center">
+                    <mat-form-field fxFlex="48">
+                        <mat-label>{{ 'authentication.enter-new-password' | translate }}</mat-label>
+                        <input matInput [type]="hidePassword ? 'password' : 'text'" #userPassword
+                            formControlName="password" autocomplete="new-password">
+                        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
+                            [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+                            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                        </button>
+                    </mat-form-field>
+
+                    <mat-form-field fxFlex="48">
+                        <mat-label>{{ 'authentication.repeat-new-password' | translate }}</mat-label>
+                        <input matInput [type]="hideRepeatedPassword ? 'password' : 'text'" #repeatedPassword
+                            formControlName="repeatedPassword" autocomplete="new-password"
+                            [errorStateMatcher]="crossFieldErrorMatcher">
+                        <button mat-icon-button matSuffix (click)="hideRepeatedPassword = !hideRepeatedPassword"
+                            [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideRepeatedPassword">
+                            <mat-icon>{{hideRepeatedPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                        </button>
+
+
+                        <mat-error *ngIf="changePasswordForm.errors?.['passwordMismatch']">
+                            {{ 'authentication.passwords-do-not-match' | translate }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <p *ngIf="changePasswordError" id="error">{{changePasswordError}}</p>
+
+                <button mat-raised-button color="primary" (click)="changePassword(userPassword.value)"
+                    [disabled]="changePasswordForm.invalid">
+                    <span *ngIf="!changePasswordInProgress">{{ 'account.change-password' | translate
+                        }}</span>
+                    <app-loading-spinner *ngIf="changePasswordInProgress" scale="0.25" color="white"
+                        style="height: 36px;">
+                    </app-loading-spinner>
+                </button>
+
+            </form>
+        </div>
     </div>
 </mat-dialog-content>
 
 
-<mat-dialog-actions align="center">
+<mat-dialog-actions align="center" class="section">
     <button mat-raised-button (click)="closeDialog()">{{
         'general.close'
         | translate }}</button>

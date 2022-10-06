@@ -18,4 +18,11 @@ h3 {
 
 p {
     margin: 0 !important;
+    margin-bottom: 1.25em !important;
+}
+
+p#error {
+    margin-top: 20px;
+    color: #a50101;
+    text-align: center;
 }

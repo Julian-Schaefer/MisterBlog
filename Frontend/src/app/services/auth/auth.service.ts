@@ -16,9 +16,11 @@ import {
     User,
 } from "@angular/fire/auth";
 import { Router } from "@angular/router";
-import { EMPTY, from, map, Observable, of, Subject, switchMap } from 'rxjs';
+import { EMPTY, firstValueFrom, from, lastValueFrom, map, Observable, of, Subject, switchMap } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 import { AuthProvider } from 'src/app/components/authentication/redux/AuthProvider';
+import { NGXLogger } from 'ngx-logger';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable(
     { providedIn: "root" }
@@ -35,6 +37,8 @@ export class AuthService {
         public router: Router,
         public ngZone: NgZone,
         private auth: Auth,
+        private translateService: TranslateService,
+        private logger: NGXLogger,
         @Inject(PLATFORM_ID) platformId: Object
     ) {
         this.isBrowser = isPlatformBrowser(platformId);
@@ -166,17 +170,48 @@ export class AuthService {
         }));
     }
 
+    getSignInProvider(): Observable<string | null> {
+        return this.isLoggedIn.pipe(switchMap((loggedIn) => {
+            if (loggedIn) {
+                return from(this.auth.currentUser.getIdTokenResult()).pipe(map((result) => {
+                    return result.signInProvider;
+                }));
+            } else {
+                return null;
+            }
+        }));
+    }
+
     updatePassword(newPassword: string): Observable<void> {
         return from(updatePassword(this.auth.currentUser, newPassword));
     }
 
-    handleAuthentication(user: User, shouldNavigate: boolean) {
+    async getErrorMessageFromError(error: any): Promise<string> {
+        this.logger.log(error);
+        let errorMessage = await firstValueFrom(this.translateService.get("error.unknown-error"));
+
+        if (error.name && error.name === "FirebaseError") {
+            if (error.code && error.code.startsWith("auth/")) {
+                const errorCode = "error.auth." + error.code.substring("auth/".length);
+                errorMessage = await firstValueFrom(this.translateService.get(errorCode));
+
+                if (errorMessage === errorCode) {
+                    this.logger.warn("No Translation found for error: ", errorCode, error.message);
+                    errorMessage = await firstValueFrom(this.translateService.get("error.unknown-error"));
+                }
+            }
+        }
+
+        return errorMessage;
+    }
+
+    private handleAuthentication(user: User, shouldNavigate: boolean) {
         this.isInitialized = true;
         this.onInitialized.next();
 
         if (user) {
-            user.getIdTokenResult().then((result) => {
-                if (result.signInProvider === 'password' && user.emailVerified === false) {
+            this.getSignInProvider().subscribe((signInProvider) => {
+                if (signInProvider === 'password' && user.emailVerified === false) {
                     if (shouldNavigate) {
                         this.router.navigate(['verify-email'], { state: { email: user.email } });
                     }

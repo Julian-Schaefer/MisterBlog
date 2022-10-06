@@ -20,7 +20,9 @@
         "change-language": "Sprache ändern",
         "change-language-desc": "Bitte wähle deine bevorzugte Sprache aus:",
         "sign-out-desc": "Aus deinem Account ausloggen:",
-        "change-password": "Passwort ändern"
+        "change-password": "Passwort ändern",
+        "change-password-desc": "Hier kannst du dein Passwort ändern:",
+        "change-password-success": "Dein Passwort wurde erfolgreich geändert!"
     },
     "postList": {
         "continueReading": "Weiterlesen",
@@ -55,6 +57,8 @@
         "email": "E-Mail",
         "enter-password": "Passwort eingeben",
         "repeat-password": "Passwort wiederholen",
+        "enter-new-password": "Neues Passwort eingeben",
+        "repeat-new-password": "Neues Passwort wiederholen",
         "passwords-do-not-match": "Passwörter stimmen nicht überein.",
         "or-sign-in-using": "oder logge dich ein mit",
         "or-sign-up-using": "oder registriere dich mit",

@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs';
 import * as actions from '../redux/authentication.actions';
 import { selectAuthenticationState } from '../redux/authentication.reducer';
 
-class CrossFieldErrorMatcher implements ErrorStateMatcher {
+export class CrossFieldErrorMatcher implements ErrorStateMatcher {
   isErrorState(control: AbstractControl<any, any>, form: FormGroupDirective | NgForm): boolean {
     return control.dirty && form.invalid;
   }
