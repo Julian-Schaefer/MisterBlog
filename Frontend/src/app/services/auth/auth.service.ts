@@ -30,8 +30,6 @@ export class AuthService {
     public user: User;
 
     private isBrowser: boolean;
-    private isInitialized = false;
-    private onInitialized = new Subject<void>;
 
     constructor(
         public router: Router,
@@ -44,7 +42,7 @@ export class AuthService {
         this.isBrowser = isPlatformBrowser(platformId);
         if (this.isBrowser) {
             onAuthStateChanged(this.auth, user => {
-                this.handleAuthentication(user, false);
+                this.handleAuthentication(user);
             });
         }
     }
@@ -55,7 +53,6 @@ export class AuthService {
 
         return from(createUserWithEmailAndPassword(this.auth, email, password)
             .then((credential) => {
-                this.handleAuthentication(credential.user, true);
                 this.sendVerificationEmail();
             })
         );
@@ -79,21 +76,6 @@ export class AuthService {
         if (!this.isBrowser)
             return of(false);
 
-        if (this.isInitialized) {
-            return from(this._checkIsLoggedIn());
-        } else {
-            return this.onInitialized.pipe(
-                switchMap(() => {
-                    return this._checkIsLoggedIn().pipe(
-                        map((isLoggedIn) => {
-                            return isLoggedIn;
-                        }));
-                })
-            );
-        }
-    }
-
-    private _checkIsLoggedIn(): Observable<boolean> {
         const user = this.auth.currentUser;
 
         if (!user) return of(false);
@@ -112,35 +94,18 @@ export class AuthService {
             return of(null);
         }
 
-        if (this.isInitialized) {
-            if (!this.auth.currentUser) {
-                return of(null);
-            }
-
-            return from(this.auth.currentUser.getIdToken());
-        } else {
-            return new Observable(subscriber => {
-                this.onInitialized.subscribe(() => {
-                    if (!this.auth.currentUser) {
-                        subscriber.next(null);
-                    } else {
-                        this.auth.currentUser.getIdToken().then(idToken => {
-                            subscriber.next(idToken);
-                        });
-                    }
-                });
-            });
+        if (!this.auth.currentUser) {
+            return of(null);
         }
+
+        return from(this.auth.currentUser.getIdToken());
     }
 
     signInWithEmail(email: string, password: string): Observable<UserCredential> {
         if (!this.isBrowser)
             return;
 
-        return from(signInWithEmailAndPassword(this.auth, email, password).then((credential) => {
-            this.handleAuthentication(credential.user, true);
-            return credential;
-        }));
+        return from(signInWithEmailAndPassword(this.auth, email, password));
     }
 
     signInWithProvider(provider: AuthProvider): Observable<UserCredential> {
@@ -155,19 +120,14 @@ export class AuthService {
             case AuthProvider.APPLE: authProvider = new GoogleAuthProvider(); break;
         }
 
-        return from(signInWithPopup(this.auth, authProvider).then((credential) => {
-            this.handleAuthentication(credential.user, true);
-            return credential;
-        }));
+        return from(signInWithPopup(this.auth, authProvider));
     }
 
     signOut(): Observable<void> {
         if (!this.isBrowser)
             return;
 
-        return from(this.auth.signOut().then((_) => {
-            this.handleAuthentication(null, true);
-        }));
+        return from(this.auth.signOut());
     }
 
     getSignInProvider(): Observable<string | null> {
@@ -175,27 +135,13 @@ export class AuthService {
             return of(null);
         }
 
-        if (this.isInitialized) {
-            if (!this.auth.currentUser) {
-                return of(null);
-            }
-
-            return from(this.auth.currentUser.getIdTokenResult()).pipe(map((result) => {
-                return result.signInProvider;
-            }));
-        } else {
-            return new Observable(subscriber => {
-                this.onInitialized.subscribe(() => {
-                    if (!this.auth.currentUser) {
-                        subscriber.next(null);
-                    } else {
-                        this.auth.currentUser.getIdTokenResult().then(result => {
-                            subscriber.next(result.signInProvider);
-                        });
-                    }
-                });
-            });
+        if (!this.auth.currentUser) {
+            return of(null);
         }
+
+        return from(this.auth.currentUser.getIdTokenResult()).pipe(map((result) => {
+            return result.signInProvider;
+        }));
     }
 
     updatePassword(newPassword: string): Observable<void> {
@@ -221,28 +167,19 @@ export class AuthService {
         return errorMessage;
     }
 
-    private handleAuthentication(user: User, shouldNavigate: boolean) {
-        this.isInitialized = true;
-        this.onInitialized.next();
-
+    private handleAuthentication(user: User) {
         if (user) {
             this.getSignInProvider().subscribe((signInProvider) => {
                 if (signInProvider === 'password' && user.emailVerified === false) {
-                    if (shouldNavigate) {
-                        this.router.navigate(['verify-email'], { state: { email: user.email } });
-                    }
+                    this.router.navigate(['verify-email'], { state: { email: user.email } });
                 } else {
                     this.user = user;
-                    if (shouldNavigate) {
-                        this.router.navigate(['posts']);
-                    }
+                    this.router.navigate(['posts']);
                 }
             });
         } else {
             this.user = null;
-            if (shouldNavigate) {
-                this.router.navigate(['']);
-            }
+            this.router.navigate(['']);
         }
     }
 }

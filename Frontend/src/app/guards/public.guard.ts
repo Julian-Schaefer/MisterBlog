@@ -22,7 +22,7 @@ export class PublicGuard implements CanActivate {
       this.authService.isLoggedIn.subscribe(loggedIn => {
         if (loggedIn) {
           this.router.navigate(['posts']);
-          return true;
+          return false;
         }
       });
     } else {
