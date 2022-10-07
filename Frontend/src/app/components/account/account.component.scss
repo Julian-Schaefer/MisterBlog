@@ -22,12 +22,7 @@ h3 {
 }
 
 p#error {
-    margin-top: 12px;
     color: #a50101;
     text-align: center;
     margin-bottom: 0px;
-}
-
-::ng-deep .mat-form-field-wrapper {
-    padding-bottom: 0 !important;
 }
