@@ -27,6 +27,10 @@ def create_app(config_class=config.Config):
         try:
             token = authHeader.split()[1]
             user = tokenVerifier.verify(token)
+
+            if user['firebase']['sign_in_provider'] == "password" and not user['email_verified']:
+                return {"message": "Email not verified."}, 401
+
             request.user = user
         except Exception:
             return {"message": "Invalid Token provided."}, 401
