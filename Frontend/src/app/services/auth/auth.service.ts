@@ -171,15 +171,31 @@ export class AuthService {
     }
 
     getSignInProvider(): Observable<string | null> {
-        return this.isLoggedIn.pipe(switchMap((loggedIn) => {
-            if (loggedIn) {
-                return from(this.auth.currentUser.getIdTokenResult()).pipe(map((result) => {
-                    return result.signInProvider;
-                }));
-            } else {
-                return null;
+        if (!this.isBrowser) {
+            return of(null);
+        }
+
+        if (this.isInitialized) {
+            if (!this.auth.currentUser) {
+                return of(null);
             }
-        }));
+
+            return from(this.auth.currentUser.getIdTokenResult()).pipe(map((result) => {
+                return result.signInProvider;
+            }));
+        } else {
+            return new Observable(subscriber => {
+                this.onInitialized.subscribe(() => {
+                    if (!this.auth.currentUser) {
+                        subscriber.next(null);
+                    } else {
+                        this.auth.currentUser.getIdTokenResult().then(result => {
+                            subscriber.next(result.signInProvider);
+                        });
+                    }
+                });
+            });
+        }
     }
 
     updatePassword(newPassword: string): Observable<void> {
