@@ -1,9 +1,13 @@
 from newspaper import Article
 import newspaper
 
-url = 'http://fox13now.com/2013/12/30/new-year-new-laws-obamacare-pot-guns-and-drones/'
-url = 'https://freddysblog.com/2021/02/28/running-business-central-in-docker-using-sql-on-the-host/'
-#url = 'https://www.waldo.be/2021/07/06/the-complexity-of-complex-return-types-updated-looping-a-record-return-type/'
+url = "http://fox13now.com/2013/12/30/new-year-new-laws-obamacare-pot-guns-and-drones/"
+url = (
+    "https://freddysblog.com/2021/02/28/running-business-central",
+    "-in-docker-using-sql-on-the-host/",
+)
+# url = 'https://www.waldo.be/2021/07/06/the-complexity-of-
+# complex-return-types-updated-looping-a-record-return-type/'
 article = Article(url, keep_article_html=True)
 article.download()
 article.parse()
@@ -24,7 +28,7 @@ print(article.additional_data)
 print(article.publish_date)
 print(article.authors)
 
-cnn_paper = newspaper.build('http://cnn.com')
+cnn_paper = newspaper.build("http://cnn.com")
 
 for article in cnn_paper.articles:
     print(article.url)
