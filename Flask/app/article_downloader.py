@@ -163,5 +163,5 @@ def download_article(url: str, download_content: bool = False) -> BlogPost:
 
         return blogPost
     except Exception as e:
-        logging.info('Could not download Article', exc_info=True)
+        logging.info(f'Could not download Article: {e}', exc_info=True)
         return None

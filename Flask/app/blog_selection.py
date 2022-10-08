@@ -1,5 +1,5 @@
 from app.database import db
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.types import JSON
 
 
 class BlogSelection(db.Model):
@@ -9,7 +9,7 @@ class BlogSelection(db.Model):
     user_id = db.Column(db.String(), primary_key=True)
     is_selected = db.Column(db.Boolean())
     rss_url = db.Column(db.String(), nullable=True)
-    article_selectors = db.Column(JSONB(), nullable=True)
+    article_selectors = db.Column(JSON(), nullable=True)
     page_counter_url = db.Column(db.String(), nullable=True)
 
     def __init__(self, blog_url, user_id, is_selected, rss_url, article_selectors, page_counter_url):
