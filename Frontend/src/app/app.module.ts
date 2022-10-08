@@ -63,6 +63,7 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { RouteReuseStrategy } from '@angular/router';
 import { AccountComponent } from './components/account/account.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import { getAuth } from 'firebase/auth';
 
 export const interceptorProviders =
     [
@@ -106,6 +107,10 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         BrowserAnimationsModule,
         provideFirebaseApp(() => initializeApp(environment.firebase)),
         provideAuth(() => {
+            if (typeof document === 'undefined') {
+                return getAuth(getApp())
+            }
+
             const auth = initializeAuth(getApp(), {
                 persistence: browserLocalPersistence,
                 popupRedirectResolver: browserPopupRedirectResolver
