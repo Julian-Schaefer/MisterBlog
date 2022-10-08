@@ -3,7 +3,7 @@ from sqlalchemy.types import JSON
 
 
 class BlogSelection(db.Model):
-    __tablename__ = 'blog_selection'
+    __tablename__ = "blog_selection"
 
     blog_url = db.Column(db.String(), primary_key=True)
     user_id = db.Column(db.String(), primary_key=True)
@@ -12,7 +12,15 @@ class BlogSelection(db.Model):
     article_selectors = db.Column(JSON(), nullable=True)
     page_counter_url = db.Column(db.String(), nullable=True)
 
-    def __init__(self, blog_url, user_id, is_selected, rss_url, article_selectors, page_counter_url):
+    def __init__(
+        self,
+        blog_url,
+        user_id,
+        is_selected,
+        rss_url,
+        article_selectors,
+        page_counter_url,
+    ):
         self.blog_url = blog_url
         self.user_id = user_id
         self.is_selected = is_selected

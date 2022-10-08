@@ -12,8 +12,7 @@ def setUpFirebase():
         serviceAccount = json.load(StringIO(serviceAccountJson))
         cred = credentials.Certificate(serviceAccount)
     else:
-        cred = credentials.Certificate(os.environ.get("CERTIFICATE_PATH",
-                                                      None))
+        cred = credentials.Certificate(os.environ.get("CERTIFICATE_PATH", None))
     firebase_admin.initialize_app(cred)
 
 
