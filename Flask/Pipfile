@@ -28,6 +28,7 @@ lxml = "*"
 autopep8 = "*"
 pytest = "*"
 python-dotenv = "*"
+flake8 = "*"
 
 [requires]
 python_version = "3.9"
