@@ -30,6 +30,7 @@ pytest = "*"
 python-dotenv = "*"
 flake8 = "*"
 black = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.9"
