@@ -4,12 +4,12 @@ from unittest.mock import patch
 
 
 def test_factory():
-    with patch('app.firebase.setUpFirebase'):
+    with patch("app.firebase.setUpFirebase"):
         assert not create_app().testing
 
     assert create_app(TestConfig).testing
 
 
 def test_no_token(client):
-    response = client.get('/tour')
+    response = client.get("/blog-selection")
     assert response.data == b'{"message":"No Token provided."}\n'
