@@ -1,0 +1,28 @@
+{
+  "hosting": [
+    {
+      "target": "staging",
+      "rewrites": [
+        {
+          "source": "**",
+          "run": {
+            "serviceId": "misterblog-frontend-staging",
+            "region": "europe-west3"
+          }
+        }
+      ]
+    },
+    {
+      "target": "production",
+      "rewrites": [
+        {
+          "source": "**",
+          "run": {
+            "serviceId": "misterblog-frontend-production",
+            "region": "europe-west3"
+          }
+        }
+      ]
+    }
+  ]
+}

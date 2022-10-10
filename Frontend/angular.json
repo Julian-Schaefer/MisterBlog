@@ -63,6 +63,27 @@
               ],
               "outputHashing": "all"
             },
+            "staging": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "1mb",
+                  "maximumError": "2mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.staging.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
             "development": {
               "buildOptimizer": false,
               "optimization": false,
@@ -82,6 +103,9 @@
           "configurations": {
             "production": {
               "browserTarget": "Mister-Blog:build:production"
+            },
+            "staging": {
+              "browserTarget": "Mister-Blog:build:staging"
             },
             "development": {
               "browserTarget": "Mister-Blog:build:development"
@@ -153,6 +177,18 @@
               "sourceMap": false,
               "extractLicenses": true
             },
+            "staging": {
+              "outputHashing": "media",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.staging.ts"
+                }
+              ],
+              "optimization": true,
+              "sourceMap": false,
+              "extractLicenses": true
+            },
             "development": {
               "optimization": false,
               "sourceMap": true,
@@ -171,6 +207,10 @@
             "production": {
               "browserTarget": "Mister-Blog:build:production",
               "serverTarget": "Mister-Blog:server:production"
+            },
+            "staging": {
+              "browserTarget": "Mister-Blog:build:staging",
+              "serverTarget": "Mister-Blog:server:staging"
             }
           },
           "defaultConfiguration": "development"
@@ -186,6 +226,10 @@
             "production": {
               "browserTarget": "Mister-Blog:build:production",
               "serverTarget": "Mister-Blog:server:production"
+            },
+            "staging": {
+              "browserTarget": "Mister-Blog:build:staging",
+              "serverTarget": "Mister-Blog:server:staging"
             },
             "development": {
               "browserTarget": "Mister-Blog:build:development",
@@ -204,6 +248,10 @@
             "production": {
               "cordovaBuildTarget": "Mister-Blog:ionic-cordova-build:production",
               "devServerTarget": "Mister-Blog:serve:production"
+            },
+            "staging": {
+              "cordovaBuildTarget": "Mister-Blog:ionic-cordova-build:staging",
+              "devServerTarget": "Mister-Blog:serve:staging"
             }
           }
         },
@@ -215,6 +263,9 @@
           "configurations": {
             "production": {
               "browserTarget": "Mister-Blog:build:production"
+            },
+            "staging": {
+              "browserTarget": "Mister-Blog:build:staging"
             }
           }
         }

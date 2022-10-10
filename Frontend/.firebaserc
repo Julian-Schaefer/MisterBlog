@@ -1,0 +1,18 @@
+{
+  "projects": {
+    "default": "blogify-cdb97"
+  },
+  "targets": {
+    "blogify-cdb97": {
+      "hosting": {
+        "staging": [
+          "misterblog-staging"
+        ],
+        "production": [
+          "misterblog-production"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
