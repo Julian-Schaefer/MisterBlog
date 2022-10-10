@@ -120,7 +120,7 @@ def _download_article_html(url: str) -> str:
     for img in img_tags:
         sources = ["src", "srcset", "data-lazy-src"]
         for source in sources:
-            if img.has_attr(source) and "base64" in img[source]:
+            if img.has_attr(source) and img[source].startswith("data:image/"):
                 img[source] = None
 
     return str(soup)
