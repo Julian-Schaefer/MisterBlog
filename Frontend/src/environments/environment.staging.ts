@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: "https://misterblog-flask-production-u4uh6szxoq-ey.a.run.app",
+  apiUrl: "https://misterblog-flask-staging-u4uh6szxoq-ey.a.run.app",
   firebase: {
     apiKey: "AIzaSyDLY466XtHAJhe3aX89RbueINfryvSQS-c",
     authDomain: "auth.misterblog.me",

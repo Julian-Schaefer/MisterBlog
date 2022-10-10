@@ -1,0 +1,14 @@
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "--build-arg",
+        "ENVIRONMENT=${_ENVIRONMENT}",
+        "--tag",
+        "europe-west3-docker.pkg.dev/${_PROJECT}/cloud-run-source-deploy/${_SERVICE_NAME}",
+        ".",
+      ]
+
+images:
+  - "europe-west3-docker.pkg.dev/${_PROJECT}/cloud-run-source-deploy/${_SERVICE_NAME}"
