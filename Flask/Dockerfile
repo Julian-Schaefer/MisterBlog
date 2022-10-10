@@ -14,6 +14,12 @@ ENV APP_HOME /app
 WORKDIR $APP_HOME
 COPY . ./
 
+#Install NodeJS
+RUN apt-get update
+RUN apt-get -y install curl gnupg
+RUN curl -sL https://deb.nodesource.com/setup_16.x  | bash -
+RUN apt-get -y install nodejs
+
 # Install production dependencies.
 RUN pip install pipenv
 RUN pipenv install --system
