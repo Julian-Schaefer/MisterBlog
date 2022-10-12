@@ -32,16 +32,22 @@ export class AccountService {
     }
 
     initializeLanguage() {
-        this.translateService.addLangs(['de', 'en']);
+        const supportedLanguages = ['en', 'de'];
+        const currentLang = this.translateService.currentLang;
 
+        this.translateService.addLangs(supportedLanguages);
         this.translateService.setDefaultLang('en');
 
-        const currentLanguage = this.localStorageService.getItem(AccountService.languageKey);
-        if (currentLanguage) {
-            this.translateService.use(currentLanguage);
+        const storedLanguage = this.localStorageService.getItem(AccountService.languageKey);
+        if (storedLanguage) {
+            this.translateService.use(storedLanguage);
         } else {
-            const defaultLang = this.translateService.getBrowserLang();
-            this.translateService.use(defaultLang);
+            if (currentLang && supportedLanguages.indexOf(currentLang) !== -1) {
+                this.translateService.use(currentLang);
+            } else {
+                const defaultLang = this.translateService.getDefaultLang();
+                this.translateService.use(defaultLang);
+            }
         }
     }
 }

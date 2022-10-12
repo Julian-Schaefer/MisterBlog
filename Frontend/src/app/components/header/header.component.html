@@ -3,8 +3,8 @@
 
         <ion-title style="max-width: 1040px; margin: auto;">
             <div style="float: left">
-                <h1 id="heading" routerLink="/posts"><img src="assets/logo.svg" draggable="false"
-                        style="height: 32px; margin-top: 19px;">
+                <h1 id="heading" [routerLink]="[authService.user ? '/posts' : this.translateService.currentLang]">
+                    <img src="assets/logo.svg" draggable="false" style="height: 32px; margin-top: 19px;">
                 </h1>
             </div>
             <div style="float: right">
@@ -28,11 +28,13 @@
 
                 <ng-template #loggedOut>
                     <div class="authentication-container" fxLayout="row" fxLayoutAlign="space-between center">
-                        <a [routerLink]="['/sign-in']"><button mat-raised-button color="primary">{{
+                        <a [routerLink]="['/', translateService.currentLang, 'sign-in']"><button mat-raised-button
+                                color="primary">{{
                                 'authentication.sign-in' |
                                 translate}}</button></a>
                         <p style="margin: 12px;" fxHide fxShow.gt-xs>{{ 'general.or' | translate}}</p>
-                        <a [routerLink]="['/sign-up']" fxHide fxShow.gt-xs><button mat-raised-button color="primary">{{
+                        <a [routerLink]="['/', translateService.currentLang, 'sign-up']" fxHide fxShow.gt-xs><button
+                                mat-raised-button color="primary">{{
                                 'authentication.sign-up' | translate}}</button></a>
                     </div>
                 </ng-template>

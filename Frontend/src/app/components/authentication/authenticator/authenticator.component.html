@@ -71,15 +71,18 @@
                 <app-social-sign-in></app-social-sign-in>
 
                 <div id="bottom-bar">
-                    <span>{{ 'authentication.trouble-signing-in' | translate }} <a routerLink="/forgot-password">{{
+                    <span>{{ 'authentication.trouble-signing-in' | translate }} <a
+                            [routerLink]="['/', translateService.currentLang, 'forgot-password']">{{
                             'authentication.forgot-password' | translate }}</a></span>
 
                     <br>
 
                     <span *ngIf="isSignUp">{{ 'authentication.already-have-account' | translate }} <a
-                            routerLink="/sign-in">{{ 'authentication.sign-in' | translate }}</a></span>
+                            [routerLink]="['/', translateService.currentLang, 'sign-in']">{{ 'authentication.sign-in' |
+                            translate }}</a></span>
                     <span *ngIf="!isSignUp">{{ 'authentication.dont-have-account' | translate }} <a
-                            routerLink="/sign-up">{{ 'authentication.sign-up' | translate }}</a></span>
+                            [routerLink]="['/', translateService.currentLang, 'sign-up']">{{ 'authentication.sign-up' |
+                            translate }}</a></span>
                 </div>
             </mat-card>
         </div>

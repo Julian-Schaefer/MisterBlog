@@ -3,6 +3,7 @@ import { AbstractControl, FormBuilder, FormControl, FormGroup, FormGroupDirectiv
 import { ErrorStateMatcher } from '@angular/material/core';
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import * as actions from '../redux/authentication.actions';
 import { selectAuthenticationState } from '../redux/authentication.reducer';
@@ -36,7 +37,8 @@ export class AuthenticatorComponent implements OnInit, OnDestroy {
       null : { 'passwordMismatch': true };
   }
 
-  constructor(private store: Store, private route: ActivatedRoute, private router: Router, private formBuilder: FormBuilder) { }
+  constructor(private store: Store, private route: ActivatedRoute, private formBuilder: FormBuilder,
+    public translateService: TranslateService) { }
 
   ngOnInit(): void {
     this.store.dispatch(actions.reset());
