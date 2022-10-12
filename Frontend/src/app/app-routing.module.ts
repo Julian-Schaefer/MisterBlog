@@ -7,6 +7,7 @@ import { PostListComponent } from './components/post-list/post-list.component';
 import { PostComponent } from './components/post/post.component';
 import { AuthGuard } from './guards/auth.guard';
 import { PublicGuard } from './guards/public.guard';
+import { LanguageGuard } from './guards/language.guard';
 import { AboutComponent } from './components/about/about.component';
 
 const routes: Routes = [
@@ -18,7 +19,20 @@ const routes: Routes = [
   { path: 'sign-up', component: AuthenticatorComponent, canActivate: [PublicGuard], data: { isSignUp: true } },
   { path: 'forgot-password', component: ForgotPasswordComponent, canActivate: [PublicGuard] },
   { path: 'verify-email', component: VerifyEmailComponent, canActivate: [PublicGuard] },
-  { path: '**', redirectTo: '' }
+  { path: 'en', redirectTo: '' },
+  {
+    path: ':language',
+    canActivate: [LanguageGuard],
+    children: [
+      { path: '', component: AboutComponent, canActivate: [PublicGuard] },
+      { path: 'sign-in', component: AuthenticatorComponent, canActivate: [PublicGuard], data: { isSignUp: false } },
+      { path: 'sign-up', component: AuthenticatorComponent, canActivate: [PublicGuard], data: { isSignUp: true } },
+      { path: 'forgot-password', component: ForgotPasswordComponent, canActivate: [PublicGuard] },
+      { path: 'verify-email', component: VerifyEmailComponent, canActivate: [PublicGuard] },
+      { path: '**', redirectTo: '' }
+    ]
+  },
+  { path: '**', redirectTo: '' },
 ];
 
 @NgModule({

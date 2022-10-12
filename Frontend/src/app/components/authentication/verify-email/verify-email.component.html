@@ -33,7 +33,7 @@
 
                 <div id="bottom-bar">
                     <span>{{ 'authentication.back-to-sign-in' | translate }} <a class="redirect"
-                            routerLink="/sign-in">{{
+                            [routerLink]="['/', translateService.currentLang, 'sign-in']">{{
                             'authentication.sign-in' | translate }}</a></span>
                 </div>
             </mat-card>

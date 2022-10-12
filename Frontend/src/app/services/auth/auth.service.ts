@@ -52,7 +52,7 @@ export class AuthService {
             return;
 
         return from(createUserWithEmailAndPassword(this.auth, email, password)
-            .then((credential) => {
+            .then((_) => {
                 this.sendVerificationEmail();
             })
         );
@@ -177,7 +177,7 @@ export class AuthService {
                     this.router.navigate(['posts']);
                 }
             });
-        } else {
+        } else if (this.user) {
             this.user = null;
             this.router.navigate(['']);
         }
