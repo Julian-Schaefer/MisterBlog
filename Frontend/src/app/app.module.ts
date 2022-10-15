@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, TransferState } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -64,6 +64,7 @@ import { RouteReuseStrategy } from '@angular/router';
 import { AccountComponent } from './components/account/account.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { getAuth } from 'firebase/auth';
+import { translateBrowserLoaderFactory } from './translate-browser.loader';
 
 export const interceptorProviders =
     [
@@ -128,8 +129,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
-                useFactory: HttpLoaderFactory,
-                deps: [HttpClient]
+                useFactory: translateBrowserLoaderFactory,
+                deps: [HttpClient, TransferState]
             }
         }),
         StoreModule.forRoot({
