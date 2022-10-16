@@ -9,6 +9,8 @@ import { AuthGuard } from './guards/auth.guard';
 import { PublicGuard } from './guards/public.guard';
 import { LanguageGuard } from './guards/language.guard';
 import { AboutComponent } from './components/about/about.component';
+import { PrivacyComponent } from './components/privacy/privacy.component';
+import { ImprintComponent } from './components/imprint/imprint.component';
 
 const routes: Routes = [
   { path: 'posts', component: PostListComponent, canActivate: [AuthGuard] },
@@ -19,6 +21,8 @@ const routes: Routes = [
   { path: 'sign-up', component: AuthenticatorComponent, canActivate: [PublicGuard], data: { isSignUp: true } },
   { path: 'forgot-password', component: ForgotPasswordComponent, canActivate: [PublicGuard] },
   { path: 'verify-email', component: VerifyEmailComponent, canActivate: [PublicGuard] },
+  { path: 'privacy', component: PrivacyComponent, canActivate: [PublicGuard] },
+  { path: 'imprint', component: ImprintComponent, canActivate: [PublicGuard] },
   { path: 'en', redirectTo: '' },
   {
     path: ':language',
@@ -29,6 +33,8 @@ const routes: Routes = [
       { path: 'sign-up', component: AuthenticatorComponent, canActivate: [PublicGuard], data: { isSignUp: true } },
       { path: 'forgot-password', component: ForgotPasswordComponent, canActivate: [PublicGuard] },
       { path: 'verify-email', component: VerifyEmailComponent, canActivate: [PublicGuard] },
+      { path: 'privacy', component: PrivacyComponent, canActivate: [PublicGuard] },
+      { path: 'imprint', component: ImprintComponent, canActivate: [PublicGuard] },
       { path: '**', redirectTo: '' }
     ]
   },
