@@ -2,7 +2,7 @@ import re
 from bs4 import BeautifulSoup
 import requests
 import tldextract
-from urllib.parse import urlsplit, urldefrag
+from urllib.parse import urlsplit, urldefrag, urljoin
 
 
 def bs_preprocess(html):
@@ -57,15 +57,12 @@ def get_page_counter_url(url):
 
     for href in possible_hrefs:
         try:
-            if href.startswith("/"):
-                href = get_root_url(url) + href
-
+            href = urljoin(url, href)
             soup = get_soup_from_url(href)
 
             for new_link in soup.find_all("a", href=True):
                 new_href = new_link["href"]
-                if new_href.startswith("/"):
-                    new_href = get_root_url(url) + new_href
+                new_href = urljoin(url, new_href)
 
                 if new_href == href:
                     continue

@@ -45,7 +45,7 @@ export class PostComponent {
 
     if (blogPost.blogUrl) {
       this.blogUrl = blogPost.blogUrl;
-    } else {
+    } else if (!this.blogUrl) {
       this.blogUrl = blogPost.postUrl.substring(0, blogPost.postUrl.indexOf('/', "https://".length))
     }
   }

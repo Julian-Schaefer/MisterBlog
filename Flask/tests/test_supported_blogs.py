@@ -1,16 +1,20 @@
-
 from app.article_selector import get_article_selectors
 from app.rss_selector import get_rss_url
 
 
 def test_supported_blogs():
-    supported_blogs = ["https://lindaloves.de/diy",
-                       "https://freddysblog.com",
-                       "https://www.heise.de/developer/",
-                       "https://www.kauffmann.nl/",
-                       "https://robertostefanettinavblog.com/",
-                       "https://devblogs.microsoft.com/powershell"
-                       ]
+    supported_blogs = [
+        "https://lindaloves.de/diy",
+        "https://freddysblog.com",
+        "https://www.heise.de/developer/",
+        "https://www.kauffmann.nl/",
+        "https://robertostefanettinavblog.com/",
+        "https://devblogs.microsoft.com/powershell",
+        "https://msdynamicsworld.com/d365-business-central-news",
+        "https://www.wired.com/most-recent/",
+    ]
+
+    # TODO: Support blogs with only one page, then it simply doesnt have pagination and old posts disappear
 
     for supported_blog in supported_blogs:
         rss_url_result = get_rss_url(supported_blog)
