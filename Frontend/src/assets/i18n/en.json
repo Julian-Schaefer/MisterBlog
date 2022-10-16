@@ -8,7 +8,9 @@
         "by": "By",
         "close": "Close",
         "delete": "Delete",
-        "ok": "OK"
+        "ok": "OK",
+        "privacy": "Privacy",
+        "imprint": "Imprint"
     },
     "account": {
         "your-account": "Your Account",

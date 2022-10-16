@@ -65,6 +65,8 @@ import { AccountComponent } from './components/account/account.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { getAuth } from 'firebase/auth';
 import { translateBrowserLoaderFactory } from './translate-browser.loader';
+import { PrivacyComponent } from './components/privacy/privacy.component';
+import { ImprintComponent } from './components/imprint/imprint.component';
 
 export const interceptorProviders =
     [
@@ -96,7 +98,9 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         LoadingSpinnerComponent,
         HeaderComponent,
         AccountComponent,
-        ConfirmDialogComponent
+        ConfirmDialogComponent,
+        PrivacyComponent,
+        ImprintComponent
     ],
     imports: [
         BrowserModule.withServerTransition({ appId: 'serverApp' }),
