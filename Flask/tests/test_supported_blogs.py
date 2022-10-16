@@ -14,7 +14,8 @@ def test_supported_blogs():
         "https://www.wired.com/most-recent/",
     ]
 
-    # TODO: Support blogs with only one page, then it simply doesnt have pagination and old posts disappear
+    # TODO: Support blogs with only one page,
+    # then it simply doesnt have pagination and old posts disappear
 
     for supported_blog in supported_blogs:
         rss_url_result = get_rss_url(supported_blog)
