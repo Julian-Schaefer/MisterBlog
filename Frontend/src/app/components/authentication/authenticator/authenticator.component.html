@@ -85,11 +85,8 @@
                             translate }}</a></span>
                 </div>
             </mat-card>
-            <p style="text-align:center; margin-top: 8px;">
-                <a [routerLink]="['/', translateService.currentLang, 'privacy']">{{ 'general.privacy' | translate
-                    }}</a> | <a [routerLink]="['/', translateService.currentLang, 'imprint']">{{
-                    'general.imprint' | translate }}</a>
-            </p>
+
+            <app-legal></app-legal>
         </div>
     </div>
 </ion-content>
