@@ -20,7 +20,7 @@
                         <input matInput [type]="hidePassword ? 'password' : 'text'" #userPassword
                             formControlName="password" autocomplete="current-password">
                         <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
-                            [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+                            [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword" tabindex="-1">
                             <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
                         </button>
                     </mat-form-field>
@@ -34,7 +34,8 @@
                                 formControlName="repeatedPassword" autocomplete="new-password"
                                 [errorStateMatcher]="crossFieldErrorMatcher">
                             <button mat-icon-button matSuffix (click)="hideRepeatedPassword = !hideRepeatedPassword"
-                                [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideRepeatedPassword">
+                                [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideRepeatedPassword"
+                                tabindex="-1">
                                 <mat-icon>{{hideRepeatedPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
                             </button>
 
