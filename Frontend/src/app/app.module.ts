@@ -67,6 +67,7 @@ import { getAuth } from 'firebase/auth';
 import { translateBrowserLoaderFactory } from './translate-browser.loader';
 import { PrivacyComponent } from './components/privacy/privacy.component';
 import { ImprintComponent } from './components/imprint/imprint.component';
+import { LegalComponent } from './components/legal/legal.component';
 
 export const interceptorProviders =
     [
@@ -100,7 +101,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         AccountComponent,
         ConfirmDialogComponent,
         PrivacyComponent,
-        ImprintComponent
+        ImprintComponent,
+        LegalComponent
     ],
     imports: [
         BrowserModule.withServerTransition({ appId: 'serverApp' }),
