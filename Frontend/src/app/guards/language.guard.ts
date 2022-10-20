@@ -1,7 +1,7 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-import { map, Observable } from 'rxjs';
+import { from, map, Observable } from 'rxjs';
+import { AccountService } from '../services/account/account.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +9,7 @@ import { map, Observable } from 'rxjs';
 export class LanguageGuard implements CanActivate {
 
   constructor(
-    public translateService: TranslateService,
+    public accountService: AccountService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
@@ -18,7 +18,7 @@ export class LanguageGuard implements CanActivate {
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     if (next.params && next.params.language) {
       const language = next.params.language;
-      return this.translateService.use(language).pipe(map(() => true));
+      return from(this.accountService.setLanguage(language)).pipe(map(() => true));
     } else {
       return true;
     }

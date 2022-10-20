@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { Observable, map, from } from 'rxjs';
+import { Observable, map, from, firstValueFrom } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { TranslateService } from '@ngx-translate/core';
 import { LocalStorageService } from '../local-storage-service/local-storage.service';
+import { NgcCookieConsentService } from 'ngx-cookieconsent';
 
 @Injectable(
     { providedIn: "root" }
@@ -18,6 +19,7 @@ export class AccountService {
     constructor(private http: HttpClient,
         private authService: AuthService,
         private translateService: TranslateService,
+        private cookieConsentService: NgcCookieConsentService,
         private localStorageService: LocalStorageService) { }
 
     deleteAccount(): Observable<void> {
@@ -31,23 +33,37 @@ export class AccountService {
         this.localStorageService.setItem(AccountService.languageKey, language);
     }
 
-    initializeLanguage() {
+    async setLanguage(language: string = null) {
         const supportedLanguages = ['en', 'de'];
-        const currentLang = this.translateService.currentLang;
 
-        this.translateService.addLangs(supportedLanguages);
-        this.translateService.setDefaultLang('en');
+        if (this.translateService.langs.length === 0) {
+            this.translateService.addLangs(supportedLanguages);
+            this.translateService.setDefaultLang('en');
+        }
 
         const storedLanguage = this.localStorageService.getItem(AccountService.languageKey);
         if (storedLanguage) {
-            this.translateService.use(storedLanguage);
+            await firstValueFrom(this.translateService.use(storedLanguage));
         } else {
-            if (currentLang && supportedLanguages.indexOf(currentLang) !== -1) {
-                this.translateService.use(currentLang);
-            } else {
+            if (language && supportedLanguages.indexOf(language) !== -1) {
+                await firstValueFrom(this.translateService.use(language));
+            } else if (!this.translateService.currentLang) {
                 const defaultLang = this.translateService.getDefaultLang();
-                this.translateService.use(defaultLang);
+                await firstValueFrom(this.translateService.use(defaultLang));
             }
         }
+
+        this.translateService
+            .get(['cookie.message', 'cookie.dismiss', 'cookie.policy', 'cookie.link'])
+            .subscribe(data => {
+                this.cookieConsentService.getConfig().content = this.cookieConsentService.getConfig().content || {};
+                this.cookieConsentService.getConfig().content.header = data['cookie.header'];
+                this.cookieConsentService.getConfig().content.message = data['cookie.message'];
+                this.cookieConsentService.getConfig().content.dismiss = data['cookie.dismiss'];
+                this.cookieConsentService.getConfig().content.link = data['cookie.link'];
+                this.cookieConsentService.destroy(); // remove previous cookie bar (with default messages)
+                this.cookieConsentService.init(this.cookieConsentService.getConfig());
+            });
+
     }
 }
