@@ -69,6 +69,7 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
 import { getAuth } from 'firebase/auth';
 import { translateBrowserLoaderFactory } from './translate-browser.loader';
 import { NgcCookieConsentModule, NgcCookieConsentConfig } from 'ngx-cookieconsent';
+import { NgxGoogleAnalyticsModule, NgxGoogleAnalyticsRouterModule } from 'ngx-google-analytics';
 
 const cookieConfig: NgcCookieConsentConfig = {
     cookie: {
@@ -179,6 +180,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         MatSnackBarModule,
         NgxSpinnerModule,
         MatSelectModule,
+        NgxGoogleAnalyticsModule.forRoot('G-FERRF8L750'),
+        NgxGoogleAnalyticsRouterModule,
         NgcCookieConsentModule.forRoot(cookieConfig),
         StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
         ServiceWorkerModule.register('ngsw-worker.js', {
