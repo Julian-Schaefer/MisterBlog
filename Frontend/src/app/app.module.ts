@@ -30,6 +30,9 @@ import { VerifyEmailComponent } from './components/authentication/verify-email/v
 import { PostListComponent } from './components/post-list/post-list.component';
 import { PostComponent } from './components/post/post.component';
 import { SelectedBlogsComponent } from './components/selected-blogs/selected-blogs.component';
+import { PrivacyComponent } from './components/privacy/privacy.component';
+import { ImprintComponent } from './components/imprint/imprint.component';
+import { LegalComponent } from './components/legal/legal.component';
 
 import { SafeHtmlPipe } from './pipes/SafeHtmlPipe';
 import { SafeURLPipe } from './pipes/SafeURLPipe';
@@ -65,9 +68,24 @@ import { AccountComponent } from './components/account/account.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { getAuth } from 'firebase/auth';
 import { translateBrowserLoaderFactory } from './translate-browser.loader';
-import { PrivacyComponent } from './components/privacy/privacy.component';
-import { ImprintComponent } from './components/imprint/imprint.component';
-import { LegalComponent } from './components/legal/legal.component';
+import { NgcCookieConsentModule, NgcCookieConsentConfig } from 'ngx-cookieconsent';
+
+const cookieConfig: NgcCookieConsentConfig = {
+    cookie: {
+        domain: 'misterblog.me' // or 'your.domain.com' // it is mandatory to set a domain, for cookies to work properly (see https://goo.gl/S2Hy2A)
+    },
+    palette: {
+        popup: {
+            background: '#00008b'
+        },
+        button: {
+            background: '#3f51b5',
+            text: 'white'
+        }
+    },
+    theme: 'classic',
+    type: 'info'
+};
 
 export const interceptorProviders =
     [
@@ -161,6 +179,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         MatSnackBarModule,
         NgxSpinnerModule,
         MatSelectModule,
+        NgcCookieConsentModule.forRoot(cookieConfig),
         StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
         ServiceWorkerModule.register('ngsw-worker.js', {
             enabled: environment.production,

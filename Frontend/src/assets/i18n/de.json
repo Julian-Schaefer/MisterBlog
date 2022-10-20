@@ -49,6 +49,13 @@
         "de": "Deutsch",
         "en": "Englisch"
     },
+    "cookie": {
+        "message": "Diese Website verwendet Cookies, um Ihnen die bestmögliche Nutzung unserer Website zu ermöglichen.",
+        "dismiss": "Verstanden!",
+        "deny": "Cookies ablehnen",
+        "link": "Mehr erfahren",
+        "policy": "Cookie Policy"
+    },
     "date": {
         "dateFormatPattern": "MMM d, y, h:mm"
     },
