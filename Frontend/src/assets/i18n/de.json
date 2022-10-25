@@ -55,7 +55,7 @@
         "deny": "Cookies ablehnen",
         "link": "Mehr erfahren",
         "policy": "Cookie Policy",
-        "href": "www.misterblog.me/de/privacy"
+        "href": "https://www.misterblog.me/de/privacy"
     },
     "date": {
         "dateFormatPattern": "MMM d, y, h:mm"
