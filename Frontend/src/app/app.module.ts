@@ -73,7 +73,7 @@ import { NgxGoogleAnalyticsModule, NgxGoogleAnalyticsRouterModule } from 'ngx-go
 
 const cookieConfig: NgcCookieConsentConfig = {
     cookie: {
-        domain: 'misterblog.me' // or 'your.domain.com' // it is mandatory to set a domain, for cookies to work properly (see https://goo.gl/S2Hy2A)
+        domain: 'www.misterblog.me' // or 'your.domain.com' // it is mandatory to set a domain, for cookies to work properly (see https://goo.gl/S2Hy2A)
     },
     palette: {
         popup: {
@@ -82,10 +82,14 @@ const cookieConfig: NgcCookieConsentConfig = {
         button: {
             background: '#3f51b5',
             text: 'white'
+        },
+        highlight: {
+            background: '#3f51b5',
+            text: 'white'
         }
     },
     theme: 'classic',
-    type: 'info'
+    type: 'opt-in'
 };
 
 export const interceptorProviders =
@@ -180,8 +184,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         MatSnackBarModule,
         NgxSpinnerModule,
         MatSelectModule,
-        NgxGoogleAnalyticsModule.forRoot('G-FERRF8L750'),
-        NgxGoogleAnalyticsRouterModule,
+        NgxGoogleAnalyticsModule,
+        //NgxGoogleAnalyticsRouterModule,
         NgcCookieConsentModule.forRoot(cookieConfig),
         StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
         ServiceWorkerModule.register('ngsw-worker.js', {
