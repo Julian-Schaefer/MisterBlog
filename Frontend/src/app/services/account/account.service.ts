@@ -54,13 +54,14 @@ export class AccountService {
         }
 
         this.translateService
-            .get(['cookie.message', 'cookie.dismiss', 'cookie.policy', 'cookie.link'])
+            .get(['cookie.message', 'cookie.dismiss', 'cookie.policy', 'cookie.link', 'cookie.href'])
             .subscribe(data => {
                 this.cookieConsentService.getConfig().content = this.cookieConsentService.getConfig().content || {};
                 this.cookieConsentService.getConfig().content.header = data['cookie.header'];
                 this.cookieConsentService.getConfig().content.message = data['cookie.message'];
                 this.cookieConsentService.getConfig().content.dismiss = data['cookie.dismiss'];
                 this.cookieConsentService.getConfig().content.link = data['cookie.link'];
+                this.cookieConsentService.getConfig().content.href = data['cookie.href'];
                 this.cookieConsentService.destroy(); // remove previous cookie bar (with default messages)
                 this.cookieConsentService.init(this.cookieConsentService.getConfig());
             });
