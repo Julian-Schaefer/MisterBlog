@@ -81,7 +81,8 @@
     "cookie": {
         "message": "This website uses cookies to ensure you get the best experience on our website.",
         "dismiss": "Got it!",
-        "deny": "Refuse cookies",
+        "allow": "Allow all",
+        "deny": "Allow essential cookies only",
         "link": "Learn more",
         "policy": "Cookie Policy",
         "href": "https://www.misterblog.me/privacy"

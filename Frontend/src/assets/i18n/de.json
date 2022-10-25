@@ -51,8 +51,8 @@
     },
     "cookie": {
         "message": "Diese Website verwendet Cookies, um Ihnen die bestmögliche Nutzung unserer Website zu ermöglichen.",
-        "dismiss": "Verstanden!",
-        "deny": "Cookies ablehnen",
+        "allow": "Zustimmen",
+        "deny": "Nur essenzielle Cookies zulassen",
         "link": "Mehr erfahren",
         "policy": "Cookie Policy",
         "href": "https://www.misterblog.me/de/privacy"
