@@ -83,7 +83,8 @@
         "dismiss": "Got it!",
         "deny": "Refuse cookies",
         "link": "Learn more",
-        "policy": "Cookie Policy"
+        "policy": "Cookie Policy",
+        "href": "https://www.misterblog.me/privacy"
     },
     "date": {
         "dateFormatPattern": "MMM d, y, h:mm a"
