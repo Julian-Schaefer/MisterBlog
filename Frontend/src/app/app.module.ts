@@ -73,7 +73,7 @@ import { NgxGoogleAnalyticsModule, NgxGoogleAnalyticsRouterModule } from 'ngx-go
 
 const cookieConfig: NgcCookieConsentConfig = {
     cookie: {
-        domain: 'www.misterblog.me' // or 'your.domain.com' // it is mandatory to set a domain, for cookies to work properly (see https://goo.gl/S2Hy2A)
+        domain: environment.domain // or 'your.domain.com' // it is mandatory to set a domain, for cookies to work properly (see https://goo.gl/S2Hy2A)
     },
     palette: {
         popup: {

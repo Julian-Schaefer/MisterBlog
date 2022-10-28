@@ -10,5 +10,7 @@ export const environment = {
     messagingSenderId: "797738042746",
     appId: "1:797738042746:web:f79a733cfc9cbad72802c3",
     measurementId: "G-V0GCNMMWW7"
-  }
+  },
+  domain: "staging.misterblog.me",
+  gaTrackingCode: ''
 };
