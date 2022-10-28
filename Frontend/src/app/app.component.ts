@@ -10,6 +10,7 @@ import { GoogleAnalyticsInitializer, IGoogleAnalyticsSettings, NGX_GOOGLE_ANALYT
 import { NgcCookieConsentService } from 'ngx-cookieconsent';
 import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { CookieService } from 'ngx-cookie-service';
 
 
 @Component({
@@ -25,6 +26,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private domSanitizer: DomSanitizer,
     private matIconRegistry: MatIconRegistry,
     private cookieConsentService: NgcCookieConsentService,
+    private cookieService: CookieService,
     private injector: Injector,
     @Inject(PLATFORM_ID) platformId: Object) {
     this.platformId = platformId;
@@ -48,13 +50,18 @@ export class AppComponent implements OnInit, OnDestroy {
     this.registerIcon("apple", './assets/svg/apple.svg');
 
     this.statusChangeSubscription = this.cookieConsentService.statusChange$.subscribe(async (result) => {
-      if (result.status && result.status === 'allow') {
-        const settings: IGoogleAnalyticsSettings = {
-          trackingCode: environment.gaTrackingCode
-        };
+      if (result.status) {
+        if (result.status === 'allow') {
+          const settings: IGoogleAnalyticsSettings = {
+            trackingCode: environment.gaTrackingCode
+          };
 
-        const initGA = await GoogleAnalyticsInitializer(settings, this.injector.get(NGX_GTAG_FN), this.injector.get(DOCUMENT));
-        await initGA();
+          const initGA = await GoogleAnalyticsInitializer(settings, this.injector.get(NGX_GTAG_FN), this.injector.get(DOCUMENT));
+          await initGA();
+        } else if (result.status === 'deny') {
+          this.cookieService.deleteAll();
+          window.location.reload();
+        }
       }
     });
   }
