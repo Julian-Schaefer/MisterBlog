@@ -52,7 +52,7 @@ export class AppComponent implements OnInit, OnDestroy {
     const cookieConsentStatus = this.cookieService.get("cookieconsent_status");
     if (cookieConsentStatus && cookieConsentStatus === 'allow') {
       this.initializeGoogleAnalytics();
-    } else {
+    } else if (cookieConsentStatus && cookieConsentStatus === 'deny') {
       window['ga-disable-' + environment.gaTrackingCode] = true;
     }
 
