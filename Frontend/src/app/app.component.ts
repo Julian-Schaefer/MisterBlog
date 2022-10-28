@@ -1,11 +1,15 @@
-import { isPlatformServer } from '@angular/common';
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { DOCUMENT, isPlatformServer } from '@angular/common';
+import { Component, Inject, Injector, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AuthService } from './services/auth/auth.service';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { Capacitor } from '@capacitor/core';
 import { AccountService } from './services/account/account.service';
+import { GoogleAnalyticsInitializer, IGoogleAnalyticsSettings, NGX_GOOGLE_ANALYTICS_SETTINGS_TOKEN, NGX_GTAG_FN } from 'ngx-google-analytics';
+import { NgcCookieConsentService } from 'ngx-cookieconsent';
+import { Subscription } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 
 @Component({
@@ -13,12 +17,15 @@ import { AccountService } from './services/account/account.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   private platformId: Object;
+  private statusChangeSubscription!: Subscription;
 
   constructor(public authService: AuthService, private accountService: AccountService,
     private domSanitizer: DomSanitizer,
     private matIconRegistry: MatIconRegistry,
+    private cookieConsentService: NgcCookieConsentService,
+    private injector: Injector,
     @Inject(PLATFORM_ID) platformId: Object) {
     this.platformId = platformId;
   }
@@ -39,6 +46,20 @@ export class AppComponent implements OnInit {
     this.registerIcon("google_signin", './assets/svg/google_signin.svg');
     this.registerIcon("twitter", './assets/svg/twitter.svg');
     this.registerIcon("apple", './assets/svg/apple.svg');
+
+    this.statusChangeSubscription = this.cookieConsentService.statusChange$.subscribe((result) => {
+      if (result.status && result.status === 'allow') {
+        const settings: IGoogleAnalyticsSettings = {
+          trackingCode: environment.gaTrackingCode
+        };
+
+        GoogleAnalyticsInitializer(settings, this.injector.get(NGX_GTAG_FN), this.injector.get(DOCUMENT));
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.statusChangeSubscription?.unsubscribe();
   }
 
   private registerIcon(name: string, filename: string) {
