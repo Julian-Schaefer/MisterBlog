@@ -49,21 +49,26 @@ export class AppComponent implements OnInit, OnDestroy {
     this.registerIcon("twitter", './assets/svg/twitter.svg');
     this.registerIcon("apple", './assets/svg/apple.svg');
 
+    const cookieConsentStatus = this.cookieService.get("cookieconsent_status");
+    if (cookieConsentStatus && cookieConsentStatus === 'allow') {
+      this.initializeGoogleAnalytics();
+    }
+
     this.statusChangeSubscription = this.cookieConsentService.statusChange$.subscribe(async (result) => {
       if (result.status) {
         if (result.status === 'allow') {
-          const settings: IGoogleAnalyticsSettings = {
-            trackingCode: environment.gaTrackingCode
-          };
-
-          const initGA = await GoogleAnalyticsInitializer(settings, this.injector.get(NGX_GTAG_FN), this.injector.get(DOCUMENT));
-          await initGA();
+          this.initializeGoogleAnalytics();
         } else if (result.status === 'deny') {
           this.cookieService.deleteAll();
+          caches.keys().then(function (names) {
+            for (let name of names)
+              caches.delete(name);
+          });
           window.location.reload();
         }
       }
     });
+
   }
 
   ngOnDestroy(): void {
@@ -77,5 +82,14 @@ export class AppComponent implements OnInit, OnDestroy {
     } else {
       this.matIconRegistry.addSvgIcon(name, this.domSanitizer.bypassSecurityTrustResourceUrl(filename));
     }
+  }
+
+  private async initializeGoogleAnalytics() {
+    const settings: IGoogleAnalyticsSettings = {
+      trackingCode: environment.gaTrackingCode
+    };
+
+    const initGA = await GoogleAnalyticsInitializer(settings, this.injector.get(NGX_GTAG_FN), this.injector.get(DOCUMENT));
+    await initGA();
   }
 }
