@@ -7,7 +7,7 @@ import { StatusBar, Style } from '@capacitor/status-bar';
 import { Capacitor } from '@capacitor/core';
 import { AccountService } from './services/account/account.service';
 import { GoogleAnalyticsInitializer, IGoogleAnalyticsSettings, NGX_GOOGLE_ANALYTICS_SETTINGS_TOKEN, NGX_GTAG_FN } from 'ngx-google-analytics';
-import { NgcCookieConsentService } from 'ngx-cookieconsent';
+import { NgcCookieConsentService, NgcStatusChangeEvent } from 'ngx-cookieconsent';
 import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { CookieService } from 'ngx-cookie-service';
@@ -56,17 +56,21 @@ export class AppComponent implements OnInit, OnDestroy {
       window['ga-disable-' + environment.gaTrackingCode] = true;
     }
 
-    this.statusChangeSubscription = this.cookieConsentService.statusChange$.subscribe(async (result) => {
+    this.statusChangeSubscription = this.cookieConsentService.statusChange$.subscribe(async (result: NgcStatusChangeEvent) => {
       if (result.status) {
         if (result.status === 'allow') {
           this.initializeGoogleAnalytics();
         } else if (result.status === 'deny') {
-          this.cookieService.deleteAll();
+          window['ga-disable-' + environment.gaTrackingCode] = true;
+          for (const key in this.cookieService.getAll()) {
+            if (key !== "cookieconsent_status") {
+              this.cookieService.delete(key);
+            }
+          }
           window.location.reload();
         }
       }
     });
-
   }
 
   ngOnDestroy(): void {
@@ -83,6 +87,8 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   private async initializeGoogleAnalytics() {
+    window['ga-disable-' + environment.gaTrackingCode] = false;
+
     const settings: IGoogleAnalyticsSettings = {
       trackingCode: environment.gaTrackingCode
     };
