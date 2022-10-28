@@ -52,6 +52,8 @@ export class AppComponent implements OnInit, OnDestroy {
     const cookieConsentStatus = this.cookieService.get("cookieconsent_status");
     if (cookieConsentStatus && cookieConsentStatus === 'allow') {
       this.initializeGoogleAnalytics();
+    } else {
+      window['ga-disable-' + environment.gaTrackingCode] = true;
     }
 
     this.statusChangeSubscription = this.cookieConsentService.statusChange$.subscribe(async (result) => {
@@ -60,7 +62,6 @@ export class AppComponent implements OnInit, OnDestroy {
           this.initializeGoogleAnalytics();
         } else if (result.status === 'deny') {
           this.cookieService.deleteAll();
-          window['ga-disable-' + environment.gaTrackingCode] = true;
           window.location.reload();
         }
       }
