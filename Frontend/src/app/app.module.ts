@@ -70,6 +70,7 @@ import { getAuth } from 'firebase/auth';
 import { translateBrowserLoaderFactory } from './translate-browser.loader';
 import { NgcCookieConsentModule, NgcCookieConsentConfig } from 'ngx-cookieconsent';
 import { NgxGoogleAnalyticsModule, NgxGoogleAnalyticsRouterModule } from 'ngx-google-analytics';
+import { CookieService } from 'ngx-cookie-service';
 
 const cookieConfig: NgcCookieConsentConfig = {
     cookie: {
@@ -185,7 +186,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         NgxSpinnerModule,
         MatSelectModule,
         NgxGoogleAnalyticsModule,
-        //NgxGoogleAnalyticsRouterModule,
+        NgxGoogleAnalyticsRouterModule,
         NgcCookieConsentModule.forRoot(cookieConfig),
         StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
         ServiceWorkerModule.register('ngsw-worker.js', {
@@ -196,7 +197,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         }),
     ],
     providers: [interceptorProviders, { provide: MAT_DIALOG_DATA, useValue: null },
-        { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+        { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, CookieService],
     bootstrap: [AppComponent]
 })
 export class AppModule {
