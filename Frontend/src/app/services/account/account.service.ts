@@ -54,7 +54,7 @@ export class AccountService {
         }
 
         this.translateService
-            .get(['cookie.message', 'cookie.allow', 'cookie.deny', 'cookie.policy', 'cookie.link', 'cookie.href'])
+            .get(['cookie.message', 'cookie.allow', 'cookie.deny', 'cookie.policy', 'cookie.link', 'cookie.href', 'cookie.policy'])
             .subscribe(data => {
                 this.cookieConsentService.getConfig().content = this.cookieConsentService.getConfig().content || {};
                 this.cookieConsentService.getConfig().content.header = data['cookie.header'];
@@ -63,6 +63,7 @@ export class AccountService {
                 this.cookieConsentService.getConfig().content.deny = data['cookie.deny'];
                 this.cookieConsentService.getConfig().content.link = data['cookie.link'];
                 this.cookieConsentService.getConfig().content.href = data['cookie.href'];
+                this.cookieConsentService.getConfig().content.policy = data['cookie.policy'];
                 this.cookieConsentService.destroy(); // remove previous cookie bar (with default messages)
                 this.cookieConsentService.init(this.cookieConsentService.getConfig());
             });
