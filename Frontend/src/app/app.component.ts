@@ -60,10 +60,7 @@ export class AppComponent implements OnInit, OnDestroy {
           this.initializeGoogleAnalytics();
         } else if (result.status === 'deny') {
           this.cookieService.deleteAll();
-          caches.keys().then(function (names) {
-            for (let name of names)
-              caches.delete(name);
-          });
+          window['ga-disable-' + environment.gaTrackingCode] = true;
           window.location.reload();
         }
       }
