@@ -47,13 +47,14 @@ export class AppComponent implements OnInit, OnDestroy {
     this.registerIcon("twitter", './assets/svg/twitter.svg');
     this.registerIcon("apple", './assets/svg/apple.svg');
 
-    this.statusChangeSubscription = this.cookieConsentService.statusChange$.subscribe((result) => {
+    this.statusChangeSubscription = this.cookieConsentService.statusChange$.subscribe(async (result) => {
       if (result.status && result.status === 'allow') {
         const settings: IGoogleAnalyticsSettings = {
           trackingCode: environment.gaTrackingCode
         };
 
-        GoogleAnalyticsInitializer(settings, this.injector.get(NGX_GTAG_FN), this.injector.get(DOCUMENT));
+        const initGA = await GoogleAnalyticsInitializer(settings, this.injector.get(NGX_GTAG_FN), this.injector.get(DOCUMENT));
+        await initGA();
       }
     });
   }
