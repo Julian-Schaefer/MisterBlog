@@ -63,15 +63,14 @@ export class AppComponent implements OnInit, OnDestroy {
             this.initializeGoogleAnalytics();
           } else if (result.status === 'deny') {
             window['ga-disable-' + environment.gaTrackingCode] = true;
+            const domain = environment.domain;
+            const cookieDomain = (domain.indexOf(".") !== -1) ? domain.substring(domain.indexOf(".")) : domain
             for (const key in this.cookieService.getAll()) {
               if (key !== "cookieconsent_status") {
-                this.cookieService.delete(key, '/', '.misterblog.me');
+                this.cookieService.delete(key, '/', cookieDomain);
               }
             }
-
-            setTimeout(() => {
-              window.location.reload();
-            }, 5000);
+            window.location.reload();
           }
         }
       });
