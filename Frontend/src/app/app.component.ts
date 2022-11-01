@@ -68,7 +68,10 @@ export class AppComponent implements OnInit, OnDestroy {
                 this.cookieService.delete(key);
               }
             }
-            window.location.reload();
+
+            setTimeout(() => {
+              window.location.reload();
+            }, 5000);
           }
         }
       });
