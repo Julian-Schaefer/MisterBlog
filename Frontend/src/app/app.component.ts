@@ -65,7 +65,7 @@ export class AppComponent implements OnInit, OnDestroy {
             window['ga-disable-' + environment.gaTrackingCode] = true;
             for (const key in this.cookieService.getAll()) {
               if (key !== "cookieconsent_status") {
-                this.cookieService.delete(key);
+                this.cookieService.delete(key, '/', '.misterblog.me');
               }
             }
 
