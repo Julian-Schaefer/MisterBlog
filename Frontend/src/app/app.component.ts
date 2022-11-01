@@ -50,29 +50,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.registerIcon("apple", './assets/svg/apple.svg');
 
     if (!isPlatformServer(this.platformId)) {
-      const cookieConsentStatus = this.cookieService.get("cookieconsent_status");
-      if (cookieConsentStatus && cookieConsentStatus === 'allow') {
-        this.initializeGoogleAnalytics();
-      } else if (cookieConsentStatus && cookieConsentStatus === 'deny') {
-        window['ga-disable-' + environment.gaTrackingCode] = true;
-      }
-
-      this.statusChangeSubscription = this.cookieConsentService.statusChange$.subscribe(async (result: NgcStatusChangeEvent) => {
-        if (result.status) {
-          if (result.status === 'allow') {
-            this.initializeGoogleAnalytics();
-          } else if (result.status === 'deny') {
-            window['ga-disable-' + environment.gaTrackingCode] = true;
-            const domain = environment.production ? "." + environment.domain : environment.domain
-            for (const key in this.cookieService.getAll()) {
-              if (key !== "cookieconsent_status") {
-                this.cookieService.delete(key, '/', domain);
-              }
-            }
-            window.location.reload();
-          }
-        }
-      });
+      this.initializeCookieConsent();
     }
   }
 
@@ -87,6 +65,32 @@ export class AppComponent implements OnInit, OnDestroy {
     } else {
       this.matIconRegistry.addSvgIcon(name, this.domSanitizer.bypassSecurityTrustResourceUrl(filename));
     }
+  }
+
+  private initializeCookieConsent() {
+    const cookieConsentStatus = this.cookieService.get("cookieconsent_status");
+    if (cookieConsentStatus && cookieConsentStatus === 'allow') {
+      this.initializeGoogleAnalytics();
+    } else if (cookieConsentStatus && cookieConsentStatus === 'deny') {
+      window['ga-disable-' + environment.gaTrackingCode] = true;
+    }
+
+    this.statusChangeSubscription = this.cookieConsentService.statusChange$.subscribe(async (result: NgcStatusChangeEvent) => {
+      if (result.status) {
+        if (result.status === 'allow') {
+          this.initializeGoogleAnalytics();
+        } else if (result.status === 'deny') {
+          window['ga-disable-' + environment.gaTrackingCode] = true;
+          const domain = environment.production ? "." + environment.domain : environment.domain
+          for (const key in this.cookieService.getAll()) {
+            if (key !== "cookieconsent_status") {
+              this.cookieService.delete(key, '/', domain);
+            }
+          }
+          window.location.reload();
+        }
+      }
+    });
   }
 
   private async initializeGoogleAnalytics() {
