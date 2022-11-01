@@ -11,6 +11,6 @@ export const environment = {
     appId: "1:797738042746:web:f79a733cfc9cbad72802c3",
     measurementId: "G-V0GCNMMWW7"
   },
-  domain: "www.misterblog.me",
+  domain: "misterblog.me",
   gaTrackingCode: 'G-FERRF8L750'
 };
