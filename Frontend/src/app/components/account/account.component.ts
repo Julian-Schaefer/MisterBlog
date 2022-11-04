@@ -40,8 +40,8 @@ export class AccountComponent implements OnInit {
     private accountService: AccountService,
     private snackBar: MatSnackBar,
     private formBuilder: FormBuilder,
-    private translateService: TranslateService,
-    private logger: NGXLogger) { }
+    private logger: NGXLogger,
+    public translateService: TranslateService) { }
 
   ngOnInit(): void {
     this.language = this.translateService.currentLang;

@@ -33,6 +33,7 @@ import { SelectedBlogsComponent } from './components/selected-blogs/selected-blo
 import { PrivacyComponent } from './components/privacy/privacy.component';
 import { ImprintComponent } from './components/imprint/imprint.component';
 import { LegalComponent } from './components/legal/legal.component';
+import { LanguageDialog } from './components/legal/legal.component';
 
 import { SafeHtmlPipe } from './pipes/SafeHtmlPipe';
 import { SafeURLPipe } from './pipes/SafeURLPipe';
@@ -126,7 +127,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         ConfirmDialogComponent,
         PrivacyComponent,
         ImprintComponent,
-        LegalComponent
+        LegalComponent,
+        LanguageDialog
     ],
     imports: [
         BrowserModule.withServerTransition({ appId: 'serverApp' }),

@@ -46,6 +46,10 @@ export class AccountService {
             await firstValueFrom(this.translateService.use(storedLanguage));
         } else {
             if (language && supportedLanguages.indexOf(language) !== -1) {
+                if (language === this.translateService.currentLang) {
+                    return;
+                }
+
                 await firstValueFrom(this.translateService.use(language));
             } else if (!this.translateService.currentLang) {
                 const defaultLang = this.translateService.getDefaultLang();

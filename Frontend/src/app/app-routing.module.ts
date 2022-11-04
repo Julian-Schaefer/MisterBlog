@@ -21,8 +21,8 @@ const routes: Routes = [
   { path: 'sign-up', component: AuthenticatorComponent, canActivate: [PublicGuard], data: { isSignUp: true } },
   { path: 'forgot-password', component: ForgotPasswordComponent, canActivate: [PublicGuard] },
   { path: 'verify-email', component: VerifyEmailComponent, canActivate: [PublicGuard] },
-  { path: 'privacy', component: PrivacyComponent, canActivate: [PublicGuard] },
-  { path: 'imprint', component: ImprintComponent, canActivate: [PublicGuard] },
+  { path: 'privacy', component: PrivacyComponent },
+  { path: 'imprint', component: ImprintComponent },
   { path: 'en', redirectTo: '' },
   {
     path: ':language',
@@ -33,8 +33,8 @@ const routes: Routes = [
       { path: 'sign-up', component: AuthenticatorComponent, canActivate: [PublicGuard], data: { isSignUp: true } },
       { path: 'forgot-password', component: ForgotPasswordComponent, canActivate: [PublicGuard] },
       { path: 'verify-email', component: VerifyEmailComponent, canActivate: [PublicGuard] },
-      { path: 'privacy', component: PrivacyComponent, canActivate: [PublicGuard] },
-      { path: 'imprint', component: ImprintComponent, canActivate: [PublicGuard] },
+      { path: 'privacy', component: PrivacyComponent },
+      { path: 'imprint', component: ImprintComponent },
       { path: '**', redirectTo: '' }
     ]
   },
