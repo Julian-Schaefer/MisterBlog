@@ -10,7 +10,8 @@
         "delete": "Löschen",
         "ok": "OK",
         "privacy": "Datenschutz",
-        "imprint": "Impressum"
+        "imprint": "Impressum",
+        "language": "Sprache"
     },
     "account": {
         "your-account": "Dein Konto",

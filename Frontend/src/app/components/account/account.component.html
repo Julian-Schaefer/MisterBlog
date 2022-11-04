@@ -11,8 +11,10 @@
 
             <mat-form-field appearance="fill" controlType="select">
                 <mat-select [(value)]="language" (selectionChange)="onLanguageChanged()">
-                    <mat-option value="de">{{ 'languages.de' | translate }}</mat-option>
-                    <mat-option value="en">{{ 'languages.en' | translate }}</mat-option>
+                    <div *ngFor="let supportedLanguage of translateService.getLangs()">
+                        <mat-option [value]="supportedLanguage">{{ 'languages.'+supportedLanguage | translate }}
+                        </mat-option>
+                    </div>
                 </mat-select>
             </mat-form-field>
         </div>
