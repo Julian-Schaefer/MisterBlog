@@ -21,6 +21,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { AuthProvider } from 'src/app/components/authentication/redux/AuthProvider';
 import { NGXLogger } from 'ngx-logger';
 import { TranslateService } from '@ngx-translate/core';
+import { LocalStorageService } from '../local-storage-service/local-storage.service';
 
 @Injectable(
     { providedIn: "root" }
@@ -36,6 +37,7 @@ export class AuthService {
         public ngZone: NgZone,
         private auth: Auth,
         private translateService: TranslateService,
+        private localStorage: LocalStorageService,
         private logger: NGXLogger,
         @Inject(PLATFORM_ID) platformId: Object
     ) {
@@ -126,6 +128,8 @@ export class AuthService {
     signOut(): Observable<void> {
         if (!this.isBrowser)
             return;
+
+        this.localStorage.clear();
 
         return from(this.auth.signOut());
     }
