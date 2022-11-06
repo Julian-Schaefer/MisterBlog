@@ -3,12 +3,10 @@ from flask import Blueprint, request, jsonify
 import json
 from datetime import datetime
 
-from app.article_selector import get_article_selectors
 import app.article_downloader as article_downloader
 from app.blog_selection import BlogSelection
 from app.database import db
 from app.models import BlogPost
-import app.rss_selector as rss_selector
 from app.firebase import delete_user
 
 bp = Blueprint("routes", __name__)
