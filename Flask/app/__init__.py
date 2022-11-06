@@ -1,4 +1,5 @@
 import logging
+from flask_socketio import SocketIO
 from flask import Flask, request
 from flask_cors import CORS
 import google.cloud.logging as gcloud_logging
@@ -55,6 +56,12 @@ def create_app(config_class=config.Config):
 
     logging.basicConfig()
     # logger.setLevel(logging.DEBUG)
+
+    socket_io = SocketIO(app, cors_allowed_origins="*")
+
+    from . import blog_adder
+
+    blog_adder.init_socketio(socket_io)
 
     return app
 

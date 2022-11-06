@@ -72,6 +72,9 @@ import { translateBrowserLoaderFactory } from './translate-browser.loader';
 import { NgcCookieConsentModule, NgcCookieConsentConfig } from 'ngx-cookieconsent';
 import { NgxGoogleAnalyticsModule, NgxGoogleAnalyticsRouterModule } from 'ngx-google-analytics';
 import { CookieService } from 'ngx-cookie-service';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+
+const socketIoConfig: SocketIoConfig = { url: environment.apiUrl, options: {} };
 
 const cookieConfig: NgcCookieConsentConfig = {
     cookie: {
@@ -187,6 +190,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         MatSnackBarModule,
         NgxSpinnerModule,
         MatSelectModule,
+        SocketIoModule.forRoot(socketIoConfig),
         NgxGoogleAnalyticsModule,
         NgxGoogleAnalyticsRouterModule,
         NgcCookieConsentModule.forRoot(cookieConfig),

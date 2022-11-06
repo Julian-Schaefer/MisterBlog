@@ -23,6 +23,8 @@ trafilatura = "*"
 feedparser = "*"
 readabilipy = "*"
 lxml = "*"
+flask-socketio = "*"
+eventlet = "==0.30.2"
 
 [dev-packages]
 autopep8 = "*"

@@ -36,4 +36,4 @@ RUN pipenv --clear
 # For environments with multiple CPU cores, increase the number of workers
 # to be equal to the cores available.
 # Timeout is set to 0 to disable the timeouts of the workers to allow Cloud Run to handle instance scaling.
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 10 --timeout 0 --log-level $LOG_LEVEL "app:start_on_gcloud()"
+CMD exec gunicorn --bind :$PORT --worker-class eventlet --workers 1 --threads 10 --timeout 0 --log-level $LOG_LEVEL "app:start_on_gcloud()"
