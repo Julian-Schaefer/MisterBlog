@@ -5,6 +5,8 @@ import { SelectedBlog } from '../SelectedBlog';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { LocalStorageService } from '../local-storage-service/local-storage.service';
+import { Socket } from 'ngx-socket-io';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +18,9 @@ export class BlogService {
   private baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient,
-    private localStorageService: LocalStorageService) {
+    private localStorageService: LocalStorageService,
+    private authService: AuthService,
+    private socket: Socket) {
   }
 
   getBlogPostsFromLocalStorage(): BlogPost[] {
@@ -54,7 +58,28 @@ export class BlogService {
   }
 
   addSelectedBlog(selectedBlog: SelectedBlog): Observable<void> {
-    return this.http.post<void>(this.baseUrl + "/blog-selection", selectedBlog);
+    return new Observable((subscriber) => {
+      this.authService.getIdToken().subscribe((token: string) => {
+        if (token) {
+          this.socket.ioSocket.io.opts.query = { Authorization: `Bearer ${token}`, user_id: this.authService.user.uid };
+          this.socket.connect();
+
+          this.socket.on('update', (update) => {
+            if (update.status === "completed") {
+              this.socket.disconnect();
+              subscriber.next();
+            }
+          });
+
+          this.socket.on('error', (err) => {
+            this.socket.disconnect();
+            subscriber.error(err);
+          })
+
+          this.socket.emit('add_selected_blog', selectedBlog);
+        }
+      });
+    });
   }
 
   deleteSelectedBlog(selectedBlog: SelectedBlog): Observable<void> {

@@ -34,62 +34,6 @@ def deleteBlogSelection():
         return {"error": "The request payload is not in JSON format"}
 
 
-@bp.route("/blog-selection", methods=["POST"])
-def addBlogSelection():
-    user_id = request.user["user_id"]
-    if request.is_json:
-        data = request.get_json()
-        blog_url = data["blogUrl"]
-        if not blog_url.startswith("https://"):
-            blog_url = "https://" + blog_url
-
-        blog_selection_exists = (
-            db.session.query(BlogSelection)
-            .filter_by(user_id=user_id, blog_url=blog_url)
-            .one_or_none()
-        )
-
-        if blog_selection_exists:
-            return {
-                "error": "The specified Blog URL has already been added for this User."
-            }, 409
-
-        rss_url_result = rss_selector.get_rss_url(blog_url)
-        if rss_url_result and rss_url_result[1]:
-            new_blog_selection = BlogSelection(
-                blog_url=blog_url,
-                user_id=user_id,
-                is_selected=True,
-                rss_url=rss_url_result[0],
-                article_selectors=None,
-                page_counter_url=None,
-            )
-        else:
-            article_selectors = get_article_selectors(blog_url)
-            if article_selectors and len(article_selectors[0]) > 0:
-                new_blog_selection = BlogSelection(
-                    blog_url=blog_url,
-                    user_id=user_id,
-                    is_selected=True,
-                    rss_url=None,
-                    article_selectors=json.dumps(article_selectors[0]),
-                    page_counter_url=article_selectors[1],
-                )
-            else:
-                return {"error": "The provided Blog URL is not supported."}, 406
-
-        db.session.add(new_blog_selection)
-        db.session.commit()
-        return {
-            "message": (
-                f"Blog Selection {new_blog_selection.blog_url} for User",
-                f"{new_blog_selection.user_id} has been created successfully.",
-            )
-        }
-    else:
-        return {"error": "The request payload is not in JSON format."}, 400
-
-
 @bp.route("/blog-selection/selected", methods=["POST", "GET"])
 def handleSelectedBlogs():
     user_id = request.user["user_id"]

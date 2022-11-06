@@ -61,7 +61,7 @@ def create_app(config_class=config.Config):
 
     from . import blog_adder
 
-    blog_adder.init_socketio(socket_io)
+    blog_adder.init_socketio(socket_io, tokenVerifier)
 
     return app
 
