@@ -74,7 +74,7 @@ import { NgxGoogleAnalyticsModule, NgxGoogleAnalyticsRouterModule } from 'ngx-go
 import { CookieService } from 'ngx-cookie-service';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
-const socketIoConfig: SocketIoConfig = { url: environment.apiUrl, options: {} };
+const socketIoConfig: SocketIoConfig = { url: environment.apiUrl, options: { autoConnect: false } };
 
 const cookieConfig: NgcCookieConsentConfig = {
     cookie: {

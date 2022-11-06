@@ -11,7 +11,6 @@ import { NgcCookieConsentService, NgcStatusChangeEvent } from 'ngx-cookieconsent
 import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { CookieService } from 'ngx-cookie-service';
-import { Socket } from 'ngx-socket-io';
 
 
 @Component({
@@ -29,13 +28,11 @@ export class AppComponent implements OnInit, OnDestroy {
     private cookieConsentService: NgcCookieConsentService,
     private cookieService: CookieService,
     private injector: Injector,
-    private socket: Socket,
     @Inject(PLATFORM_ID) platformId: Object) {
     this.platformId = platformId;
   }
 
   ngOnInit(): void {
-    this.socket.emit('message', 'asd');
     if (Capacitor.isPluginAvailable('StatusBar')) {
       StatusBar.setStyle({
         style: Style.Dark
