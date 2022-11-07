@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { NgcCookieConsentService } from 'ngx-cookieconsent';
 import { AccountService } from 'src/app/services/account/account.service';
 
 @Component({
@@ -13,7 +14,14 @@ export class LegalComponent {
 
   @Input() showLanguageSelector = true;
 
-  constructor(public translateService: TranslateService, public dialog: MatDialog) { }
+  constructor(
+    private cookieConsentService: NgcCookieConsentService,
+    public translateService: TranslateService,
+    public dialog: MatDialog) { }
+
+  showCookieConsent() {
+    this.cookieConsentService.open();
+  }
 
   openLanguageDialog(): void {
     this.dialog.open(LanguageDialog);
