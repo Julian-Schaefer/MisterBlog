@@ -1,7 +1,12 @@
 <p>
     <a [routerLink]="['/', translateService.currentLang, 'privacy']">{{ 'general.privacy' | translate
-        }}</a> | <a [routerLink]="['/', translateService.currentLang, 'imprint']">{{
+        }}</a>
+    |
+    <a [routerLink]="['/', translateService.currentLang, 'imprint']">{{
         'general.imprint' | translate }}</a>
+    |
+    <a (click)="showCookieConsent()">{{
+        'cookie.name' | translate }}</a>
 
     <span *ngIf="showLanguageSelector"> | <a (click)="openLanguageDialog()">{{ 'general.language' | translate
             }}</a></span>

@@ -51,6 +51,7 @@
         "en": "Englisch"
     },
     "cookie": {
+        "name": "Cookies",
         "message": "Diese Website verwendet Cookies, um Ihnen die bestmögliche Nutzung unserer Website zu ermöglichen.",
         "allow": "Zustimmen",
         "deny": "Nur essenzielle Cookies zulassen",
